@@ -1,4 +1,8 @@
-const classes = {
+import { withStyles } from "@material-ui/core/styles";
+
+import LogoImage from "../assets/utility/adote-um-pix-logo.svg";
+
+const styles = {
   logo: {
     margin: 10,
     width: 40,
@@ -7,12 +11,8 @@ const classes = {
   },
 };
 
-const Logo = () => (
-  <img
-    src="./assets/utility/adote-um-pix-logo.svg"
-    className={classes.logo}
-    alt="logo"
-  />
+const Logo = ({ classes }) => (
+  <img src={LogoImage} className={classes.logo} alt="logo" />
 );
 
-export default Logo;
+export default withStyles(styles)(Logo);
