@@ -1,7 +1,7 @@
 function App() {
   return (
     <div className="App">
-      <button href="/about">Sobre o projeto</button>
+      <h1>Adote um PIX</h1>
     </div>
   );
 }
