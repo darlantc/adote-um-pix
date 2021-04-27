@@ -5,6 +5,8 @@ import {
   ThemeProvider,
 } from "@material-ui/core/styles";
 
+import Logo from "./components/Logo";
+
 const PixAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #FFF 30%, #000000 90%)",
   color: "#000000",
@@ -17,31 +19,16 @@ const theme = createMuiTheme({
   },
 });
 
-const classes = {
-  logo: {
-    margin: 10,
-    width: 40,
-    height: 40,
-    objectFit: "cover",
-  },
-};
-
 const App = () => {
   return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        <PixAppBar position="relative">
-          <Toolbar>
-            <img
-              src="./assets/utility/adote-um-pix-logo.svg"
-              className={classes.logo}
-              alt="logo"
-            />
-            <Typography variant="h4">Adote Um Pix</Typography>
-          </Toolbar>
-        </PixAppBar>
-      </ThemeProvider>
-    </div>
+    <ThemeProvider theme={theme}>
+      <PixAppBar position="relative">
+        <Toolbar>
+          <Logo />
+          <Typography variant="h4">Adote Um Pix</Typography>
+        </Toolbar>
+      </PixAppBar>
+    </ThemeProvider>
   );
 };
 
