@@ -3,6 +3,8 @@ import "firebase/database";
 import "firebase/auth";
 import "firebase/storage";
 
+import UserRequestStatus from "../models/UserRequestStatus";
+
 class FirebaseService {
   auth;
   database;
@@ -29,9 +31,27 @@ class FirebaseService {
     return this.database.ref();
   }
 
+  get serverTimestamp() {
+    return firebase.database.ServerValue.TIMESTAMP;
+  }
+
   get usersRef() {
     return this.database.ref("users");
   }
+
+  get userRequestsRef() {
+    return this.database.ref("userRequests");
+  }
+
+  saveNewUserRequest = ({ userId, pixKey, description }) => {
+    this.userRequestsRef.push({
+      userId,
+      pixKey,
+      description,
+      createdAt: this.serverTimestamp,
+      status: UserRequestStatus.waitingForApproval,
+    });
+  };
 }
 
 export default FirebaseService;
