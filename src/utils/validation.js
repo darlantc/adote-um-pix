@@ -124,7 +124,7 @@ export const emailValidation = (raw) => {
 };
 
 export const randomKeyValidation = (raw) => {
-  const keyValue = raw.trim().replace(/-/g, "");
+  const keyValue = raw ? raw.trim().replace(/-/g, "") : "";
 
   if (keyValue.length === 32) {
     const pattern = /^[a-zA-Z0-9]*$/;

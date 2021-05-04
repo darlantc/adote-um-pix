@@ -14,10 +14,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
   },
   textField: {
-    id: "outlined-basic",
-    variant: "outlined",
-    fullWidth: true,
-    required: true,
+    backgroundColor: "#FFFFFF",
   },
 }));
 

@@ -4,13 +4,14 @@ import {
   Toolbar,
   Box,
   ButtonBase,
-  TextField,
   Modal,
+  Grid,
 } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
 
 import Logo from "./Logo";
+import LoginForm from "./forms/LoginForm";
 
 const PixAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #FFF 30%, #000000 90%)",
@@ -71,36 +72,13 @@ const StyledAppBar = () => {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <Box
-          borderRadius={7}
-          bgcolor="background.paper"
-          position="absolute"
-          top={120}
-          left="50vw"
-          marginLeft="-165px"
-        >
-          <form
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box width={300} m={2}>
-              <Typography variant="h6">Email</Typography>
-              <TextField fullWidth required />
-              <Typography variant="h6">Password</Typography>
-              <TextField fullWidth required />
+        <Grid container direction="column" justify="center" alignItems="center">
+          <Grid item>
+            <Box borderRadius={7} bgcolor="background.paper">
+              <LoginForm />
             </Box>
-
-            <Typography> ou </Typography>
-
-            <Box width={300} m={2}>
-              <Typography variant="h6">Telefone</Typography>
-              <TextField fullWidth required />
-            </Box>
-          </form>
-        </Box>
+          </Grid>
+        </Grid>
       </Modal>
     </>
   );

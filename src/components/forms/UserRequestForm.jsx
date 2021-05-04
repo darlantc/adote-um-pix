@@ -59,6 +59,7 @@ const UserRequestForm = () => {
         Descreva sua necessidade
       </Typography>
       <TextField
+        className={classes.textField}
         onChange={(event) => setDescription(event.target.value)}
         value={description}
         variant="outlined"
@@ -75,6 +76,7 @@ const UserRequestForm = () => {
         Digite sua chave PIX
       </Typography>
       <TextField
+        className={classes.textField}
         onChange={fourWayValidation}
         value={pixKey}
         id="outlined-basic"
