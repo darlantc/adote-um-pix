@@ -1,6 +1,6 @@
 import { withStyles } from "@material-ui/core/styles";
 
-import LogoImage from "../assets/utility/adote-um-pix-logo.svg";
+import LogoImage from "../assets/images/adote-um-pix-logo.svg";
 
 const styles = {
   logo: {
