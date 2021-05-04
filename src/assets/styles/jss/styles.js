@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     backgroundColor: "#FFFFFF",
+    borderRadius: "5px",
   },
 }));
 

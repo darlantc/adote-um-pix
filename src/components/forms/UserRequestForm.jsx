@@ -42,12 +42,18 @@ const UserRequestForm = () => {
         6,
         9
       )}-${cpf.slice(9)}`;
+
       setPixKey(formattedCpf);
+      setValidationError("");
     } else if (contact && !cpf) {
       const formattedContact = `(${contact.slice(0, 2)}) ${
         contact[2]
       } ${contact.slice(3, 7)}-${contact.slice(7)}`;
+
       setPixKey(formattedContact);
+      setValidationError("");
+    } else if (email || key) {
+      setValidationError("");
     } else if (!cpf && !contact && !email && !key && !firstTry) {
       setValidationError("Aparentemente a chave digitada não é válida.");
     }
@@ -79,7 +85,6 @@ const UserRequestForm = () => {
         className={classes.textField}
         onChange={fourWayValidation}
         value={pixKey}
-        id="outlined-basic"
         label="CPF, Celular, e-mail ou chave aleatória"
         variant="outlined"
         fullWidth

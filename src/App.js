@@ -1,9 +1,10 @@
+import { BrowserRouter } from "react-router-dom";
 import { Container } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import useStyles from "./assets/styles/jss/styles";
 import StyledAppBar from "./components/StyledAppBar";
-import UserRequestForm from "./components/forms/UserRequestForm";
+import Routes from "./routes/Routes";
 
 const theme = createMuiTheme({
   typography: {
@@ -15,12 +16,14 @@ const App = () => {
   const classes = useStyles();
 
   return (
-    <ThemeProvider theme={theme}>
-      <StyledAppBar />
-      <Container className={classes.container}>
-        <UserRequestForm />
-      </Container>
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <StyledAppBar />
+        <Container className={classes.container}>
+          <Routes />
+        </Container>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 };
 
