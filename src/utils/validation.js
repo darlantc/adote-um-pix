@@ -36,7 +36,7 @@ export const cpfValidation = (raw) => {
   return false;
 };
 
-export const contactValidation = (raw) => {
+export const phoneValidation = (raw) => {
   const num = String(raw).replace(/\D/g, "");
 
   const numDDD = Number(`${num[0]}${num[1]}`);
@@ -123,7 +123,7 @@ export const emailValidation = (raw) => {
   return pattern.test(raw);
 };
 
-export const randomKeyValidation = (raw) => {
+export const pixRandomKeyValidation = (raw) => {
   const keyValue = raw ? raw.trim().replace(/-/g, "") : "";
 
   if (keyValue.length === 32) {
@@ -135,4 +135,15 @@ export const randomKeyValidation = (raw) => {
   }
 
   return false;
+};
+
+export const formatCpf = (raw) => {
+  const cpf = raw ? String(raw) : "";
+  if (cpf.length === 11) {
+    return `${cpf.slice(0, 3)}.${cpf.slice(3, 6)}.${cpf.slice(
+      6,
+      9
+    )}-${cpf.slice(9)}`;
+  }
+  return null;
 };

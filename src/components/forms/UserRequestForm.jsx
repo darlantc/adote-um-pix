@@ -10,9 +10,10 @@ import { useState } from "react";
 import useStyles from "../../assets/styles/jss/styles";
 import {
   cpfValidation,
-  contactValidation,
-  randomKeyValidation,
+  phoneValidation,
+  pixRandomKeyValidation,
   emailValidation,
+  formatCpf,
 } from "../../utils/validation";
 
 const UserRequestForm = () => {
@@ -33,15 +34,12 @@ const UserRequestForm = () => {
     setPixKey(event.target.value);
 
     const cpf = cpfValidation(event.target.value);
-    const contact = contactValidation(event.target.value);
+    const contact = phoneValidation(event.target.value);
     const email = emailValidation(event.target.value);
-    const key = randomKeyValidation(event.target.value);
+    const key = pixRandomKeyValidation(event.target.value);
 
     if (cpf && !contact) {
-      const formattedCpf = `${cpf.slice(0, 3)}.${cpf.slice(3, 6)}.${cpf.slice(
-        6,
-        9
-      )}-${cpf.slice(9)}`;
+      const formattedCpf = formatCpf(cpf);
 
       setPixKey(formattedCpf);
       setValidationError("");

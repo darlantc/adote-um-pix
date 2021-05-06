@@ -3,9 +3,9 @@ import {
   AppBar,
   Toolbar,
   Box,
+  Button,
   ButtonBase,
   Modal,
-  Grid,
 } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
@@ -67,25 +67,30 @@ const StyledAppBar = () => {
               </Box>
             </ButtonBase>
 
-            <RegistrationButton variant="outlined" onClick={openModal}>
+            <Button
+              style={{ textDecoration: "none" }}
+              component={Link}
+              to="/perfil"
+            >
+              <RegistrationButton>Perfil</RegistrationButton>
+            </Button>
+            <RegistrationButton onClick={openModal}>
               Registre-se
             </RegistrationButton>
           </Box>
         </Toolbar>
       </PixAppBar>
-      <Modal
-        open={displayModal}
-        onClose={closeModal}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        <Grid container direction="column" justify="center" alignItems="center">
-          <Grid item>
-            <Box borderRadius={7} bgcolor="background.paper">
-              <LoginForm />
-            </Box>
-          </Grid>
-        </Grid>
+      <Modal open={displayModal} onClose={closeModal}>
+        <Box display="flex" justifyContent="center">
+          <Box
+            borderRadius={7}
+            position="absolute"
+            top="15vh"
+            bgcolor="background.paper"
+          >
+            <LoginForm />
+          </Box>
+        </Box>
       </Modal>
     </>
   );
