@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { Container } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
-function App() {
+import useStyles from "./assets/styles/jss/styles";
+import StyledAppBar from "./components/StyledAppBar";
+import UserRequestForm from "./components/forms/UserRequestForm";
+
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: "Original Surfer",
+  },
+});
+
+const App = () => {
+  const classes = useStyles();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <StyledAppBar />
+      <Container className={classes.container}>
+        <UserRequestForm />
+      </Container>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
