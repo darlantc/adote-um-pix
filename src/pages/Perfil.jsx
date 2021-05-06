@@ -11,17 +11,9 @@ const Perfil = () => {
         variant="outlined"
         style={{ textDecoration: "none" }}
         component={Link}
-        to="/"
+        to="/minhassolicitacoes"
       >
-        Home
-      </Button>
-      <Button
-        variant="outlined"
-        style={{ textDecoration: "none" }}
-        component={Link}
-        to="/solicite"
-      >
-        Solicite
+        Minhas Solicitações
       </Button>
       <Button
         variant="outlined"

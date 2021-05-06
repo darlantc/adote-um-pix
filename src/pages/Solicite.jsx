@@ -13,14 +13,6 @@ const Solicite = () => {
         variant="outlined"
         style={{ textDecoration: "none" }}
         component={Link}
-        to="/"
-      >
-        Home
-      </Button>
-      <Button
-        variant="outlined"
-        style={{ textDecoration: "none" }}
-        component={Link}
         to="/perfil"
       >
         Perfil

@@ -90,11 +90,14 @@ const UserRequestForm = () => {
         fullWidth
         required
       />
-      <FormHelperText error gutterBottom>
-        {validationError}
-      </FormHelperText>
-      <Box m={2} display="flex" justifyContent="center" fullWidth>
-        <Button onClick={handleSave} variant="outlined" size="medium">
+      <FormHelperText error>{validationError}</FormHelperText>
+      <Box display="flex" justifyContent="center" fullWidth>
+        <Button
+          className={classes.soliciteButton}
+          onClick={handleSave}
+          variant="outlined"
+          size="medium"
+        >
           Salvar
         </Button>
       </Box>

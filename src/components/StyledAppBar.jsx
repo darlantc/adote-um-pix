@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import Logo from "./Logo";
 import LoginForm from "./forms/LoginForm";
@@ -55,10 +56,16 @@ const StyledAppBar = () => {
             justifyContent="space-between"
             width="100%"
           >
-            <Box display="flex" alignItems="center">
-              <Logo />
-              <Typography variant="h4">Adote um PIX</Typography>
-            </Box>
+            <ButtonBase
+              style={{ textDecoration: "none" }}
+              component={Link}
+              to="/"
+            >
+              <Box display="flex" alignItems="center">
+                <Logo />
+                <Typography variant="h4">Adote um PIX</Typography>
+              </Box>
+            </ButtonBase>
 
             <RegistrationButton variant="outlined" onClick={openModal}>
               Registre-se
