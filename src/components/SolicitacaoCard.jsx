@@ -1,44 +1,11 @@
-import { Typography, Button, Box, Paper, CardContent } from "@material-ui/core";
+import { Typography, Button, Box, Paper } from "@material-ui/core";
+import fromUnixTime from "date-fns/fromUnixTime";
 
-const SolicitacaoCard = ({ item, edit }) => {
+const SolicitacaoCard = ({ item }) => {
   const { descricao, chavePix, timestamp, status } = item;
 
-  function timeConverter(stamp) {
-    var a = new Date(stamp);
-    var months = [
-      "Jan",
-      "Fev",
-      "Mar",
-      "Abr",
-      "Mai",
-      "Jun",
-      "Jul",
-      "Ago",
-      "Set",
-      "Out",
-      "Nov",
-      "Dez",
-    ];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds();
-    var time =
-      hour +
-      ":" +
-      min +
-      ":" +
-      sec +
-      " - " +
-      date +
-      " / " +
-      month +
-      " / " +
-      year;
-    return time;
-  }
+  const rawDate = String(fromUnixTime(timestamp));
+  const requestDate = rawDate.slice(0, 25);
 
   return (
     <Paper variant="outlined" elevation={3}>
@@ -47,7 +14,7 @@ const SolicitacaoCard = ({ item, edit }) => {
           <Typography variant="h5" gutterBottom>
             Solicitação
           </Typography>
-          <Typography variant="h6">{timeConverter(timestamp)}</Typography>
+          <Typography variant="h6">{requestDate}</Typography>
         </Box>
         <Typography variant="h6" gutterBottom>{`- ${status} -`}</Typography>
         <Typography variant="p" gutterBottom>
@@ -58,7 +25,7 @@ const SolicitacaoCard = ({ item, edit }) => {
         </Typography>
 
         <Box display="flex" justifyContent="center" fullWidth>
-          <Button variant="outlined" onClick={edit}>
+          <Button variant="outlined" onClick={""}>
             Editar Solicitação
           </Button>
         </Box>

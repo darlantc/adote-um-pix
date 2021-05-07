@@ -6,8 +6,8 @@ import {
   Box,
 } from "@material-ui/core";
 import { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 
-import useStyles from "../../assets/styles/jss/styles";
 import {
   cpfValidation,
   phoneValidation,
@@ -15,6 +15,18 @@ import {
   emailValidation,
   formatCpf,
 } from "../../utils/validation";
+
+const useStyles = makeStyles((theme) => ({
+  soliciteButton: {
+    backgroundColor: "#2CA089",
+    color: "#FFFFFF",
+    marginTop: "10px",
+  },
+  textField: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: "5px",
+  },
+}));
 
 const UserRequestForm = () => {
   const classes = useStyles();

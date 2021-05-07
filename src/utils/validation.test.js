@@ -22,32 +22,32 @@ describe("emailValidation test", () => {
 });
 
 describe("cpfValidation test", () => {
-  it("should return true if cpf is valid", () => {
+  it("should return raw cpf number if cpf is valid", () => {
     expect(cpfValidation("944.200.880-36")).toBe("94420088036");
     expect(cpfValidation(27782199000)).toBe("27782199000");
     expect(cpfValidation("474505780/69")).toBe("47450578069");
   });
-  it("should return false if cpf is invalid", () => {
-    expect(cpfValidation(52554522322)).toBe(false);
-    expect(cpfValidation("34233232323232")).toBe(false);
-    expect(cpfValidation("5255452")).toBe(false);
-    expect(cpfValidation("")).toBe(false);
-    expect(cpfValidation(null)).toBe(false);
+  it("should return null if cpf is invalid", () => {
+    expect(cpfValidation(52554522322)).toBe(null);
+    expect(cpfValidation("34233232323232")).toBe(null);
+    expect(cpfValidation("5255452")).toBe(null);
+    expect(cpfValidation("")).toBe(null);
+    expect(cpfValidation(null)).toBe(null);
   });
 });
 
 describe("phoneValidation test", () => {
-  it("should return true if phone is valid", () => {
+  it("should return raw phone number if phone is valid", () => {
     expect(phoneValidation(71982154575)).toBe("71982154575");
     expect(phoneValidation("(11) 9 8852-4565")).toBe("11988524565");
     expect(phoneValidation("21978796032")).toBe("21978796032");
   });
-  it("should return false if phone is invalid", () => {
-    expect(phoneValidation(71982154575554515)).toBe(false);
-    expect(phoneValidation("(01) 9 7752-4565")).toBe(false);
-    expect(phoneValidation("21 3879-6032")).toBe(false);
-    expect(phoneValidation("")).toBe(false);
-    expect(phoneValidation(null)).toBe(false);
+  it("should return null if phone is invalid", () => {
+    expect(phoneValidation(71982154575554515)).toBe(null);
+    expect(phoneValidation("(01) 9 7752-4565")).toBe(null);
+    expect(phoneValidation("21 3879-6032")).toBe(null);
+    expect(phoneValidation("")).toBe(null);
+    expect(phoneValidation(null)).toBe(null);
   });
 });
 

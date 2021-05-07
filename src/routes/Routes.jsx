@@ -1,5 +1,5 @@
 import { Switch } from "react-router-dom";
-import Route from "./RouterWraper";
+import Route from "./RouterWrapper";
 import Homepage from "../pages/Homepage";
 import Adote from "../pages/Adote";
 import Perfil from "../pages/Perfil";

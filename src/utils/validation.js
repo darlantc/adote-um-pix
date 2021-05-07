@@ -33,7 +33,7 @@ export const cpfValidation = (raw) => {
     }
   }
 
-  return false;
+  return null;
 };
 
 export const phoneValidation = (raw) => {
@@ -114,7 +114,7 @@ export const phoneValidation = (raw) => {
   if (num.length === 11 && ddds.includes(numDDD)) {
     return num;
   }
-  return false;
+  return null;
 };
 
 export const emailValidation = (raw) => {
@@ -134,7 +134,7 @@ export const pixRandomKeyValidation = (raw) => {
     }
   }
 
-  return false;
+  return null;
 };
 
 export const formatCpf = (raw) => {

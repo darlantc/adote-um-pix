@@ -3,8 +3,60 @@ import { Link } from "react-router-dom";
 import SubjectIcon from "@material-ui/icons/Subject";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
+import { makeStyles } from "@material-ui/core/styles";
 
-import useStyles from "../assets/styles/jss/styles";
+const useStyles = makeStyles((theme) => ({
+  adoteButton: {
+    backgroundColor: "#0088AA",
+    color: "#FFFFFF",
+    marginTop: "10px",
+  },
+  adoteBox: {
+    backgroundColor: "#00CCFF",
+    color: "#FFFFFF",
+    borderRadius: "7px",
+    border: "2px",
+    borderColor: "#0088AA",
+    padding: "10px",
+  },
+  soliciteButton: {
+    backgroundColor: "#2CA089",
+    color: "#FFFFFF",
+    marginTop: "10px",
+  },
+  soliciteBox: {
+    backgroundColor: "#00D4AA",
+    color: "#FFFFFF",
+    borderRadius: "7px",
+    borderColor: "#2CA089",
+    borderRadius: "7px",
+    padding: "10px",
+  },
+  infoDisplay: {
+    margin: "10px",
+    backgroundColor: "#FFFFFF",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  infoItem: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gridContainer: {
+    marginTop: "10px",
+    display: "flex",
+    justifyContent: "center",
+  },
+  gridItem: {
+    width: "50%",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+  },
+}));
 
 const Homepage = () => {
   const classes = useStyles();
