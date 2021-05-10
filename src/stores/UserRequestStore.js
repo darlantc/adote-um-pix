@@ -1,32 +1,47 @@
 class UserRequestStore {
-    get;
-    add;
-    userRequests = [];
+  get;
+  add;
+  update;
+  remove;
+  filter;
+  userRequests = [];
 
-    constructor(get, add) {
-        this.get = get;
-        this.add = add;
-    }
+  constructor(get, add, update, remove, filter) {
+    this.get = get;
+    this.add = add;
+    this.update = update;
+    this.remove = remove;
+    this.filter = filter;
+  }
 
-    getUserRequests = async () => {
-        const result = await this.get();
-        this.userRequests = result;
-    };
+  getUserRequests = async () => {
+    const result = await this.get();
+    this.userRequests = result;
+  };
 
-    addUserRequest = async (item) => {
-        await this.add(item);
-        await this.getUserRequests();
-    };
+  addUserRequest = async (item) => {
+    await this.add(item);
+    await this.getUserRequests();
+  };
 
-    // TODO: adicionar método de update
+  updateUserRequest = async (item, key) => {
+    await this.update(item, key);
+    await this.getUserRequests();
+  };
 
-    // TODO: adicionar método de delete
+  removeUserRequest = async (key) => {
+    await this.remove(key);
+    await this.getUserRequests();
+  };
 
-    // TODO: adicionar método de filtro textual
+  filterUserRequest = async (string) => {
+    await this.filter(string);
+    await this.getUserRequests();
+  };
 
-    clearStore = () => {
-        this.userRequests = [];
-    };
+  clearStore = () => {
+    this.userRequests = [];
+  };
 }
 
 export default UserRequestStore;
