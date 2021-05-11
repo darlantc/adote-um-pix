@@ -1,5 +1,4 @@
 import {
-  formatCpf,
   cpfValidation,
   emailValidation,
   phoneValidation,
@@ -62,23 +61,10 @@ describe("pixKeyValidation", () => {
   });
   it("should return false if random key is invalid", () => {
     expect(
-      pixRandomKeyValidation("f9e50d7e-342e-4a16-898c-81cf2dfsdsd5ds275c047")
-    ).toBe(false);
-    expect(pixRandomKeyValidation("z9e42d7e452e4a16898c81cr057")).toBe(false);
-    expect(pixRandomKeyValidation("")).toBe(false);
-    expect(pixRandomKeyValidation(null)).toBe(false);
-  });
-});
-
-describe("formatCpf", () => {
-  it("should return formatted CPF if cpf is valid", () => {
-    expect(formatCpf(16021334433)).toBe("160.213.344-33");
-    expect(formatCpf("85214856225")).toBe("852.148.562-25");
-  });
-  it("should return null if cpf is invalid", () => {
-    expect(formatCpf("f90!d7e-342e-4a16-898c-81cf/75c047")).toBe(null);
-    expect(formatCpf("z9e42d7e452e4a16898c81cr057")).toBe(null);
-    expect(formatCpf("")).toBe(null);
-    expect(formatCpf(null)).toBe(null);
+      pixRandomKeyValidation("f9e50d7e-342e-4a16-898c-81cf2df5ds275c047")
+    ).toBe(null);
+    expect(pixRandomKeyValidation("z9e42d7e452e4a16898c81cr057")).toBe(null);
+    expect(pixRandomKeyValidation("")).toBe(null);
+    expect(pixRandomKeyValidation(null)).toBe(null);
   });
 });

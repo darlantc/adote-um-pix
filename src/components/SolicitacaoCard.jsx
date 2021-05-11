@@ -1,11 +1,9 @@
 import { Typography, Button, Box, Paper } from "@material-ui/core";
-import fromUnixTime from "date-fns/fromUnixTime";
+
+import { formatDate } from "../utils/formatting";
 
 const SolicitacaoCard = ({ item }) => {
   const { descricao, chavePix, timestamp, status } = item;
-
-  const rawDate = String(fromUnixTime(timestamp));
-  const requestDate = rawDate.slice(0, 25);
 
   return (
     <Paper variant="outlined" elevation={3}>
@@ -14,7 +12,7 @@ const SolicitacaoCard = ({ item }) => {
           <Typography variant="h5" gutterBottom>
             Solicitação
           </Typography>
-          <Typography variant="h6">{requestDate}</Typography>
+          <Typography variant="h6">{formatDate(timestamp)}</Typography>
         </Box>
         <Typography variant="h6" gutterBottom>{`- ${status} -`}</Typography>
         <Typography variant="p" gutterBottom>
