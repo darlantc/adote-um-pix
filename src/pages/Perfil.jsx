@@ -68,7 +68,7 @@ const Perfil = () => {
         </FormHelperText>
       </Box>
 
-      <Box maxWidth="65%">
+      <Box width="65%">
         <PerfilInfo />
       </Box>
     </Box>
