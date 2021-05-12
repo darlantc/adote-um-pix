@@ -117,7 +117,7 @@ const Homepage = () => {
             </Typography>
 
             <Typography variant="p" gutterBottom>
-              Está com disponibilida finaceira e o coração aberto para
+              Está com disponibilidade finaceira e o coração aberto para
               contribuir com aquele salve que pode mudar a trajetória de alguém?
               Faça parte do nosso time de padrinhos PIX. Com certeza tem alguém
               aqui acreditando em você.

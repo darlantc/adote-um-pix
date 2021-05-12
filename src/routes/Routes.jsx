@@ -13,7 +13,7 @@ export default function Routes() {
       <Route exact path="/solicite" component={Solicite} />
       <Route
         exact
-        path="/minhassolicitacoes"
+        path="/minhas-solicitacoes"
         component={MinhasSolicitacoes}
         isPrivate
       />
