@@ -3,15 +3,13 @@ class UserRequestStore {
   add;
   update;
   remove;
-  filter;
   userRequests = [];
 
-  constructor(get, add, update, remove, filter) {
+  constructor(get, add, update, remove) {
     this.get = get;
     this.add = add;
     this.update = update;
     this.remove = remove;
-    this.filter = filter;
   }
 
   getUserRequests = async () => {
@@ -34,9 +32,14 @@ class UserRequestStore {
     await this.getUserRequests();
   };
 
-  filterUserRequest = async (string) => {
-    await this.filter(string);
-    await this.getUserRequests();
+  filterUserRequest = (string) => {
+    const filteredValues = this.userRequests.filter((request) => {
+      const lowerRequest = request.toLowerCase();
+      const lowerString = string.toLowerCase();
+      return lowerRequest.indexOf(lowerString) >= 0;
+    });
+
+    return filteredValues;
   };
 
   clearStore = () => {

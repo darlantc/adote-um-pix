@@ -81,39 +81,33 @@ describe("UserRequestStore", () => {
         removeCallback
       );
 
-      await sut.removeUserRequest(0);
+      await sut.removeUserRequest(1);
       expect(sut.userRequests.length).toBe(2);
+
+      await sut.removeUserRequest(0);
+      expect(sut.userRequests.length).toBe(1);
     });
   });
 
-  describe("findUserRequest", () => {
-    it("should return the key of a specific value in user requests", async () => {
+  describe("filterUserRequest", () => {
+    it("should return the values that match string in user requests", async () => {
       let sampleList = ["Beatitudinem", "Amare", "Magna", "Cognitio"];
 
       const getCallback = async () => sampleList;
-      const addCallback = async () => {};
-      const updateCallback = async () => {};
-      const removeCallback = async () => {};
-      const filterCallback = async (string) => {
-        const searchedValues = sampleList.filter((request) => {
-          const lowerRequest = request.toLowerCase();
-          const lowerString = string.toLowerCase();
-          return lowerRequest.indexOf(lowerString) >= 0;
-        });
 
-        sampleList = [...searchedValues];
-      };
+      const sut = makeSUT(getCallback);
 
-      const sut = makeSUT(
-        getCallback,
-        addCallback,
-        updateCallback,
-        removeCallback,
-        filterCallback
-      );
+      await sut.getUserRequests();
 
-      await sut.filterUserRequest("a");
-      expect(sut.userRequests.length).toBe(3);
+      expect(sut.userRequests.length).toBe(4);
+      const filter1 = sut.filterUserRequest("MA");
+      expect(filter1.length).toBe(2);
+
+      const filter2 = sut.filterUserRequest("a");
+      expect(filter2.length).toBe(3);
+
+      const filter3 = sut.filterUserRequest("Cog");
+      expect(filter3.length).toBe(1);
     });
   });
 
@@ -133,8 +127,7 @@ const makeSUT = (
   get = async () => [],
   add = async () => {},
   update = async () => {},
-  remove = async () => {},
-  filter = async () => {}
+  remove = async () => {}
 ) => {
-  return new UserRequestStore(get, add, update, remove, filter);
+  return new UserRequestStore(get, add, update, remove);
 };
