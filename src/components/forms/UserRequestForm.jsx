@@ -6,14 +6,27 @@ import {
   Box,
 } from "@material-ui/core";
 import { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 
-import useStyles from "../../assets/styles/jss/styles";
 import {
   cpfValidation,
-  contactValidation,
-  randomKeyValidation,
+  phoneValidation,
+  pixRandomKeyValidation,
   emailValidation,
+  formatCpf,
 } from "../../utils/validation";
+
+const useStyles = makeStyles((theme) => ({
+  soliciteButton: {
+    backgroundColor: "#2CA089",
+    color: "#FFFFFF",
+    marginTop: "10px",
+  },
+  textField: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: "5px",
+  },
+}));
 
 const UserRequestForm = () => {
   const classes = useStyles();
@@ -33,21 +46,24 @@ const UserRequestForm = () => {
     setPixKey(event.target.value);
 
     const cpf = cpfValidation(event.target.value);
-    const contact = contactValidation(event.target.value);
+    const contact = phoneValidation(event.target.value);
     const email = emailValidation(event.target.value);
-    const key = randomKeyValidation(event.target.value);
+    const key = pixRandomKeyValidation(event.target.value);
 
     if (cpf && !contact) {
-      const formattedCpf = `${cpf.slice(0, 3)}.${cpf.slice(3, 6)}.${cpf.slice(
-        6,
-        9
-      )}-${cpf.slice(9)}`;
+      const formattedCpf = formatCpf(cpf);
+
       setPixKey(formattedCpf);
+      setValidationError("");
     } else if (contact && !cpf) {
       const formattedContact = `(${contact.slice(0, 2)}) ${
         contact[2]
       } ${contact.slice(3, 7)}-${contact.slice(7)}`;
+
       setPixKey(formattedContact);
+      setValidationError("");
+    } else if (email || key) {
+      setValidationError("");
     } else if (!cpf && !contact && !email && !key && !firstTry) {
       setValidationError("Aparentemente a chave digitada não é válida.");
     }
@@ -59,6 +75,7 @@ const UserRequestForm = () => {
         Descreva sua necessidade
       </Typography>
       <TextField
+        className={classes.textField}
         onChange={(event) => setDescription(event.target.value)}
         value={description}
         variant="outlined"
@@ -75,19 +92,22 @@ const UserRequestForm = () => {
         Digite sua chave PIX
       </Typography>
       <TextField
+        className={classes.textField}
         onChange={fourWayValidation}
         value={pixKey}
-        id="outlined-basic"
         label="CPF, Celular, e-mail ou chave aleatória"
         variant="outlined"
         fullWidth
         required
       />
-      <FormHelperText error gutterBottom>
-        {validationError}
-      </FormHelperText>
-      <Box m={2} display="flex" justifyContent="center" fullWidth>
-        <Button onClick={handleSave} variant="outlined" size="medium">
+      <FormHelperText error>{validationError}</FormHelperText>
+      <Box display="flex" justifyContent="center" fullWidth>
+        <Button
+          className={classes.soliciteButton}
+          onClick={handleSave}
+          variant="outlined"
+          size="medium"
+        >
           Salvar
         </Button>
       </Box>

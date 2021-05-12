@@ -3,14 +3,16 @@ import {
   AppBar,
   Toolbar,
   Box,
+  Button,
   ButtonBase,
-  TextField,
   Modal,
 } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import Logo from "./Logo";
+import LoginForm from "./forms/LoginForm";
 
 const PixAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #FFF 30%, #000000 90%)",
@@ -54,52 +56,40 @@ const StyledAppBar = () => {
             justifyContent="space-between"
             width="100%"
           >
-            <Box display="flex" alignItems="center">
-              <Logo />
-              <Typography variant="h4">Adote um PIX</Typography>
-            </Box>
+            <ButtonBase
+              style={{ textDecoration: "none" }}
+              component={Link}
+              to="/"
+            >
+              <Box display="flex" alignItems="center">
+                <Logo />
+                <Typography variant="h4">Adote um PIX</Typography>
+              </Box>
+            </ButtonBase>
 
-            <RegistrationButton variant="outlined" onClick={openModal}>
+            <Button
+              style={{ textDecoration: "none" }}
+              component={Link}
+              to="/perfil"
+            >
+              <RegistrationButton>Perfil</RegistrationButton>
+            </Button>
+            <RegistrationButton onClick={openModal}>
               Registre-se
             </RegistrationButton>
           </Box>
         </Toolbar>
       </PixAppBar>
-      <Modal
-        open={displayModal}
-        onClose={closeModal}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        <Box
-          borderRadius={7}
-          bgcolor="background.paper"
-          position="absolute"
-          top={120}
-          left="50vw"
-          marginLeft="-165px"
-        >
-          <form
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
+      <Modal open={displayModal} onClose={closeModal}>
+        <Box display="flex" justifyContent="center">
+          <Box
+            borderRadius={7}
+            position="absolute"
+            top="15vh"
+            bgcolor="background.paper"
           >
-            <Box width={300} m={2}>
-              <Typography variant="h6">Email</Typography>
-              <TextField fullWidth required />
-              <Typography variant="h6">Password</Typography>
-              <TextField fullWidth required />
-            </Box>
-
-            <Typography> ou </Typography>
-
-            <Box width={300} m={2}>
-              <Typography variant="h6">Telefone</Typography>
-              <TextField fullWidth required />
-            </Box>
-          </form>
+            <LoginForm />
+          </Box>
         </Box>
       </Modal>
     </>
