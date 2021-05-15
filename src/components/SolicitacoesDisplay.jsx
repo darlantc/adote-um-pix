@@ -1,4 +1,4 @@
-import { Typography, Button, Box } from "@material-ui/core";
+import { Typography, Button, Box, GridListTile } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { formatDate } from "../utils/formatting";
@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme) => ({
     border: "2px",
     borderColor: "#0088AA",
     padding: "10px",
+    maxWidth: "655px",
+    margin: "5px",
   },
 }));
 
@@ -25,23 +27,21 @@ const SolicitacoesDisplay = ({ item }) => {
   const { nome, timestamp, descricao } = item;
 
   return (
-    <div>
-      <Box className={classes.adoteBox}>
-        <Typography variant="h4">{nome}</Typography>
-        <Typography variant="h5">{formatDate(timestamp)}</Typography>
-        <Typography variant="p">{descricao}</Typography>
+    <Box className={classes.adoteBox}>
+      <Typography variant="h4">{nome}</Typography>
+      <Typography variant="h5">{formatDate(timestamp)}</Typography>
+      <Typography variant="p">{descricao}</Typography>
 
-        <Box display="flex" justifyContent="center" fullWidth>
-          <Button
-            className={classes.adoteButton}
-            variant="outlined"
-            size="medium"
-          >
-            Salvar
-          </Button>
-        </Box>
+      <Box display="flex" justifyContent="center" fullWidth>
+        <Button
+          className={classes.adoteButton}
+          variant="outlined"
+          size="medium"
+        >
+          Salvar
+        </Button>
       </Box>
-    </div>
+    </Box>
   );
 };
 

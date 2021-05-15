@@ -1,5 +1,4 @@
-import { Typography, Button, Grid } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Typography, GridList, GridListTile, Box } from "@material-ui/core";
 import SolicitacoesDisplay from "../components/SolicitacoesDisplay";
 
 const Adote = () => {
@@ -38,15 +37,11 @@ const Adote = () => {
       <Typography variant="h3" gutterBottom>
         Adote
       </Typography>
-      <Grid container spacing={1}>
+      <Box margin="5px" maxWidth="700px" border="2px solid" borderRadius="7px">
         {solicitacoes.map((solicitacao) => {
-          return (
-            <Grid item>
-              <SolicitacoesDisplay item={solicitacao} />
-            </Grid>
-          );
+          return <SolicitacoesDisplay item={solicitacao} />;
         })}
-      </Grid>
+      </Box>
     </div>
   );
 };
