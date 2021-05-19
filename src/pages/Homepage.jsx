@@ -4,6 +4,7 @@ import SubjectIcon from "@material-ui/icons/Subject";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import { makeStyles } from "@material-ui/core/styles";
+import { APP_ROUTES } from "../routes/Routes";
 
 const useStyles = makeStyles((theme) => ({
   adoteButton: {
@@ -102,7 +103,7 @@ const Homepage = () => {
                 className={classes.soliciteButton}
                 variant="outlined"
                 component={Link}
-                to="/solicite"
+                to={APP_ROUTES.request}
               >
                 Solicite
               </Button>
@@ -117,7 +118,7 @@ const Homepage = () => {
             </Typography>
 
             <Typography variant="p" gutterBottom>
-              Está com disponibilida finaceira e o coração aberto para
+              Está com disponibilidade financeira e o coração aberto para
               contribuir com aquele salve que pode mudar a trajetória de alguém?
               Faça parte do nosso time de padrinhos PIX. Com certeza tem alguém
               aqui acreditando em você.
@@ -128,7 +129,7 @@ const Homepage = () => {
                 className={classes.adoteButton}
                 variant="outlined"
                 component={Link}
-                to="/adote"
+                to={APP_ROUTES.adopt}
               >
                 Adote
               </Button>

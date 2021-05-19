@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 import { useEffect, useState } from "react";
 
+import { APP_ROUTES } from "../routes/Routes";
 import PerfilInfo from "../components/PerfilInfo";
 
 const useStyles = makeStyles(() => ({
@@ -41,7 +42,7 @@ const Perfil = () => {
           className={classes.button}
           variant="outlined"
           component={Link}
-          to="/minhassolicitacoes"
+          to={APP_ROUTES.myRequests}
         >
           Solicitações
         </Button>
@@ -49,7 +50,7 @@ const Perfil = () => {
           className={classes.button}
           variant="outlined"
           component={Link}
-          to="/minhascontribuicoes"
+          to={APP_ROUTES.myContributions}
         >
           Contribuições
         </Button>
