@@ -2,6 +2,7 @@ import { Typography, Button, Box } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 import DefaultUserPhoto from "../assets/images/defaultUserPhoto.png";
+import { APP_ROUTES } from "../routes/Routes";
 
 const Perfil = () => {
   return (
@@ -14,7 +15,7 @@ const Perfil = () => {
           variant="outlined"
           style={{ textDecoration: "none" }}
           component={Link}
-          to="/minhassolicitacoes"
+          to={APP_ROUTES.myRequests}
         >
           Minhas Solicitações
         </Button>

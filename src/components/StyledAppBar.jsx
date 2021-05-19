@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 
 import Logo from "./Logo";
 import LoginForm from "./forms/LoginForm";
+import { APP_ROUTES } from "../routes/Routes";
 
 const PixAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #FFF 30%, #000000 90%)",
@@ -59,7 +60,7 @@ const StyledAppBar = () => {
             <ButtonBase
               style={{ textDecoration: "none" }}
               component={Link}
-              to="/"
+              to={APP_ROUTES.home}
             >
               <Box display="flex" alignItems="center">
                 <Logo />
@@ -70,7 +71,7 @@ const StyledAppBar = () => {
             <Button
               style={{ textDecoration: "none" }}
               component={Link}
-              to="/perfil"
+              to={APP_ROUTES.profile}
             >
               <RegistrationButton>Perfil</RegistrationButton>
             </Button>
