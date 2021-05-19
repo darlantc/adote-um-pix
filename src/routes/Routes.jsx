@@ -12,6 +12,7 @@ export const APP_ROUTES = Object.freeze({
   request: "/solicite",
   adopt: "/adote",
   profile: "/perfil",
+  myContributions: "/minhas-contribuicoes",
 });
 
 export default function Routes() {
