@@ -13,8 +13,8 @@ import {
   phoneValidation,
   pixRandomKeyValidation,
   emailValidation,
-  formatCpf,
 } from "../../utils/validation";
+import { formatCpf } from "../../utils/formatting";
 
 const useStyles = makeStyles((theme) => ({
   soliciteButton: {
