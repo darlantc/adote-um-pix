@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 import { useEffect, useState } from "react";
+import { observer } from "mobx-react";
 
 import PerfilInfo from "../components/PerfilInfo";
+import { useMainStoreContext } from "../contexts/mainStoreContext";
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -13,11 +15,23 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Perfil = () => {
+const Perfil = observer(() => {
+  const { authStore } = useMainStoreContext();
+  const { loggedUser } = authStore;
   const classes = useStyles();
 
-  const [engajamento, setEngajamento] = useState(50);
+  const [engajamento, setEngajamento] = useState(0);
   const [nivel, setNivel] = useState("");
+
+  if (loggedUser.photoUrl) {
+    setEngajamento(engajamento + 25);
+  } else if (loggedUser.name) {
+    setEngajamento(engajamento + 25);
+  } else if (loggedUser.bio) {
+    setEngajamento(engajamento + 25);
+  } else if (loggedUser.linkedIn) {
+    setEngajamento(engajamento + 25);
+  }
 
   useEffect(() => {
     if (engajamento <= 24) {
@@ -73,6 +87,6 @@ const Perfil = () => {
       </Box>
     </Box>
   );
-};
+});
 
 export default Perfil;

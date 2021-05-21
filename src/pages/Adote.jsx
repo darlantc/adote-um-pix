@@ -1,4 +1,4 @@
-import { Typography, GridList, GridListTile, Box } from "@material-ui/core";
+import { Typography, Box } from "@material-ui/core";
 import SolicitacoesDisplay from "../components/SolicitacoesDisplay";
 
 const Adote = () => {

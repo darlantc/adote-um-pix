@@ -10,9 +10,11 @@ import {
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { observer } from "mobx-react";
 
 import Logo from "./Logo";
 import LoginForm from "./forms/LoginForm";
+import { useMainStoreContext } from "../contexts/mainStoreContext";
 
 const PixAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #FFF 30%, #000000 90%)",
@@ -34,7 +36,10 @@ const RegistrationButton = styled(ButtonBase)({
   },
 });
 
-const StyledAppBar = () => {
+const StyledAppBar = observer(() => {
+  const { authStore } = useMainStoreContext();
+  const { loggedUser } = authStore;
+
   const [displayModal, setDisplayModal] = useState(false);
 
   const openModal = (event) => {
@@ -67,16 +72,17 @@ const StyledAppBar = () => {
               </Box>
             </ButtonBase>
 
-            <Button
-              style={{ textDecoration: "none" }}
-              component={Link}
-              to="/perfil"
-            >
-              <RegistrationButton>Perfil</RegistrationButton>
-            </Button>
-            <RegistrationButton onClick={openModal}>
-              Registre-se
-            </RegistrationButton>
+            {loggedUser ? (
+              <Button
+                style={{ textDecoration: "none" }}
+                component={Link}
+                to="/perfil"
+              >
+                <RegistrationButton>Perfil</RegistrationButton>
+              </Button>
+            ) : (
+              <RegistrationButton onClick={openModal}>Entre</RegistrationButton>
+            )}
           </Box>
         </Toolbar>
       </PixAppBar>
@@ -94,5 +100,5 @@ const StyledAppBar = () => {
       </Modal>
     </>
   );
-};
+});
 export default StyledAppBar;

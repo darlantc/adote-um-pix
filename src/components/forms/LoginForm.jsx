@@ -1,11 +1,38 @@
 import { Typography, Box, Button, TextField } from "@material-ui/core";
 import { useState } from "react";
 
-const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+import { useMainStoreContext } from "../../contexts/mainStoreContext";
 
+const LoginForm = () => {
+  const { authStore } = useMainStoreContext();
+  const { sendSignInLinkToEmail } = authStore;
+
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSendLink = async () => {
+    const error = await sendSignInLinkToEmail(email);
+    console.log("2");
+    if (error) {
+      setMessage(error.message);
+    } else {
+      console.log("4");
+      setMessage(
+        "Agora entre no seu email e faça login pelo link que lhe enviamos."
+      );
+    }
+  };
+
+  const didSendLink = (event) => {
+    event.preventDefault();
+    console.log("1");
+
+    setEmail("");
+    setPhone("");
+
+    handleSendLink();
+  };
 
   return (
     <form
@@ -20,13 +47,6 @@ const LoginForm = () => {
         <TextField
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          fullWidth
-          required
-        />
-        <Typography variant="h6">Password</Typography>
-        <TextField
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
           fullWidth
           required
         />
@@ -45,10 +65,12 @@ const LoginForm = () => {
       </Box>
 
       <Box m={2} display="flex" justifyContent="center">
-        <Button variant="outlined" size="medium">
+        <Button variant="outlined" size="medium" onClick={didSendLink}>
           Entrar
         </Button>
       </Box>
+
+      <Typography variant="h6">{message}</Typography>
     </form>
   );
 };

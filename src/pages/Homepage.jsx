@@ -1,4 +1,4 @@
-import { Typography, Button, Grid, Box, Card } from "@material-ui/core";
+import { Typography, Button, Grid, Box } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import SubjectIcon from "@material-ui/icons/Subject";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#FFFFFF",
     borderRadius: "7px",
     borderColor: "#2CA089",
-    borderRadius: "7px",
     padding: "10px",
   },
   infoDisplay: {

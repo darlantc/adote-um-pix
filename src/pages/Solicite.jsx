@@ -1,5 +1,4 @@
-import { Typography, Button } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Typography } from "@material-ui/core";
 
 import UserRequestForm from "../components/forms/UserRequestForm";
 
