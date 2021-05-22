@@ -40,6 +40,8 @@ const StyledAppBar = observer(() => {
   const { authStore } = useMainStoreContext();
   const { loggedUser } = authStore;
 
+  console.log(loggedUser);
+
   const [displayModal, setDisplayModal] = useState(false);
 
   const openModal = (event) => {

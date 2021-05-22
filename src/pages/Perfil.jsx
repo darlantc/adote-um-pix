@@ -23,9 +23,9 @@ const Perfil = observer(() => {
   const [engajamento, setEngajamento] = useState(0);
   const [nivel, setNivel] = useState("");
 
-  if (loggedUser.photoUrl) {
+  if (loggedUser.photoURL) {
     setEngajamento(engajamento + 25);
-  } else if (loggedUser.name) {
+  } else if (loggedUser.displayName) {
     setEngajamento(engajamento + 25);
   } else if (loggedUser.bio) {
     setEngajamento(engajamento + 25);
