@@ -1,4 +1,4 @@
-import { makeObservable, observable } from "mobx";
+import { makeObservable, observable, action } from "mobx";
 
 import LoginStatus from "../models/LoginStatus";
 
@@ -11,9 +11,14 @@ class AuthStore {
     makeObservable(this, {
       loggedUser: observable,
       loginStatus: observable,
+      setLoginStatus: action,
     });
     this.confirmEmailSignIn();
   }
+
+  setLoginStatus = () => {
+    this.loginStatus = LoginStatus.offline;
+  };
 
   configSignInEmail = () => {
     return {
@@ -49,11 +54,12 @@ class AuthStore {
       try {
         const result = await this.firebaseService.auth.signInWithEmailLink(
           email,
-          window.location.href
+          ref
         );
 
         window.localStorage.removeItem("emailForSignIn");
         this.loggedUser = result.user;
+        this.loginStatus = LoginStatus.online;
       } catch (error) {
         return error;
       }

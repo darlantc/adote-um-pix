@@ -1,5 +1,6 @@
 import { Typography, Box, Button, TextField } from "@material-ui/core";
 import { useState } from "react";
+import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import EmailRedirectButton from "../EmailRedirectButton";
@@ -7,9 +8,9 @@ import Google from "../../assets/images/Gmail.jpg";
 import Outlook from "../../assets/images/Outlook.jpg";
 import Yahoo from "../../assets/images/Yahoo.jpg";
 
-const LoginForm = () => {
+const LoginForm = observer(() => {
   const { authStore } = useMainStoreContext();
-  const { sendSignInLinkToEmail, loginStatus } = authStore;
+  const { sendSignInLinkToEmail, loginStatus, setLoginStatus } = authStore;
 
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -79,8 +80,10 @@ const LoginForm = () => {
       ) : (
         <div>
           <Typography variant="h6" align="center">
-            Pronto! Agora é só entrar no seu email e fazer login pelo link que
-            lhe enviamos.
+            Agora é só fazer login pelo link que enviamos para o email:
+          </Typography>
+          <Typography variant="h6" color="primary" align="center" gutterbottom>
+            {window.localStorage.getItem("emailForSignIn")}
           </Typography>
 
           <Box
@@ -105,10 +108,23 @@ const LoginForm = () => {
               alt="Yahoo"
             />
           </Box>
+
+          <Typography variant="h6" align="center">
+            Não é esse email?
+          </Typography>
+          <Box m={1} display="flex" justifyContent="center">
+            <Button
+              variant="outlined"
+              size="medium"
+              onClick={() => setLoginStatus()}
+            >
+              Voltar
+            </Button>
+          </Box>
         </div>
       )}
     </form>
   );
-};
+});
 
 export default LoginForm;
