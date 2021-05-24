@@ -10,7 +10,8 @@ class UserRequestModel {
             data &&
             data.hasOwnProperty("createdAt") &&
             data.hasOwnProperty("userId") &&
-            data.hasOwnProperty("pixKey")
+            data.hasOwnProperty("pixKey") &&
+            data.hasOwnProperty("status")
         ) {
             this.createdAt = data.createdAt;
             this.description = data.description;

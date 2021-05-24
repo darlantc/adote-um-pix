@@ -6,6 +6,9 @@ describe("UserRequestModel", () => {
         expect(() => makeSUT({})).toThrow("Invalid data");
         expect(() => makeSUT({ createdAt: 1619887317208 })).toThrow("Invalid data");
         expect(() => makeSUT({ createdAt: 1619887317208, userId: "48914" })).toThrow("Invalid data");
+        expect(() =>
+            makeSUT({ createdAt: 1619887317208, userId: "48914", pixKey: "f7de57ab-ee77-4493-aabc-f819f6b1d0b4" })
+        ).toThrow("Invalid data");
     });
 
     it("Should create with valid data", () => {
