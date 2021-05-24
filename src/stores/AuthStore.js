@@ -5,19 +5,29 @@ import LoginStatus from "../models/LoginStatus";
 class AuthStore {
   loggedUser = null;
   loginStatus = LoginStatus.offline;
+  error = null;
 
   constructor(firebaseService) {
     this.firebaseService = firebaseService;
     makeObservable(this, {
       loggedUser: observable,
       loginStatus: observable,
+      setLoggedUser: action,
       setLoginStatus: action,
     });
     this.confirmEmailSignIn();
   }
 
-  setLoginStatus = () => {
-    this.loginStatus = LoginStatus.offline;
+  setLoggedUser = (value) => {
+    this.loggedUser = value;
+  };
+
+  setLoginStatus = (value) => {
+    this.loginStatus = value;
+  };
+
+  setError = (value) => {
+    this.error = value;
   };
 
   configSignInEmail = () => {
@@ -28,7 +38,7 @@ class AuthStore {
   };
 
   sendSignInLinkToEmail = async (email) => {
-    this.loginStatus = LoginStatus.loading;
+    this.setLoginStatus(LoginStatus.loading);
     try {
       await this.firebaseService.auth.sendSignInLinkToEmail(
         email,
@@ -37,9 +47,9 @@ class AuthStore {
 
       localStorage.setItem("emailForSignIn", email);
 
-      this.loginStatus = LoginStatus.online;
+      this.setLoginStatus(LoginStatus.online);
     } catch (error) {
-      return error;
+      this.setError(error);
     }
   };
 
@@ -58,10 +68,10 @@ class AuthStore {
         );
 
         window.localStorage.removeItem("emailForSignIn");
-        this.loggedUser = result.user;
-        this.loginStatus = LoginStatus.online;
+        this.setLoggedUser(result.user);
+        this.setLoginStatus(LoginStatus.online);
       } catch (error) {
-        return error;
+        this.setError(error);
       }
     }
   };

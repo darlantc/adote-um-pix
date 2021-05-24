@@ -25,11 +25,14 @@ const Perfil = observer(() => {
 
   if (loggedUser.photoURL) {
     setEngajamento(engajamento + 25);
-  } else if (loggedUser.displayName) {
+  }
+  if (loggedUser.displayName) {
     setEngajamento(engajamento + 25);
-  } else if (loggedUser.bio) {
+  }
+  if (loggedUser.bio) {
     setEngajamento(engajamento + 25);
-  } else if (loggedUser.linkedIn) {
+  }
+  if (loggedUser.linkedIn) {
     setEngajamento(engajamento + 25);
   }
 
