@@ -14,7 +14,9 @@ import { observer } from "mobx-react";
 
 import Logo from "./Logo";
 import LoginForm from "./forms/LoginForm";
+
 import { useMainStoreContext } from "../contexts/mainStoreContext";
+import { APP_ROUTES } from "../routes/Routes";
 
 const PixAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #FFF 30%, #000000 90%)",
@@ -66,7 +68,7 @@ const StyledAppBar = observer(() => {
             <ButtonBase
               style={{ textDecoration: "none" }}
               component={Link}
-              to="/"
+              to={APP_ROUTES.home}
             >
               <Box display="flex" alignItems="center">
                 <Logo />
@@ -78,7 +80,7 @@ const StyledAppBar = observer(() => {
               <Button
                 style={{ textDecoration: "none" }}
                 component={Link}
-                to="/perfil"
+                to={APP_ROUTES.profile}
               >
                 <RegistrationButton>Perfil</RegistrationButton>
               </Button>
