@@ -1,4 +1,4 @@
-import { Typography, Button, Box, GridListTile } from "@material-ui/core";
+import { Typography, Button, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { formatDate } from "../utils/formatting";
