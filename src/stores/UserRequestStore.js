@@ -1,50 +1,71 @@
+import { action, computed, makeObservable, observable } from "mobx";
+
 class UserRequestStore {
-  get;
-  add;
-  update;
-  remove;
-  userRequests = [];
+    get;
+    add;
+    update;
+    remove;
+    userRequests = [];
+    searchString = "";
 
-  constructor(get, add, update, remove) {
-    this.get = get;
-    this.add = add;
-    this.update = update;
-    this.remove = remove;
-  }
+    constructor(get, add, update, remove) {
+        this.get = get;
+        this.add = add;
+        this.update = update;
+        this.remove = remove;
 
-  getUserRequests = async () => {
-    const result = await this.get();
-    this.userRequests = result;
-  };
+        makeObservable(this, {
+            userRequests: observable,
+            searchString: observable,
+            filteredUserRequest: computed,
+            setSearchString: action,
+            setUserRequests: action,
+        });
+    }
 
-  addUserRequest = async (item) => {
-    await this.add(item);
-    await this.getUserRequests();
-  };
+    get filteredUserRequest() {
+        if (this.userRequests.length < 1) {
+            return [];
+        }
 
-  updateUserRequest = async (item, key) => {
-    await this.update(item, key);
-    await this.getUserRequests();
-  };
+        return this.userRequests.filter((request) => {
+            const lowerRequest = request.toLowerCase();
+            const lowerString = this.searchString.toLowerCase();
+            return lowerRequest.indexOf(lowerString) >= 0;
+        });
+    }
 
-  removeUserRequest = async (key) => {
-    await this.remove(key);
-    await this.getUserRequests();
-  };
+    setSearchString = (newValue) => {
+        this.searchString = newValue;
+    };
 
-  filterUserRequest = (string) => {
-    const filteredValues = this.userRequests.filter((request) => {
-      const lowerRequest = request.toLowerCase();
-      const lowerString = string.toLowerCase();
-      return lowerRequest.indexOf(lowerString) >= 0;
-    });
+    setUserRequests = (newValue) => {
+        this.userRequests = newValue;
+    };
 
-    return filteredValues;
-  };
+    getUserRequests = async () => {
+        const result = await this.get();
+        this.setUserRequests(result);
+    };
 
-  clearStore = () => {
-    this.userRequests = [];
-  };
+    addUserRequest = async (item) => {
+        await this.add(item);
+        await this.getUserRequests();
+    };
+
+    updateUserRequest = async (item, key) => {
+        await this.update(item, key);
+        await this.getUserRequests();
+    };
+
+    removeUserRequest = async (key) => {
+        await this.remove(key);
+        await this.getUserRequests();
+    };
+
+    clearStore = () => {
+        this.setUserRequests([]);
+    };
 }
 
 export default UserRequestStore;
