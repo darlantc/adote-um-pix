@@ -5,6 +5,7 @@ import Slider from "@material-ui/core/Slider";
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 
+import { APP_ROUTES } from "../routes/Routes";
 import PerfilInfo from "../components/PerfilInfo";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 
@@ -58,7 +59,7 @@ const Perfil = observer(() => {
           className={classes.button}
           variant="outlined"
           component={Link}
-          to="/minhassolicitacoes"
+          to={APP_ROUTES.myRequests}
         >
           Solicitações
         </Button>
@@ -66,7 +67,7 @@ const Perfil = observer(() => {
           className={classes.button}
           variant="outlined"
           component={Link}
-          to="/minhascontribuicoes"
+          to={APP_ROUTES.myContributions}
         >
           Contribuições
         </Button>
