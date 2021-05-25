@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import { emailValidation, phoneValidation } from "../../utils/validation";
+import { formatPhoneNumber } from "../../utils/formatting";
 import EmailRedirectOptions from "../EmailRedirectOptions";
 
 const LoginForm = observer(() => {
@@ -16,7 +17,7 @@ const LoginForm = observer(() => {
   } = authStore;
 
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [errorMessageField, setErrorMessageField] = useState("");
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const LoginForm = observer(() => {
   const didSendCodeBySMS = (event) => {
     event.preventDefault();
 
-    const validNumber = phoneValidation(phone);
+    const validNumber = phoneValidation(phoneNumber);
 
     if (validNumber) {
       signInWithPhoneNumber(validNumber);
@@ -53,6 +54,13 @@ const LoginForm = observer(() => {
       setErrorMessageField("O número digitado parece não ser válido.");
     }
   };
+
+  useEffect(() => {
+    const formattedNumber = formatPhoneNumber(phoneNumber);
+    if (formattedNumber) {
+      setPhoneNumber(formattedNumber);
+    }
+  }, [phoneNumber]);
 
   return (
     <div

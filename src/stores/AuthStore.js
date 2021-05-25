@@ -6,6 +6,7 @@ class AuthStore {
   loggedUser = null;
   loginStatus = LoginStatus.offline;
   errorMessage = null;
+  emailForSignIn = null;
 
   constructor(firebaseService) {
     this.firebaseService = firebaseService;
@@ -13,9 +14,11 @@ class AuthStore {
       loggedUser: observable,
       loginStatus: observable,
       errorMessage: observable,
+      emailForSignIn: observable,
       setLoggedUser: action,
       setLoginStatus: action,
       setErrorMessage: action,
+      setEmailForSignIn: action,
     });
     this.confirmEmailSignIn();
   }
@@ -30,6 +33,10 @@ class AuthStore {
 
   setErrorMessage = (value) => {
     this.errorMessage = value;
+  };
+
+  setEmailForSignIn = (value) => {
+    this.emailForSignIn = value;
   };
 
   configSignInEmail = () => {
@@ -55,12 +62,17 @@ class AuthStore {
     }
   };
 
-  confirmEmailSignIn = async () => {
+  confirmEmailSignIn = async (typedEmail) => {
     const ref = window.location.href;
+    let email;
     if (this.firebaseService.auth.isSignInWithEmailLink(ref)) {
-      let email = window.localStorage.getItem("emailForSignIn");
-      if (!email) {
-        email = window.prompt("Please provide your email for confirmation");
+      if (typedEmail) {
+        email = typedEmail;
+      } else {
+        email = window.localStorage.getItem("emailForSignIn");
+        if (!email) {
+          this.setEmailForSignIn("A ser informado.");
+        }
       }
 
       try {
