@@ -18,24 +18,30 @@ class UserRequestBuilder {
 
   static withCustomDescription(description) {
     this.model.description = description;
+    return this;
   }
 
   static withCustomPixKey(pixKey) {
     this.model.pixKey = pixKey;
+    return this;
   }
 
   static withCustomId(id) {
     this.model.id = id;
+    return this;
   }
 
   static withCanceledStatus() {
-    this.status = UserRequestStatus.canceled;
+    this.model.status = UserRequestStatus.canceled;
+    return this;
   }
   static withAvailableStatus() {
-    this.status = UserRequestStatus.available;
+    this.model.status = UserRequestStatus.available;
+    return this;
   }
   static withPaidStatus() {
-    this.status = UserRequestStatus.paid;
+    this.model.status = UserRequestStatus.paid;
+    return this;
   }
 
   build() {
