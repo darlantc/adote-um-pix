@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 
 import Logo from "./Logo";
+import ModalEmailRequest from "./ModalEmailRequest";
 import LoginForm from "./forms/LoginForm";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
@@ -100,6 +101,7 @@ const StyledAppBar = observer(() => {
           </Box>
         </Box>
       </Modal>
+      <ModalEmailRequest />
     </>
   );
 });
