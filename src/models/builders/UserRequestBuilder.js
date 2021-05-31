@@ -16,6 +16,12 @@ class UserRequestBuilder {
         return new UserRequestBuilder();
     }
 
+    static aExistingUserRequest(id) {
+        const builder = new UserRequestBuilder();
+        builder.model.id = id;
+        return builder;
+    }
+
     withCustomDescription(description) {
         this.model.description = description;
         return this;
@@ -23,11 +29,6 @@ class UserRequestBuilder {
 
     withCustomPixKey(pixKey) {
         this.model.pixKey = pixKey;
-        return this;
-    }
-
-    withCustomId(id) {
-        this.model.id = id;
         return this;
     }
 

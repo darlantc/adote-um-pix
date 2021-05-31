@@ -1,71 +1,79 @@
 import { action, computed, makeObservable, observable } from "mobx";
 
 class UserRequestStore {
-  get;
-  add;
-  update;
-  remove;
-  userRequests = [];
-  searchString = "";
+    get;
+    add;
+    update;
+    remove;
+    userRequests = [];
+    searchString = "";
 
-  constructor(get, add, update, remove) {
-    this.get = get;
-    this.add = add;
-    this.update = update;
-    this.remove = remove;
+    constructor(get, add, update, remove) {
+        this.get = get;
+        this.add = add;
+        this.update = update;
+        this.remove = remove;
 
-    makeObservable(this, {
-      userRequests: observable,
-      searchString: observable,
-      filteredUserRequest: computed,
-      setSearchString: action,
-      setUserRequests: action,
-    });
-  }
-
-  get filteredUserRequest() {
-    if (this.userRequests.length < 1) {
-      return [];
+        makeObservable(this, {
+            userRequests: observable,
+            searchString: observable,
+            filteredUserRequests: computed,
+            setSearchString: action,
+            setUserRequests: action,
+        });
     }
 
-    return this.userRequests.filter((request) => {
-      const lowerDescription = request.description.toLowerCase();
-      const lowerString = this.searchString.toLowerCase();
-      return lowerDescription.indexOf(lowerString) >= 0;
-    });
-  }
+    get filteredUserRequests() {
+        if (this.userRequests.length < 1) {
+            return [];
+        }
 
-  setSearchString = (newValue) => {
-    this.searchString = newValue;
-  };
+        return this.userRequests.filter((request) => {
+            const lowerDescription = request.description.toLowerCase();
+            const lowerString = this.searchString.toLowerCase();
+            return lowerDescription.indexOf(lowerString) >= 0;
+        });
+    }
 
-  setUserRequests = (newValue) => {
-    this.userRequests = newValue;
-  };
+    setSearchString = (newValue) => {
+        this.searchString = newValue;
+    };
 
-  getUserRequests = async () => {
-    const result = await this.get();
-    this.setUserRequests(result);
-  };
+    setUserRequests = (newValue) => {
+        this.userRequests = newValue;
+    };
 
-  addUserRequest = async (item) => {
-    await this.add(item);
-    await this.getUserRequests();
-  };
+    getUserRequests = async () => {
+        const result = await this.get();
+        this.setUserRequests(result);
+    };
 
-  updateUserRequest = async (item, key) => {
-    await this.update(item, key);
-    await this.getUserRequests();
-  };
+    addUserRequest = async (item) => {
+        await this.add(item);
+        await this.getUserRequests();
+    };
 
-  removeUserRequest = async (key) => {
-    await this.remove(key);
-    await this.getUserRequests();
-  };
+    updateUserRequest = async (item) => {
+        if (this.itemExists(item.id)) {
+            await this.update(item);
+            await this.getUserRequests();
+        }
+    };
 
-  clearStore = () => {
-    this.setUserRequests([]);
-  };
+    removeUserRequest = async (id) => {
+        if (this.itemExists(id)) {
+            await this.remove(id);
+            await this.getUserRequests();
+        }
+    };
+
+    itemExists = (idToVerify) => {
+        return this.userRequests.find(({ id }) => id === idToVerify);
+    };
+
+    clearStore = () => {
+        this.setUserRequests([]);
+    };
 }
 
 export default UserRequestStore;
