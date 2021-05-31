@@ -2,9 +2,11 @@ import { TextField, Box, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
+import { observer } from "mobx-react";
 
 import DefaultUserPhoto from "../assets/images/defaultUserPhoto.png";
 import { useState } from "react";
+import { useMainStoreContext } from "../contexts/mainStoreContext";
 
 const useStyles = makeStyles(() => ({
   textField: {
@@ -14,13 +16,22 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const PerfilInfo = () => {
+const PerfilInfo = observer(() => {
+  const { authStore } = useMainStoreContext();
+  const { loggedUser, userDataUpdating } = authStore;
+  console.log(loggedUser);
+
   const classes = useStyles();
 
   const [foto, setFoto] = useState();
   const [nome, setNome] = useState("");
   const [bio, setBio] = useState("");
   const [linkedIn, setLinkedIn] = useState("");
+
+  let currentImage = DefaultUserPhoto;
+  if (loggedUser && loggedUser.photoURL) {
+    currentImage = loggedUser.photoURL;
+  }
 
   const handleFile = (event) => {
     if (event.target.files[0]) {
@@ -34,13 +45,26 @@ const PerfilInfo = () => {
     }
   };
 
+  const didUpdateProfile = (event) => {
+    event.preventDefault();
+    if (loggedUser) {
+      userDataUpdating(loggedUser.uid, nome, bio, linkedIn);
+
+      setNome("");
+      setBio("");
+      setLinkedIn("");
+    }
+  };
+
   return (
-    <Box
-      fullWidth
-      display="flex"
-      flexDirection="column"
-      justifyItems="center"
-      alignItems="center"
+    <form
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyItems: "center",
+        alignItems: "center",
+      }}
+      onSubmit={didUpdateProfile}
     >
       <Box>
         <label for="foto" style={{ cursor: "pointer" }}>
@@ -71,7 +95,7 @@ const PerfilInfo = () => {
                 borderRadius: "50%",
                 margin: "5px",
               }}
-              src={DefaultUserPhoto}
+              src={currentImage}
               alt="user"
             />
           )}
@@ -85,7 +109,9 @@ const PerfilInfo = () => {
           setNome(event.target.value);
         }}
         justify="center"
-        placeholder="Nome de Usuário"
+        placeholder={
+          loggedUser && loggedUser.nome ? loggedUser.nome : "Nome de Usuário"
+        }
         variant="outlined"
         size="small"
         fullWidth
@@ -96,7 +122,7 @@ const PerfilInfo = () => {
         onChange={(event) => {
           setBio(event.target.value);
         }}
-        placeholder="Bio de Usuário"
+        placeholder={loggedUser && loggedUser.bio ? loggedUser.bio : "Bio"}
         multiline
         rows="7"
         variant="outlined"
@@ -109,7 +135,11 @@ const PerfilInfo = () => {
         onChange={(event) => {
           setLinkedIn(event.target.value);
         }}
-        placeholder="Perfil LinkedIn"
+        placeholder={
+          loggedUser && loggedUser.linkedIn
+            ? loggedUser.linkedIn
+            : "Perfil LinkedIn"
+        }
         variant="outlined"
         size="small"
         fullWidth
@@ -122,10 +152,12 @@ const PerfilInfo = () => {
         }}
       />
       <Box m={0.5}>
-        <Button variant="outlined">Salvar Perfil</Button>
+        <Button type="submit" variant="outlined">
+          Salvar Perfil
+        </Button>
       </Box>
-    </Box>
+    </form>
   );
-};
+});
 
 export default PerfilInfo;

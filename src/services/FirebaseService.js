@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import firebaseApp from "firebase";
 import "firebase/database";
 import "firebase/auth";
 import "firebase/storage";
@@ -8,6 +9,7 @@ import UserRequestStatus from "../models/UserRequestStatus";
 class FirebaseService {
   auth;
   database;
+  authParam;
 
   constructor() {
     if (!firebase.apps.length) {
@@ -24,6 +26,7 @@ class FirebaseService {
     }
 
     this.auth = firebase.auth(); //the Firebase auth namespace
+    this.authParam = firebaseApp.auth;
     this.database = firebase.database(); //the real-time database
   }
 

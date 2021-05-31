@@ -19,22 +19,25 @@ const useStyles = makeStyles(() => ({
 const Perfil = observer(() => {
   const { authStore } = useMainStoreContext();
   const { loggedUser } = authStore;
+
   const classes = useStyles();
 
   const [engajamento, setEngajamento] = useState(0);
   const [nivel, setNivel] = useState("");
 
-  if (loggedUser.photoURL) {
-    setEngajamento(engajamento + 25);
-  }
-  if (loggedUser.displayName) {
-    setEngajamento(engajamento + 25);
-  }
-  if (loggedUser.bio) {
-    setEngajamento(engajamento + 25);
-  }
-  if (loggedUser.linkedIn) {
-    setEngajamento(engajamento + 25);
+  if (loggedUser) {
+    if (loggedUser.photoURL) {
+      setEngajamento(engajamento + 25);
+    }
+    if (loggedUser.displayName) {
+      setEngajamento(engajamento + 25);
+    }
+    if (loggedUser.bio) {
+      setEngajamento(engajamento + 25);
+    }
+    if (loggedUser.linkedIn) {
+      setEngajamento(engajamento + 25);
+    }
   }
 
   useEffect(() => {
