@@ -36,10 +36,7 @@ const ModalEmailRequest = observer(() => {
           bgcolor="background.paper"
           padding="10px"
         >
-          <Typography variant="h6">
-            Por favor, confirme o email para o qual foi enviado o link para
-            login:
-          </Typography>
+          <Typography variant="h6">Confirme o seu email:</Typography>
           <TextField
             value={email}
             onChange={(event) => setEmail(event.target.value)}
