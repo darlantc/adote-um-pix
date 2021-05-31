@@ -1,155 +1,138 @@
-import { makeObservable, observable, reaction, action, computed } from "mobx";
+import { makeObservable, observable, action, computed } from "mobx";
 
 import LoginStatus from "../models/LoginStatus";
 
+const LOCAL_STORAGE_KEY = "emailForSignIn";
+
 class AuthStore {
-  loggedUser = null;
-  loginStatus = LoginStatus.offline;
-  errorMessage = null;
+    loggedUser = null;
+    errorMessage = null;
 
-  constructor(firebaseService) {
-    this.firebaseService = firebaseService;
-    makeObservable(this, {
-      loggedUser: observable,
-      loginStatus: observable,
-      errorMessage: observable,
-      setLoggedUser: action,
-      setLoginStatus: action,
-      setErrorMessage: action,
-      uid: computed,
-    });
-    this.confirmEmailSignIn();
-    reaction(
-      () => this.uid,
-      (uid) => {
-        this.updateUser(uid);
-      }
-    );
-  }
+    constructor(firebaseService) {
+        this.firebaseService = firebaseService;
+        makeObservable(this, {
+            loggedUser: observable,
+            errorMessage: observable,
+            setLoggedUser: action,
+            setErrorMessage: action,
+            uid: computed,
+            loginStatus: computed,
+        });
+        firebaseService.auth.onAuthStateChanged(this.setLoggedUser);
 
-  setLoggedUser = (user) => {
-    this.loggedUser = user;
-  };
-
-  setLoginStatus = (value) => {
-    this.loginStatus = value;
-  };
-
-  setErrorMessage = (value) => {
-    this.errorMessage = value;
-  };
-
-  get uid() {
-    if (this.loggedUser) {
-      return this.loggedUser.uid;
+        this.verifyLoginStatus();
     }
-    return null;
-  }
 
-  configSignInEmail = () => {
-    return {
-      url: "http://localhost:3000/",
-      handleCodeInApp: true,
+    get uid() {
+        if (this.loggedUser) {
+            return this.loggedUser.uid;
+        }
+        return null;
+    }
+
+    get loginStatus() {
+        if (!this.loggedUser) {
+            return LoginStatus.loading;
+        }
+        if (this.loggedUser.isAnonymous()) {
+            return LoginStatus.anonymous;
+        }
+        return LoginStatus.online;
+    }
+
+    setLoggedUser = (user) => {
+        // User pode ser null | objeto user do Firebase
+        this.loggedUser = user;
     };
-  };
 
-  sendSignInLinkToEmail = async (email) => {
-    this.setLoginStatus(LoginStatus.loading);
-    try {
-      await this.firebaseService.auth.sendSignInLinkToEmail(
-        email,
-        this.configSignInEmail()
-      );
+    setErrorMessage = (value) => {
+        this.errorMessage = value;
+    };
 
-      localStorage.setItem("emailForSignIn", email);
+    verifyLoginStatus = async () => {
+        const isSigningByEmail = await this.confirmEmailSignIn();
+        if (!isSigningByEmail) {
+            if (!this.loggedUser) {
+                await this.signInAnonymously();
+            }
+        }
+    };
 
-      this.setLoginStatus(LoginStatus.online);
-    } catch (error) {
-      this.setErrorMessage(error.message);
-    }
-  };
+    signInAnonymously = () => {
+        return this.firebaseService.auth.signInAnonymously();
+    };
 
-  authenticateUserWithEmail = async (email) => {
-    this.setLoginStatus(LoginStatus.loading);
-    const credential =
-      this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
-        email,
-        window.location.href
-      );
-    try {
-      const { user } =
-        await this.firebaseService.auth.currentUser.linkWithCredential(
-          credential
-        );
-
-      this.setLoggedUser(user);
-    } catch (error) {
-      this.setErrorMessage(error.message);
-    }
-  };
-
-  confirmEmailSignIn = async () => {
-    const ref = window.location.href;
-    if (this.firebaseService.auth.isSignInWithEmailLink(ref)) {
-      let email = window.localStorage.getItem("emailForSignIn");
-      if (!email) {
-        email = window.prompt("Please provide your email for confirmation");
-      }
-
-      try {
-        const result = await this.firebaseService.auth.signInWithEmailLink(
-          email,
-          ref
-        );
-
-        window.localStorage.removeItem("emailForSignIn");
-
-        const user = result.user;
-
-        this.setLoggedUser(user);
-        this.writeUserData();
-        this.setLoginStatus(LoginStatus.online);
-      } catch (error) {
-        this.setErrorMessage(error.message);
-      }
-    }
-  };
-
-  updateUser = async (uid) => {
-    const user = this.loggedUser;
-    const userProfileRef = this.firebaseService.database
-      .ref()
-      .child("users")
-      .child(uid);
-
-    userProfileRef.get((snapshot) => {
-      if (snapshot) {
-        const updatedUser = {
-          ...user,
-          ...snapshot.val(),
+    configSignInEmail = () => {
+        return {
+            url: window.location.origin,
+            handleCodeInApp: true,
         };
+    };
 
-        console.log("updated", updatedUser);
+    sendSignInLinkToEmail = async (email) => {
+        try {
+            await this.firebaseService.auth.sendSignInLinkToEmail(email, this.configSignInEmail());
 
-        this.setLoggedUser(updatedUser);
-      } else {
-        console.log("No data available");
-      }
-    });
-  };
+            localStorage.setItem(LOCAL_STORAGE_KEY, email);
+        } catch (error) {
+            this.setErrorMessage(error.message);
+        }
+    };
 
-  userDataUpdating = async (userId, nome, bio, linkedIn) => {
-    try {
-      this.firebaseService.database.ref("users/" + userId).set({
-        username: nome,
-        bio: bio,
-        linkedIn: linkedIn,
-      });
-      console.log("success");
-    } catch (error) {
-      console.log("error on editing", error);
-    }
-  };
+    authenticateUserWithEmail = async (email) => {
+        const credential = this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
+            email,
+            window.location.href
+        );
+        try {
+            await this.firebaseService.auth.currentUser.linkWithCredential(credential);
+        } catch (error) {
+            this.setErrorMessage(error.message);
+        }
+    };
+
+    confirmEmailSignIn = async () => {
+        const href = window.location.href;
+        if (!this.firebaseService.auth.isSignInWithEmailLink(href)) {
+            return false;
+        }
+
+        let email = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (!email) {
+            email = window.prompt("Please provide your email for confirmation");
+        }
+
+        try {
+            await this.firebaseService.auth.signInWithEmailLink(email, href);
+            window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+        } catch (error) {
+            this.setErrorMessage(error.message);
+        } finally {
+            return true;
+        }
+    };
+
+    updateUser = async (userId, name, bio, linkedIn) => {
+        try {
+            await this.firebaseService.usersRef.child(userId).set({
+                name,
+                bio,
+                linkedIn,
+            });
+            console.log("success");
+        } catch (error) {
+            console.log("error on editing", error);
+        }
+    };
+
+    logout = async () => {
+        try {
+            await this.firebaseService.auth.signOut();
+            await this.signInAnonymously();
+        } catch (error) {
+            this.logout();
+        }
+    };
 }
 
 export default AuthStore;
