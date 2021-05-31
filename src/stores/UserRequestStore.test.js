@@ -61,18 +61,22 @@ describe("UserRequestStore", () => {
 
       const getCallback = async () => sampleList;
       const addCallback = async () => {};
-      const updateCallback = async (updatedItem, id) => {
-        const position = sampleList.findIndex((request) => {
-          request.id === id;
+      const updateCallback = async (updatedItem, value) => {
+        const position = sampleList.findIndex((item) => {
+          item.id === value;
         });
-        sampleList[position] = updatedItem;
+        sampleList = sampleList.splice(position, 1, updatedItem);
       };
       const sut = makeSUT(getCallback, addCallback, updateCallback);
+
+      await sut.getUserRequests();
+      expect(sut.userRequests.length).toBe(3);
 
       const updatedItem = UserRequestBuilder.aUserRequest()
         .withCustomId(11)
         .withCustomDescription("Beatitudinem")
         .build();
+
       await sut.updateUserRequest(updatedItem, 11);
       expect(sut.userRequests[1].description).toBe("Beatitudinem");
     });
