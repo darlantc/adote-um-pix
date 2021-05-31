@@ -51,12 +51,18 @@ describe("UserRequestStore", () => {
   describe("updateUserRequest", () => {
     it("should update a specific value in user requests", async () => {
       let sampleList = [
-        UserRequestBuilder.aUserRequest().withCustomId(60).build(),
+        UserRequestBuilder.aUserRequest()
+          .withCustomId(60)
+          .withCustomDescription("Vini")
+          .build(),
         UserRequestBuilder.aUserRequest()
           .withCustomId(11)
           .withCustomDescription("Vivum")
           .build(),
-        UserRequestBuilder.aUserRequest().withCustomId(234).build(),
+        UserRequestBuilder.aUserRequest()
+          .withCustomId(234)
+          .withCustomDescription("Veritas")
+          .build(),
       ];
 
       const getCallback = async () => sampleList;
@@ -116,7 +122,7 @@ describe("UserRequestStore", () => {
   });
 
   describe("filteredUserRequest", () => {
-    it("should return the values that match string in user requests", async () => {
+    it("should return values that match string in user requests", async () => {
       let sampleList = [
         UserRequestBuilder.aUserRequest()
           .withCustomDescription("Beatitudinem")
