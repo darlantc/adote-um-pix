@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { observer } from "mobx-react";
 
 import {
   cpfValidation,
@@ -14,6 +15,7 @@ import {
   pixRandomKeyValidation,
   emailValidation,
 } from "../../utils/validation";
+import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import { formatCpf } from "../../utils/formatting";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,17 +30,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserRequestForm = () => {
+const UserRequestForm = observer(() => {
+  const { authStore, userRequestStore } = useMainStoreContext();
+  const { addUserRequest } = userRequestStore;
+
+  const userId = authStore.loggedUser.uid;
+
   const classes = useStyles();
 
   const [description, setDescription] = useState("");
   const [pixKey, setPixKey] = useState("");
+
   const [firstTry, setFirstTry] = useState(true);
   const [validationError, setValidationError] = useState("");
 
   const handleSave = (event) => {
     event.preventDefault();
     setFirstTry(false);
+
+    const request = { userId, pixKey, description };
+    addUserRequest(request);
   };
 
   const fourWayValidation = (event) => {
@@ -70,7 +81,7 @@ const UserRequestForm = () => {
   };
 
   return (
-    <form>
+    <form onSubmit={handleSave}>
       <Typography variant="h5" gutterBottom>
         Descreva sua necessidade
       </Typography>
@@ -104,7 +115,7 @@ const UserRequestForm = () => {
       <Box display="flex" justifyContent="center" fullWidth>
         <Button
           className={classes.soliciteButton}
-          onClick={handleSave}
+          type="submit"
           variant="outlined"
           size="medium"
         >
@@ -113,6 +124,6 @@ const UserRequestForm = () => {
       </Box>
     </form>
   );
-};
+});
 
 export default UserRequestForm;
