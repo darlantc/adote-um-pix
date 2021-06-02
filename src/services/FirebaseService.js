@@ -40,6 +40,10 @@ class FirebaseService {
   get userRequestsRef() {
     return this.database.ref("userRequests");
   }
+
+  userRequestsRefChild(key) {
+    return this.database.ref("userRequests/" + key);
+  }
 }
 
 export default FirebaseService;

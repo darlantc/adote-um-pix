@@ -9,13 +9,13 @@ import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
 
+import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import {
   cpfValidation,
   phoneValidation,
   pixRandomKeyValidation,
   emailValidation,
 } from "../../utils/validation";
-import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import { formatCpf } from "../../utils/formatting";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,9 +30,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserRequestForm = observer(() => {
+const UserRequestForm = observer(({ id }) => {
   const { authStore, userRequestStore } = useMainStoreContext();
-  const { addUserRequest } = userRequestStore;
+  const { addUserRequest, updateUserRequest } = userRequestStore;
 
   const userId = authStore.loggedUser.uid;
 
@@ -49,7 +49,15 @@ const UserRequestForm = observer(() => {
     setFirstTry(false);
 
     const request = { userId, pixKey, description };
-    addUserRequest(request);
+
+    if (id) {
+      updateUserRequest(request, id);
+    } else {
+      addUserRequest(request);
+    }
+
+    setPixKey("");
+    setDescription("");
   };
 
   const fourWayValidation = (event) => {

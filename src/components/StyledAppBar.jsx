@@ -75,13 +75,16 @@ const StyledAppBar = observer(() => {
             </ButtonBase>
 
             {loggedUser ? (
-              <Button
-                style={{ textDecoration: "none" }}
-                component={Link}
-                to={APP_ROUTES.profile}
-              >
-                <RegistrationButton>Perfil</RegistrationButton>
-              </Button>
+              <Box>
+                <Button
+                  style={{ textDecoration: "none" }}
+                  component={Link}
+                  to={APP_ROUTES.profile}
+                >
+                  <RegistrationButton>Perfil</RegistrationButton>
+                </Button>
+                <RegistrationButton>Sair</RegistrationButton>
+              </Box>
             ) : (
               <RegistrationButton onClick={openModal}>Entre</RegistrationButton>
             )}

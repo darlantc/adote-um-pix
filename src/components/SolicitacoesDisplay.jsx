@@ -24,13 +24,13 @@ const useStyles = makeStyles((theme) => ({
 const SolicitacoesDisplay = ({ item }) => {
   const classes = useStyles();
 
-  const { nome, timestamp, descricao } = item;
+  const { name, timestamp, description } = item;
 
   return (
     <Box className={classes.adoteBox}>
-      <Typography variant="h4">{nome}</Typography>
-      <Typography variant="h5">{formatDate(timestamp)}</Typography>
-      <Typography variant="p">{descricao}</Typography>
+      <Typography variant="h4">{name}</Typography>
+      <Typography variant="h5">{timestamp}</Typography>
+      <Typography variant="p">{description}</Typography>
 
       <Box display="flex" justifyContent="center" fullWidth>
         <Button
