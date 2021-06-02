@@ -51,8 +51,9 @@ class MainStore {
       const { userId, pixKey, description } = request;
 
       try {
-        const ref = this.firebaseService.userRequestsRef.push();
-        await ref.set({
+        const id = this.firebaseService.userRequestsRef.push().getKey();
+        await this.firebaseService.userRequestsChildRef(id).set({
+          id,
           userId,
           pixKey,
           description,
@@ -67,7 +68,7 @@ class MainStore {
 
   updateUserRequest = async (updatedItem, id) => {
     try {
-      await this.firebaseService.userRequestsRefChild(id).set({
+      await this.firebaseService.userRequestsChildRef(id).update({
         ...updatedItem,
       });
     } catch (error) {

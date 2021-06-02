@@ -1,11 +1,16 @@
 import { Typography, Button, Box, Paper, Modal } from "@material-ui/core";
 import { useState } from "react";
+import { observer } from "mobx-react";
 
+import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { formatDate } from "../utils/formatting";
 import UserRequestForm from "./forms/UserRequestForm";
 
-const SolicitacaoCard = ({ item }) => {
-  const { description, pixKey, createdAt, status } = item;
+const SolicitacaoCard = observer(({ item }) => {
+  const { userRequestStore } = useMainStoreContext();
+  const { removeUserRequest } = userRequestStore;
+
+  const { description, pixKey, createdAt, status, id } = item;
 
   const [displayModal, setDisplayModal] = useState(false);
 
@@ -16,6 +21,11 @@ const SolicitacaoCard = ({ item }) => {
 
   const closeModal = () => {
     setDisplayModal(false);
+  };
+
+  const didRemove = (event) => {
+    event.preventDefault();
+    removeUserRequest(id);
   };
 
   return (
@@ -35,9 +45,12 @@ const SolicitacaoCard = ({ item }) => {
           Chave{`: ${pixKey}`}
         </Typography>
 
-        <Box display="flex" justifyContent="center" fullWidth>
+        <Box display="flex" justifyContent="space-around" fullWidth>
           <Button variant="outlined" onClick={openModal}>
             Editar Solicitação
+          </Button>
+          <Button variant="outlined" onClick={didRemove}>
+            Excluir Solicitação
           </Button>
         </Box>
       </Box>
@@ -56,6 +69,6 @@ const SolicitacaoCard = ({ item }) => {
       </Modal>
     </Paper>
   );
-};
+});
 
 export default SolicitacaoCard;

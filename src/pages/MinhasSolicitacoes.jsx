@@ -15,7 +15,7 @@ const MinhasSolicitacoes = observer(() => {
 
   useEffect(() => {
     getUserRequests();
-    if (userRequests) {
+    if (userRequests && loggedUser) {
       const filtered = userRequests.filter((request) => {
         return request.userId === loggedUser.uid;
       });

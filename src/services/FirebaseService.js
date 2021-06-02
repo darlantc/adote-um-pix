@@ -41,7 +41,7 @@ class FirebaseService {
     return this.database.ref("userRequests");
   }
 
-  userRequestsRefChild(key) {
+  userRequestsChildRef(key) {
     return this.database.ref("userRequests/" + key);
   }
 }

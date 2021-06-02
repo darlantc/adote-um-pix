@@ -61,14 +61,15 @@ class UserRequestStore {
   };
 
   removeUserRequest = async (id) => {
-    if (this.itemExists(id)) {
-      await this.remove(id);
-      await this.getUserRequests();
-    }
+    await this.remove(id);
+    await this.getUserRequests();
   };
 
   itemExists = (idToVerify) => {
-    return this.userRequests.find(({ id }) => id === idToVerify);
+    if (this.userRequests) {
+      return this.userRequests.find(({ id }) => id === idToVerify);
+    }
+    return false;
   };
 
   clearStore = () => {

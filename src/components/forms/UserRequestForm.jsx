@@ -33,8 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const UserRequestForm = observer(({ id }) => {
   const { authStore, userRequestStore } = useMainStoreContext();
   const { addUserRequest, updateUserRequest } = userRequestStore;
-
-  const userId = authStore.loggedUser.uid;
+  const { loggedUser } = authStore;
 
   const classes = useStyles();
 
@@ -48,12 +47,16 @@ const UserRequestForm = observer(({ id }) => {
     event.preventDefault();
     setFirstTry(false);
 
-    const request = { userId, pixKey, description };
+    if (loggedUser) {
+      const request = { userId: loggedUser.uid, pixKey, description };
 
-    if (id) {
-      updateUserRequest(request, id);
-    } else {
-      addUserRequest(request);
+      if (id) {
+        console.log("🚀 ~ UPDATE", id);
+        updateUserRequest(request, id);
+      } else {
+        addUserRequest(request);
+        console.log("🚀 ~ ADD");
+      }
     }
 
     setPixKey("");
