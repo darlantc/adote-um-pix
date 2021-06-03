@@ -1,88 +1,50 @@
-import { when } from "mobx";
+import { reaction } from "mobx";
 import UserRequestStore from "./UserRequestStore";
+import UserRequestsDatabaseAdapter from "./UserRequestsDatabaseAdapter";
 import AuthStore from "./AuthStore";
 
-import UserRequestStatus from "../models/UserRequestStatus";
-
 class MainStore {
-  storesToBeClearedOnLogout = [];
-  firebaseService;
+    storesToBeClearedOnLogout = [];
+    userRequestsDatabase;
+    firebaseService;
 
-  constructor(firebaseService) {
-    this.firebaseService = firebaseService;
-    this.authStore = new AuthStore(firebaseService);
+    constructor(firebaseService) {
+        this.firebaseService = firebaseService;
+        this.authStore = new AuthStore(firebaseService);
 
-    this.userRequestStore = new UserRequestStore(
-      this.getUserRequests,
-      this.addUserRequest,
-      this.updateUserRequest,
-      this.removeUserRequest
-    );
-    this.storesToBeClearedOnLogout.push(this.userRequestStore);
+        this.userRequestsDatabase = this.getUserRequestsDatabase(this.authStore, firebaseService);
+        this.storesToBeClearedOnLogout.push(this.userRequestsDatabase);
+        const [getUserRequest, addUserRequest, updateUserRequest, deleteUserRequest] = this.userRequestsDatabase;
 
-    this.clearStores();
-  }
+        this.userRequestStore = new UserRequestStore(
+            getUserRequest,
+            addUserRequest,
+            updateUserRequest,
+            deleteUserRequest
+        );
+        this.storesToBeClearedOnLogout.push(this.userRequestStore);
 
-  clearStores = () => {
-    when(
-      () => !this.authStore.loggedUser,
-      () => {
-        this.storesToBeClearedOnLogout.forEach((store) => store.clearStore());
-      }
-    );
-  };
-
-  getUserRequests = async () => {
-    try {
-      const ref = this.firebaseService.database.ref();
-      const data = await ref.child("userRequests").get();
-      const val = data.val();
-
-      const allRequests = [...Object.values(val)];
-
-      this.userRequestStore.setUserRequests(allRequests);
-    } catch (error) {
-      console.log("error on getting users request", error.message);
+        this.clearStores();
     }
-  };
 
-  addUserRequest = async (request) => {
-    if (request) {
-      const { userId, pixKey, description } = request;
+    getUserRequestsDatabase = (authStore, firebaseService) => {
+        const adapter = new UserRequestsDatabaseAdapter(authStore, firebaseService);
 
-      try {
-        const id = this.firebaseService.userRequestsRef.push().getKey();
-        await this.firebaseService.userRequestsChildRef(id).set({
-          id,
-          userId,
-          pixKey,
-          description,
-          createdAt: this.firebaseService.serverTimestamp,
-          status: UserRequestStatus.waitingForApproval,
-        });
-      } catch (error) {
-        console.log("error on adding request", error.message);
-      }
-    }
-  };
+        return [adapter.getUserRequests, adapter.addUserRequest, adapter.updateUserRequest, adapter.removeUserRequest];
+    };
 
-  updateUserRequest = async (updatedItem, id) => {
-    try {
-      await this.firebaseService.userRequestsChildRef(id).update({
-        ...updatedItem,
-      });
-    } catch (error) {
-      console.log("error on updating request", error.message);
-    }
-  };
-
-  removeUserRequest = async (deletedId) => {
-    try {
-      await this.firebaseService.userRequestsRef.child(deletedId).remove();
-    } catch (error) {
-      console.log("error on deleting request", error.message);
-    }
-  };
+    clearStores = () => {
+        reaction(
+            () => this.authStore.loggedUser,
+            (isAuthenticated) => {
+                if (isAuthenticated) {
+                    this.userRequestsDatabase.syncLoggedUserRequests();
+                } else {
+                    this.storesToBeClearedOnLogout.forEach((store) => store.clearStore());
+                }
+            }
+        );
+    };
 }
 
 export default MainStore;
