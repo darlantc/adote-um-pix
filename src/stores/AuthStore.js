@@ -71,7 +71,10 @@ class AuthStore {
 
     sendSignInLinkToEmail = async (email) => {
         try {
-            await this.firebaseService.auth.sendSignInLinkToEmail(email, this.configSignInEmail());
+            await this.firebaseService.auth.sendSignInLinkToEmail(
+                email,
+                this.configSignInEmail()
+            );
 
             localStorage.setItem(LOCAL_STORAGE_KEY, email);
         } catch (error) {
@@ -80,12 +83,15 @@ class AuthStore {
     };
 
     authenticateUserWithEmail = async (email) => {
-        const credential = this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
-            email,
-            window.location.href
-        );
+        const credential =
+            this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
+                email,
+                window.location.href
+            );
         try {
-            await this.firebaseService.auth.currentUser.linkWithCredential(credential);
+            await this.firebaseService.auth.currentUser.linkWithCredential(
+                credential
+            );
         } catch (error) {
             this.setErrorMessage(error.message);
         }
@@ -112,16 +118,72 @@ class AuthStore {
         }
     };
 
-    updateUser = async (userId, name, bio, linkedIn) => {
+    updateUser = async (uid) => {
+        const user = this.loggedUser;
+        console.log(
+            "🚀 ~ file: AuthStore.js ~ line 120 ~ AuthStore ~ updateUser= ~ user",
+            user
+        );
+        const userProfileRef = this.firebaseService.database
+            .ref("users")
+            .child(uid);
+
+        userProfileRef.get((snapshot) => {
+            if (snapshot) {
+                console.log(
+                    "🚀 ~ file: AuthStore.js ~ line 126 ~ AuthStore ~ userProfileRef.get ~ snapshot",
+                    snapshot
+                );
+                const updatedUser = {
+                    ...user,
+                    ...snapshot.val(),
+                };
+
+                console.log(
+                    "🚀 ~ file: AuthStore.js ~ line 127 ~ AuthStore ~ userProfileRef.get ~ updatedUser",
+                    updatedUser
+                );
+
+                this.setLoggedUser(updatedUser);
+            } else {
+                console.log("No data available");
+            }
+        });
+    };
+
+    handleUserDataUpdate = async (userId, name, bio, linkedIn) => {
         try {
-            await this.firebaseService.usersRef.child(userId).set({
-                name,
-                bio,
-                linkedIn,
+            this.firebaseService.database.ref("users/" + userId).set({
+                username: name,
+                bio: bio,
+                linkedIn: linkedIn,
             });
+
+            await this.updateUser(userId);
             console.log("success");
         } catch (error) {
             console.log("error on editing", error);
+        }
+    };
+
+    handlePhotoUpload = async (photoToUpload, uid) => {
+        try {
+            await this.firebaseService.storage
+                .ref(`userPhotos/${uid}/${photoToUpload.name}`)
+                .put(photoToUpload);
+
+            const url = await this.firebaseService.storage
+                .ref(`userPhotos/${uid}`)
+                .child(photoToUpload.name)
+                .getDownloadURL();
+
+            await this.firebaseService.database.ref("users/" + uid).set({
+                photo: url,
+            });
+
+            console.log("Successfully updated photo URL.");
+        } catch (error) {
+            console.log("Error uploading photo.", error);
         }
     };
 

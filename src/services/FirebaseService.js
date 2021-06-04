@@ -28,6 +28,7 @@ class FirebaseService {
         this.auth = firebase.auth(); //the Firebase auth namespace
         this.authParam = firebaseApp.auth;
         this.database = firebase.database(); //the real-time database
+        this.storage = firebase.storage();
     }
 
     get rootRef() {
