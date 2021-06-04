@@ -1,5 +1,7 @@
 import UserRequestStatus from "../models/UserRequestStatus";
 
+import APP_ROUTES from "../routes/Routes";
+
 class UserRequestsDatabaseAdapter {
     loggedUserRequests = [];
     loggedUserRequestsRef = null;
@@ -28,20 +30,36 @@ class UserRequestsDatabaseAdapter {
                     ...snapshot.val(),
                 });
             });
+
+            console.log("🚀 ~ loggedUserRequests", this.loggedUserRequests);
         });
     };
 
     getUserRequests = async () => {
-        // TODO: Estratégia para entender o que precisa ser retornado aqui
-
-        // Requisições do usuário que está logado
-        return this.loggedUserRequests;
-
-        try {
-            // Requisições para alguém que quer ajudar
-        } catch (error) {
-            console.log("error on getting users request", error.message);
+        console.log(
+            "🚀 ~ window.location.href",
+            `${window.location.href} ${APP_ROUTES.myRequests}`
+        );
+        if (window.location.href.indexOf() >= 0) {
+            return this.loggedUserRequests;
         }
+
+        this.loggedUserRequestsRef = this.firebaseService.userRequestsRef
+            .orderByChild("status")
+            .equalTo(UserRequestStatus.available);
+
+        this.loggedUserRequestsRef.once("value", (snapshots) => {
+            console.log(
+                "🚀 ~ this.loggedUserRequestsRef.once ~ snapshots",
+                snapshots.val()
+            );
+            snapshots.forEach((snapshot) => {
+                this.authStore.userRequests.push({
+                    id: snapshot.key,
+                    ...snapshot.val(),
+                });
+            });
+        });
     };
 
     addUserRequest = async (request) => {
@@ -51,8 +69,8 @@ class UserRequestsDatabaseAdapter {
 
             this.firebaseService.userRequestsRef.push({
                 user: {
-                    id: loggedUser.id,
-                    name: loggedUser.name,
+                    id: loggedUser.uid,
+                    name: loggedUser.displayName,
                 },
                 pixKey,
                 description,
