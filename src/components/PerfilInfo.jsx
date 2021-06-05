@@ -59,14 +59,8 @@ const PerfilInfo = observer(() => {
     return (
         <div>
             <Box>
-                <label for="photo" style={{ cursor: "pointer" }}>
-                    <input
-                        id="photo"
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        onChange={handleFile}
-                    />
+                <label htmlFor="photo" style={{ cursor: "pointer" }}>
+                    <input id="photo" type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} />
                     <img
                         style={{
                             width: "200px",
@@ -96,11 +90,7 @@ const PerfilInfo = observer(() => {
                         setDisplayName(event.target.value);
                     }}
                     justify="center"
-                    placeholder={
-                        loggedUser && loggedUser.displayName
-                            ? loggedUser.displayName
-                            : "Nome de Usuário"
-                    }
+                    placeholder={loggedUser && loggedUser.displayName ? loggedUser.displayName : "Nome de Usuário"}
                     variant="outlined"
                     size="small"
                     fullWidth
@@ -111,9 +101,7 @@ const PerfilInfo = observer(() => {
                     onChange={(event) => {
                         setBio(event.target.value);
                     }}
-                    placeholder={
-                        loggedUser && loggedUser.bio ? loggedUser.bio : "Bio"
-                    }
+                    placeholder={loggedUser && loggedUser.bio ? loggedUser.bio : "Bio"}
                     multiline
                     rows="7"
                     variant="outlined"
@@ -126,11 +114,7 @@ const PerfilInfo = observer(() => {
                     onChange={(event) => {
                         setLinkedIn(event.target.value);
                     }}
-                    placeholder={
-                        loggedUser && loggedUser.linkedIn
-                            ? loggedUser.linkedIn
-                            : "Perfil LinkedIn"
-                    }
+                    placeholder={loggedUser && loggedUser.linkedIn ? loggedUser.linkedIn : "Perfil LinkedIn"}
                     variant="outlined"
                     size="small"
                     fullWidth
