@@ -6,7 +6,6 @@ const LOCAL_STORAGE_KEY = "emailForSignIn";
 
 class AuthStore {
     loggedUser = null;
-    loginStatus = LoginStatus.offline;
     errorMessage = null;
     emailForSignIn = null;
 
@@ -19,8 +18,8 @@ class AuthStore {
             setLoggedUser: action,
             setErrorMessage: action,
             setEmailForSignIn: action,
-            uid: observable,
-            loginStatus: observable,
+            uid: computed,
+            loginStatus: computed,
         });
         firebaseService.auth.onAuthStateChanged(this.setLoggedUser);
 

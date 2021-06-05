@@ -4,8 +4,6 @@ import "firebase/database";
 import "firebase/auth";
 import "firebase/storage";
 
-import UserRequestStatus from "../models/UserRequestStatus";
-
 class FirebaseService {
     auth;
     database;
