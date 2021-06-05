@@ -7,7 +7,7 @@ const LOCAL_STORAGE_KEY = "emailForSignIn";
 class AuthStore {
     loggedUser = null;
     errorMessage = null;
-    emailForSignIn = null;
+    emailForSignIn = false;
 
     constructor(firebaseService) {
         this.firebaseService = firebaseService;
@@ -66,7 +66,15 @@ class AuthStore {
 
     verifyLoginStatus = async () => {
         const isSigningByEmail = await this.confirmEmailSignIn();
+        console.log(
+            "🚀 ~ file: AuthStore.js ~ line 69 ~ AuthStore ~ verifyLoginStatus= ~ isSigningByEmail",
+            isSigningByEmail
+        );
         if (!isSigningByEmail) {
+            console.log(
+                "🚀 ~ file: AuthStore.js ~ line 72 ~ AuthStore ~ verifyLoginStatus= ~ this.loggedUser",
+                this.loggedUser
+            );
             if (!this.loggedUser) {
                 await this.signInAnonymously();
             }
@@ -86,10 +94,7 @@ class AuthStore {
 
     sendSignInLinkToEmail = async (email) => {
         try {
-            await this.firebaseService.auth.sendSignInLinkToEmail(
-                email,
-                this.configSignInEmail()
-            );
+            await this.firebaseService.auth.sendSignInLinkToEmail(email, this.configSignInEmail());
 
             localStorage.setItem(LOCAL_STORAGE_KEY, email);
         } catch (error) {
@@ -98,29 +103,27 @@ class AuthStore {
     };
 
     authenticateUserWithEmail = async (email) => {
-        const credential =
-            this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
-                email,
-                window.location.href
-            );
+        const credential = this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
+            email,
+            window.location.href
+        );
         try {
-            await this.firebaseService.auth.currentUser.linkWithCredential(
-                credential
-            );
+            await this.firebaseService.auth.currentUser.linkWithCredential(credential);
         } catch (error) {
             this.setErrorMessage(error.message);
         }
     };
 
-    confirmEmailSignIn = async () => {
+    confirmEmailSignIn = async (emailFromUser) => {
         const href = window.location.href;
         if (!this.firebaseService.auth.isSignInWithEmailLink(href)) {
             return false;
         }
 
-        let email = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+        const emailFromStorage = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+        const email = emailFromStorage || emailFromUser;
         if (!email) {
-            email = window.prompt("Please provide your email for confirmation");
+            return false;
         }
 
         try {
@@ -129,26 +132,19 @@ class AuthStore {
         } catch (error) {
             this.setErrorMessage(error.message);
         } finally {
+            this.setEmailForSignIn(false);
             return true;
         }
     };
 
     updateUser = async (uid) => {
         const user = this.loggedUser;
-        console.log(
-            "🚀 ~ file: AuthStore.js ~ line 120 ~ AuthStore ~ updateUser= ~ user",
-            user
-        );
-        const userProfileRef = this.firebaseService.database
-            .ref("users")
-            .child(uid);
+        console.log("🚀 ~ file: AuthStore.js ~ line 120 ~ AuthStore ~ updateUser= ~ user", user);
+        const userProfileRef = this.firebaseService.database.ref("users").child(uid);
 
         userProfileRef.get((snapshot) => {
             if (snapshot) {
-                console.log(
-                    "🚀 ~ file: AuthStore.js ~ line 126 ~ AuthStore ~ userProfileRef.get ~ snapshot",
-                    snapshot
-                );
+                console.log("🚀 ~ file: AuthStore.js ~ line 126 ~ AuthStore ~ userProfileRef.get ~ snapshot", snapshot);
                 const updatedUser = {
                     ...user,
                     ...snapshot.val(),
@@ -178,9 +174,7 @@ class AuthStore {
 
     handlePhotoUpload = async (photoToUpload) => {
         try {
-            await this.firebaseService.storage
-                .ref(`userPhotos/${this.uid}/${photoToUpload.name}`)
-                .put(photoToUpload);
+            await this.firebaseService.storage.ref(`userPhotos/${this.uid}/${photoToUpload.name}`).put(photoToUpload);
 
             const url = await this.firebaseService.storage
                 .ref(`userPhotos/${this.uid}`)
