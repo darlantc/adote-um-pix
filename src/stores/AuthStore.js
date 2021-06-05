@@ -151,34 +151,31 @@ class AuthStore {
         });
     };
 
-    handleUserDataUpdate = async (userId, name, bio, linkedIn) => {
-        try {
-            this.firebaseService.database.ref("users/" + userId).set({
-                username: name,
-                bio: bio,
-                linkedIn: linkedIn,
-            });
+    handleUserDataUpdate = async (displayName, bio, linkedIn) => {
+        const user = this.firebaseService.auth.currentUser;
 
-            await this.updateUser(userId);
-            console.log("success");
-        } catch (error) {
-            console.log("error on editing", error);
-        }
+        user.updateProfile({
+            displayName,
+            bio,
+            linkedIn,
+        });
     };
 
-    handlePhotoUpload = async (photoToUpload, uid) => {
+    handlePhotoUpload = async (photoToUpload) => {
         try {
             await this.firebaseService.storage
-                .ref(`userPhotos/${uid}/${photoToUpload.name}`)
+                .ref(`userPhotos/${this.uid}/${photoToUpload.name}`)
                 .put(photoToUpload);
 
             const url = await this.firebaseService.storage
-                .ref(`userPhotos/${uid}`)
+                .ref(`userPhotos/${this.uid}`)
                 .child(photoToUpload.name)
                 .getDownloadURL();
 
-            await this.firebaseService.database.ref("users/" + uid).set({
-                photo: url,
+            const user = this.firebaseService.auth.currentUser;
+
+            user.updateProfile({
+                photoURL: `${url}`,
             });
 
             console.log("Successfully updated photo URL.");
