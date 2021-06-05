@@ -7,85 +7,89 @@ import { emailValidation } from "../../utils/validation";
 import EmailRedirectOptions from "../EmailRedirectOptions";
 
 const LoginForm = observer(() => {
-  const { authStore } = useMainStoreContext();
-  const { sendSignInLinkToEmail, loginStatus, error } = authStore;
+    const { authStore } = useMainStoreContext();
+    const { sendSignInLinkToEmail, loginStatus, error } = authStore;
 
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [message, setMessage] = useState("");
 
-  const handleSendLink = async () => {
-    await sendSignInLinkToEmail(email);
-    if (error) {
-      setMessage(error.message);
-    }
-  };
+    const handleSendLink = async () => {
+        await sendSignInLinkToEmail(email);
+        if (error) {
+            setMessage(error.message);
+        }
+    };
 
-  const didSendLink = (event) => {
-    event.preventDefault();
-    if (emailValidation(email)) {
-      handleSendLink(email);
+    const didSendLink = (event) => {
+        event.preventDefault();
+        if (emailValidation(email)) {
+            handleSendLink(email);
 
-      setEmail("");
-    }
-  };
+            setEmail("");
+        }
+    };
 
-  return (
-    <form
-      style={{
-        width: "300px",
-        padding: "10px",
-      }}
-    >
-      {loginStatus === "offline" ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
+    return (
+        <form
+            style={{
+                width: "300px",
+                padding: "10px",
+            }}
         >
-          <Box m={2}>
-            <Typography variant="h6">Email</Typography>
-            <TextField
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              fullWidth
-              required
-            />
-          </Box>
+            {loginStatus === "offline" ? (
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <Box m={2}>
+                        <Typography variant="h6">Email</Typography>
+                        <TextField
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            width="100%"
+                            required
+                        />
+                    </Box>
 
-          <Box m={2} display="flex" justifyContent="center">
-            <Button variant="outlined" size="medium" onClick={didSendLink}>
-              Entrar
-            </Button>
-          </Box>
+                    <Box m={2} display="flex" justifyContent="center">
+                        <Button
+                            variant="outlined"
+                            size="medium"
+                            onClick={didSendLink}
+                        >
+                            Entrar
+                        </Button>
+                    </Box>
 
-          <Typography> ou </Typography>
+                    <Typography> ou </Typography>
 
-          <Box m={2}>
-            <Typography variant="h6">Telefone</Typography>
-            <TextField
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-              fullWidth
-              required
-            />
-          </Box>
+                    <Box m={2}>
+                        <Typography variant="h6">Telefone</Typography>
+                        <TextField
+                            value={phone}
+                            onChange={(event) => setPhone(event.target.value)}
+                            width="100%"
+                            required
+                        />
+                    </Box>
 
-          <Box m={2} display="flex" justifyContent="center">
-            <Button variant="outlined" size="medium">
-              Entrar
-            </Button>
-          </Box>
+                    <Box m={2} display="flex" justifyContent="center">
+                        <Button variant="outlined" size="medium">
+                            Entrar
+                        </Button>
+                    </Box>
 
-          <Typography variant="h6">{message}</Typography>
-        </div>
-      ) : (
-        <EmailRedirectOptions />
-      )}
-    </form>
-  );
+                    <Typography variant="h6">{message}</Typography>
+                </div>
+            ) : (
+                <EmailRedirectOptions />
+            )}
+        </form>
+    );
 });
 
 export default LoginForm;

@@ -1,8 +1,19 @@
-import { TextField, FormHelperText, Typography, Button, Box } from "@material-ui/core";
+import {
+    TextField,
+    FormHelperText,
+    Typography,
+    Button,
+    Box,
+} from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { cpfValidation, phoneValidation, pixRandomKeyValidation, emailValidation } from "../../utils/validation";
+import {
+    cpfValidation,
+    phoneValidation,
+    pixRandomKeyValidation,
+    emailValidation,
+} from "../../utils/validation";
 import { formatCpf } from "../../utils/formatting";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,9 +56,9 @@ const UserRequestForm = () => {
             setPixKey(formattedCpf);
             setValidationError("");
         } else if (contact && !cpf) {
-            const formattedContact = `(${contact.slice(0, 2)}) ${contact[2]} ${contact.slice(3, 7)}-${contact.slice(
-                7
-            )}`;
+            const formattedContact = `(${contact.slice(0, 2)}) ${
+                contact[2]
+            } ${contact.slice(3, 7)}-${contact.slice(7)}`;
 
             setPixKey(formattedContact);
             setValidationError("");
@@ -74,7 +85,8 @@ const UserRequestForm = () => {
                 required
             />
             <FormHelperText>
-                Descrever em detalhes pode aumentar suas chances de encontrar um doador para ajuda-lo
+                Descrever em detalhes pode aumentar suas chances de encontrar um
+                doador para ajuda-lo
             </FormHelperText>
             <Typography variant="h5" gutterBottom>
                 Digite sua chave PIX
@@ -90,7 +102,12 @@ const UserRequestForm = () => {
             />
             <FormHelperText error>{validationError}</FormHelperText>
             <Box display="flex" justifyContent="center">
-                <Button className={classes.soliciteButton} onClick={handleSave} variant="outlined" size="medium">
+                <Button
+                    className={classes.soliciteButton}
+                    onClick={handleSave}
+                    variant="outlined"
+                    size="medium"
+                >
                     Salvar
                 </Button>
             </Box>
