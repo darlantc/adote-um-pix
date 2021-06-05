@@ -49,7 +49,7 @@ const LoginForm = observer(() => {
     if (validNumber) {
       signInWithPhoneNumber(validNumber);
 
-      setPhone("");
+      setPhoneNumber("");
     } else {
       setErrorMessageField("O número digitado parece não ser válido.");
     }
@@ -100,8 +100,8 @@ const LoginForm = observer(() => {
             <Box m={2}>
               <Typography variant="h6">Telefone</Typography>
               <TextField
-                value={phone}
-                onChange={(event) => setPhone(event.target.value)}
+                value={phoneNumber}
+                onChange={(event) => setPhoneNumber(event.target.value)}
                 fullWidth
                 required
               />
