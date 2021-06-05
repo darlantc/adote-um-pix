@@ -1,20 +1,17 @@
 import { Route, Redirect } from "react-router-dom";
 
 import { APP_ROUTES } from "../routes/Routes";
+import { useMainStoreContext } from "../contexts/mainStoreContext";
 
 export default function RouterWrapper({
   component: Component,
   isPrivate,
   ...rest
 }) {
-  const loading = false;
-  const signed = true;
+  const { authStore } = useMainStoreContext();
+  const { loggedUser } = authStore;
 
-  if (loading) {
-    return <div></div>;
-  }
-
-  if (!signed && isPrivate) {
+  if (!loggedUser && isPrivate) {
     return <Redirect to={APP_ROUTES.home} />;
   }
 

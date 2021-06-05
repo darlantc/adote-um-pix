@@ -8,121 +8,133 @@ import { formatPhoneNumber } from "../../utils/formatting";
 import EmailRedirectOptions from "../EmailRedirectOptions";
 
 const LoginForm = observer(() => {
-  const { authStore } = useMainStoreContext();
-  const {
-    sendSignInLinkToEmail,
-    loginStatus,
-    errorMessage,
-    signInWithPhoneNumber,
-  } = authStore;
+    const { authStore } = useMainStoreContext();
+    const {
+        sendSignInLinkToEmail,
+        loginStatus,
+        errorMessage,
+        signInWithPhoneNumber,
+    } = authStore;
 
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [errorMessageField, setErrorMessageField] = useState("");
+    const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [errorMessageField, setErrorMessageField] = useState("");
 
-  useEffect(() => {
-    setInterval(() => {
-      setErrorMessageField("");
-    }, 5000);
-  }, [errorMessageField]);
+    useEffect(() => {
+        setInterval(() => {
+            setErrorMessageField("");
+        }, 5000);
+    }, [errorMessageField]);
 
-  useEffect(() => {
-    setErrorMessageField(errorMessage);
-  }, [errorMessage]);
+    useEffect(() => {
+        setErrorMessageField(errorMessage);
+    }, [errorMessage]);
 
-  const didSendLinkByEmail = (event) => {
-    event.preventDefault();
-    if (emailValidation(email)) {
-      sendSignInLinkToEmail(email);
+    const didSendLinkByEmail = (event) => {
+        event.preventDefault();
+        if (emailValidation(email)) {
+            sendSignInLinkToEmail(email);
 
-      setEmail("");
-    } else {
-      setErrorMessageField("O email digitado parece não ser válido.");
-    }
-  };
+            setEmail("");
+        } else {
+            setErrorMessageField("O email digitado parece não ser válido.");
+        }
+    };
 
-  const didSendCodeBySMS = (event) => {
-    event.preventDefault();
+    const didSendCodeBySMS = (event) => {
+        event.preventDefault();
 
-    const validNumber = phoneValidation(phoneNumber);
+        const validNumber = phoneValidation(phoneNumber);
 
-    if (validNumber) {
-      signInWithPhoneNumber(validNumber);
+        if (validNumber) {
+            signInWithPhoneNumber(validNumber);
 
-      setPhoneNumber("");
-    } else {
-      setErrorMessageField("O número digitado parece não ser válido.");
-    }
-  };
+            setPhoneNumber("");
+        } else {
+            setErrorMessageField("O número digitado parece não ser válido.");
+        }
+    };
 
-  useEffect(() => {
-    const formattedNumber = formatPhoneNumber(phoneNumber);
-    if (formattedNumber) {
-      setPhoneNumber(formattedNumber);
-    }
-  }, [phoneNumber]);
+    useEffect(() => {
+        const formattedNumber = formatPhoneNumber(phoneNumber);
+        if (formattedNumber) {
+            setPhoneNumber(formattedNumber);
+        }
+    }, [phoneNumber]);
 
-  return (
-    <div
-      style={{
-        width: "300px",
-        padding: "10px",
-      }}
-    >
-      {loginStatus === "offline" ? (
+    return (
         <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
+            style={{
+                width: "300px",
+                padding: "10px",
+            }}
         >
-          <form onSubmit={didSendLinkByEmail}>
-            <Box m={2}>
-              <Typography variant="h6">Email</Typography>
-              <TextField
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                fullWidth
-              />
-            </Box>
+            {loginStatus === "offline" ? (
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <form onSubmit={didSendLinkByEmail}>
+                        <Box m={2}>
+                            <Typography variant="h6">Email</Typography>
+                            <TextField
+                                value={email}
+                                onChange={(event) =>
+                                    setEmail(event.target.value)
+                                }
+                                fullWidth
+                            />
+                        </Box>
 
-            <Box m={2} display="flex" justifyContent="center">
-              <Button type="submit" variant="outlined" size="medium">
-                Entrar
-              </Button>
-            </Box>
-          </form>
+                        <Box m={2} display="flex" justifyContent="center">
+                            <Button
+                                type="submit"
+                                variant="outlined"
+                                size="medium"
+                            >
+                                Entrar
+                            </Button>
+                        </Box>
+                    </form>
 
-          <Typography> ou </Typography>
+                    <Typography> ou </Typography>
 
-          <form onSubmit={didSendCodeBySMS}>
-            <Box m={2}>
-              <Typography variant="h6">Telefone</Typography>
-              <TextField
-                value={phoneNumber}
-                onChange={(event) => setPhoneNumber(event.target.value)}
-                fullWidth
-                required
-              />
-            </Box>
+                    <form onSubmit={didSendCodeBySMS}>
+                        <Box m={2}>
+                            <Typography variant="h6">Telefone</Typography>
+                            <TextField
+                                value={phoneNumber}
+                                onChange={(event) =>
+                                    setPhoneNumber(event.target.value)
+                                }
+                                fullWidth
+                                required
+                            />
+                        </Box>
 
-            <Box m={2} display="flex" justifyContent="center">
-              <Button type="submit" variant="outlined" size="medium">
-                Entrar
-              </Button>
-            </Box>
-          </form>
+                        <Box m={2} display="flex" justifyContent="center">
+                            <Button
+                                type="submit"
+                                variant="outlined"
+                                size="medium"
+                            >
+                                Entrar
+                            </Button>
+                        </Box>
+                    </form>
 
-          <div id="recatcha-container"></div>
+                    <div id="recatcha-container"></div>
 
-          <Typography variant="p">{errorMessageField}</Typography>
+                    <Typography variant="p">{errorMessageField}</Typography>
+                </div>
+            ) : (
+                <EmailRedirectOptions />
+            )}
         </div>
-      ) : (
-        <EmailRedirectOptions />
-      )}
-    </div>
-  );
+    );
 });
 
 export default LoginForm;
