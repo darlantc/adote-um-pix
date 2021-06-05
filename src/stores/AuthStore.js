@@ -20,15 +20,13 @@ class AuthStore {
             setEmailForSignIn: action,
             uid: computed,
             loginStatus: computed,
+            isAuthenticated: computed,
+            isAnonymous: computed,
         });
         firebaseService.auth.onAuthStateChanged(this.setLoggedUser);
 
         this.verifyLoginStatus();
     }
-
-    setLoggedUser = (value) => {
-        this.loggedUser = value;
-    };
 
     setErrorMessage = (value) => {
         this.errorMessage = value;
@@ -49,15 +47,23 @@ class AuthStore {
         if (!this.loggedUser) {
             return LoginStatus.loading;
         }
-        if (this.loggedUser.isAnonymous()) {
+        if (this.loggedUser.isAnonymous) {
             return LoginStatus.anonymous;
         }
         return LoginStatus.online;
     }
 
-    setLoggedUser = (user) => {
+    get isAuthenticated() {
+        return this.loggedUser;
+    }
+
+    get isAnonymous() {
+        return this.loginStatus === LoginStatus.anonymous;
+    }
+
+    setLoggedUser = (newValue) => {
         // User pode ser null | objeto user do Firebase
-        this.loggedUser = user;
+        this.loggedUser = newValue;
     };
 
     setErrorMessage = (value) => {
@@ -66,24 +72,14 @@ class AuthStore {
 
     verifyLoginStatus = async () => {
         const isSigningByEmail = await this.confirmEmailSignIn();
-        console.log(
-            "🚀 ~ file: AuthStore.js ~ line 69 ~ AuthStore ~ verifyLoginStatus= ~ isSigningByEmail",
-            isSigningByEmail
-        );
         if (!isSigningByEmail) {
-            console.log(
-                "🚀 ~ file: AuthStore.js ~ line 72 ~ AuthStore ~ verifyLoginStatus= ~ this.loggedUser",
-                this.loggedUser
-            );
             if (!this.loggedUser) {
                 await this.signInAnonymously();
             }
         }
     };
 
-    signInAnonymously = () => {
-        return this.firebaseService.auth.signInAnonymously();
-    };
+    signInAnonymously = () => this.firebaseService.auth.signInAnonymously();
 
     configSignInEmail = () => {
         return {
@@ -139,21 +135,14 @@ class AuthStore {
 
     updateUser = async (uid) => {
         const user = this.loggedUser;
-        console.log("🚀 ~ file: AuthStore.js ~ line 120 ~ AuthStore ~ updateUser= ~ user", user);
         const userProfileRef = this.firebaseService.database.ref("users").child(uid);
 
         userProfileRef.get((snapshot) => {
             if (snapshot) {
-                console.log("🚀 ~ file: AuthStore.js ~ line 126 ~ AuthStore ~ userProfileRef.get ~ snapshot", snapshot);
                 const updatedUser = {
                     ...user,
                     ...snapshot.val(),
                 };
-
-                console.log(
-                    "🚀 ~ file: AuthStore.js ~ line 127 ~ AuthStore ~ userProfileRef.get ~ updatedUser",
-                    updatedUser
-                );
 
                 this.setLoggedUser(updatedUser);
             } else {
