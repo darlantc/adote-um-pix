@@ -1,6 +1,7 @@
 import { makeObservable, observable, action, computed } from "mobx";
 
 import LoginStatus from "../models/LoginStatus";
+import ErrorMessageStatus from "../models/ErrorMessageStatus";
 
 const LOCAL_STORAGE_KEY = "emailForSignIn";
 
@@ -89,22 +90,30 @@ class AuthStore {
     };
 
     sendSignInLinkToEmail = async (email) => {
+        this.setErrorMessage(ErrorMessageStatus.loading);
         try {
-            await this.firebaseService.auth.sendSignInLinkToEmail(email, this.configSignInEmail());
+            await this.firebaseService.auth.sendSignInLinkToEmail(
+                email,
+                this.configSignInEmail()
+            );
 
             localStorage.setItem(LOCAL_STORAGE_KEY, email);
+            this.setErrorMessage(ErrorMessageStatus.none);
         } catch (error) {
             this.setErrorMessage(error.message);
         }
     };
 
     authenticateUserWithEmail = async (email) => {
-        const credential = this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
-            email,
-            window.location.href
-        );
+        const credential =
+            this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
+                email,
+                window.location.href
+            );
         try {
-            await this.firebaseService.auth.currentUser.linkWithCredential(credential);
+            await this.firebaseService.auth.currentUser.linkWithCredential(
+                credential
+            );
         } catch (error) {
             this.setErrorMessage(error.message);
         }
@@ -135,7 +144,9 @@ class AuthStore {
 
     updateUser = async (uid) => {
         const user = this.loggedUser;
-        const userProfileRef = this.firebaseService.database.ref("users").child(uid);
+        const userProfileRef = this.firebaseService.database
+            .ref("users")
+            .child(uid);
 
         userProfileRef.get((snapshot) => {
             if (snapshot) {
@@ -163,7 +174,9 @@ class AuthStore {
 
     handlePhotoUpload = async (photoToUpload) => {
         try {
-            await this.firebaseService.storage.ref(`userPhotos/${this.uid}/${photoToUpload.name}`).put(photoToUpload);
+            await this.firebaseService.storage
+                .ref(`userPhotos/${this.uid}/${photoToUpload.name}`)
+                .put(photoToUpload);
 
             const url = await this.firebaseService.storage
                 .ref(`userPhotos/${this.uid}`)
@@ -173,7 +186,7 @@ class AuthStore {
             const user = this.firebaseService.auth.currentUser;
 
             user.updateProfile({
-                photoURL: `${url}`,
+                photoUrl: `${url}`,
             });
 
             console.log("Successfully updated photo URL.");

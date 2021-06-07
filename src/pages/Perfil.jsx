@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 
 import { APP_ROUTES } from "../routes/Routes";
-import PerfilInfo from "../components/PerfilInfo";
+import ProfileInfo from "../components/ProfileInfo";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 
 const useStyles = makeStyles(() => ({
@@ -26,7 +26,7 @@ const Perfil = observer(() => {
     const [nivel, setNivel] = useState("");
 
     if (loggedUser) {
-        if (loggedUser.photoURL) {
+        if (loggedUser.photoUrl) {
             setEngajamento(engajamento + 25);
         }
         if (loggedUser.displayName) {
@@ -58,28 +58,46 @@ const Perfil = observer(() => {
                 <Typography variant="h3" gutterBottom>
                     Perfil
                 </Typography>
-                <Button className={classes.button} variant="outlined" component={Link} to={APP_ROUTES.myRequests}>
+                <Button
+                    className={classes.button}
+                    variant="outlined"
+                    component={Link}
+                    to={APP_ROUTES.myRequests}
+                >
                     Solicitações
                 </Button>
-                <Button className={classes.button} variant="outlined" component={Link} to={APP_ROUTES.myContributions}>
+                <Button
+                    className={classes.button}
+                    variant="outlined"
+                    component={Link}
+                    to={APP_ROUTES.myContributions}
+                >
                     Contribuições
                 </Button>
 
                 <Box width="90%" margin="10px">
-                    <Typography align="center" id="potecial-de-perfil" gutterBottom>
+                    <Typography
+                        align="center"
+                        id="potecial-de-perfil"
+                        gutterBottom
+                    >
                         {`Engajamento: ${nivel}`}
                     </Typography>
-                    <Slider value={engajamento} aria-labelledby="potecial-de-perfil" />
+                    <Slider
+                        value={engajamento}
+                        aria-labelledby="potecial-de-perfil"
+                    />
                 </Box>
 
                 <FormHelperText variant="outlined">
-                    O preenchimento dos campos do seu perfil possibilitam um maior engajamento do nosso time de
-                    doadores, preencha todos os campos e deixe que eles te conheçam melhor!
+                    O preenchimento dos campos do seu perfil possibilitam um
+                    maior engajamento do nosso time de doadores, preencha todos
+                    os campos e deixe que eles te conheçam melhor!
                 </FormHelperText>
             </Box>
 
             <Box width="65%">
-                <PerfilInfo />
+                <ProfileInfo />
             </Box>
         </Box>
     );

@@ -6,28 +6,28 @@ import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import { emailValidation, phoneValidation } from "../../utils/validation";
 import { formatPhoneNumber } from "../../utils/formatting";
 import EmailRedirectOptions from "../EmailRedirectOptions";
+import LoadingAnimation from "../LoadingAnimation";
+import ErrorMessageStatus from "../../models/ErrorMessageStatus";
 
 const LoginForm = observer(() => {
     const { authStore } = useMainStoreContext();
-    const {
-        sendSignInLinkToEmail,
-        loginStatus,
-        errorMessage,
-        signInWithPhoneNumber,
-    } = authStore;
+    const { sendSignInLinkToEmail, errorMessage, signInWithPhoneNumber } =
+        authStore;
 
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [errorMessageField, setErrorMessageField] = useState("");
 
     useEffect(() => {
-        setInterval(() => {
+        setTimeout(() => {
             setErrorMessageField("");
         }, 5000);
     }, [errorMessageField]);
 
     useEffect(() => {
-        setErrorMessageField(errorMessage);
+        if (errorMessage !== ErrorMessageStatus.loading) {
+            setErrorMessageField(errorMessage);
+        }
     }, [errorMessage]);
 
     const didSendLinkByEmail = (event) => {
@@ -62,14 +62,32 @@ const LoginForm = observer(() => {
         }
     }, [phoneNumber]);
 
+    if (errorMessage === ErrorMessageStatus.loading) {
+        return (
+            <div
+                style={{
+                    width: "300px",
+                    height: "300px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <LoadingAnimation />
+            </div>
+        );
+    }
+
     return (
         <div
             style={{
-                width: "300px",
+                width: "320px",
                 padding: "10px",
             }}
         >
-            {loginStatus === "offline" ? (
+            {errorMessage === ErrorMessageStatus.none ? (
+                <EmailRedirectOptions />
+            ) : (
                 <div
                     style={{
                         display: "flex",
@@ -130,8 +148,6 @@ const LoginForm = observer(() => {
 
                     <Typography variant="p">{errorMessageField}</Typography>
                 </div>
-            ) : (
-                <EmailRedirectOptions />
             )}
         </div>
     );

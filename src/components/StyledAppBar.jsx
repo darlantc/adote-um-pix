@@ -1,4 +1,12 @@
-import { Typography, AppBar, Toolbar, Box, Button, ButtonBase, Modal } from "@material-ui/core";
+import {
+    Typography,
+    AppBar,
+    Toolbar,
+    Box,
+    Button,
+    ButtonBase,
+    Modal,
+} from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -33,7 +41,9 @@ const RegistrationButton = styled(ButtonBase)({
 
 const StyledAppBar = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { isAuthenticated, isAnonymous } = authStore;
+    const { loggedUser, isAuthenticated, isAnonymous } = authStore;
+
+    console.log("user", loggedUser);
 
     const [displayModal, setDisplayModal] = useState(false);
 
@@ -50,27 +60,49 @@ const StyledAppBar = observer(() => {
         <>
             <PixAppBar position="relative">
                 <Toolbar>
-                    <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
-                        <ButtonBase style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.home}>
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        width="100%"
+                    >
+                        <ButtonBase
+                            style={{ textDecoration: "none" }}
+                            component={Link}
+                            to={APP_ROUTES.home}
+                        >
                             <Box display="flex" alignItems="center">
                                 <Logo />
-                                <Typography variant="h4">Adote um PIX</Typography>
+                                <Typography variant="h4">
+                                    Adote um PIX
+                                </Typography>
                             </Box>
                         </ButtonBase>
 
                         {isAuthenticated && !isAnonymous ? (
-                            <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.profile}>
+                            <Button
+                                style={{ textDecoration: "none" }}
+                                component={Link}
+                                to={APP_ROUTES.profile}
+                            >
                                 <RegistrationButton>Perfil</RegistrationButton>
                             </Button>
                         ) : (
-                            <RegistrationButton onClick={openModal}>Entre</RegistrationButton>
+                            <RegistrationButton onClick={openModal}>
+                                Entre
+                            </RegistrationButton>
                         )}
                     </Box>
                 </Toolbar>
             </PixAppBar>
             <Modal open={displayModal} onClose={closeModal}>
                 <Box display="flex" justifyContent="center">
-                    <Box borderRadius={7} position="absolute" top="15vh" bgcolor="background.paper">
+                    <Box
+                        borderRadius={7}
+                        position="absolute"
+                        top="15vh"
+                        bgcolor="background.paper"
+                    >
                         <LoginForm />
                     </Box>
                 </Box>
