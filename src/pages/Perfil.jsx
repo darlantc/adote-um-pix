@@ -2,7 +2,6 @@ import { Typography, Button, Box, FormHelperText } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
-import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 
 import { APP_ROUTES } from "../routes/Routes";
@@ -19,38 +18,47 @@ const useStyles = makeStyles(() => ({
 const Perfil = observer(() => {
     const { authStore } = useMainStoreContext();
     const { loggedUser } = authStore;
+    console.log(
+        "🚀 ~ file: Perfil.jsx ~ line 21 ~ Perfil ~ loggedUser",
+        loggedUser
+    );
 
     const classes = useStyles();
 
-    const [engajamento, setEngajamento] = useState(0);
-    const [nivel, setNivel] = useState("");
+    const getEngajamento = () => {
+        let result = 0;
+        if (loggedUser) {
+            if (loggedUser.photoUrl) {
+                result += 25;
+            }
+            if (loggedUser.displayName) {
+                result += 25;
+            }
+            if (loggedUser.bio) {
+                result += 25;
+            }
+            if (loggedUser.linkedIn) {
+                result += 25;
+            }
+        }
 
-    if (loggedUser) {
-        if (loggedUser.photoUrl) {
-            setEngajamento(engajamento + 25);
-        }
-        if (loggedUser.displayName) {
-            setEngajamento(engajamento + 25);
-        }
-        if (loggedUser.bio) {
-            setEngajamento(engajamento + 25);
-        }
-        if (loggedUser.linkedIn) {
-            setEngajamento(engajamento + 25);
-        }
-    }
+        return result;
+    };
 
-    useEffect(() => {
+    const engajamento = getEngajamento();
+
+    const getNivel = () => {
         if (engajamento <= 24) {
-            setNivel("Baixo");
+            return "Baixo";
         } else if (24 < engajamento < 49) {
-            setNivel("Moderado");
+            return "Moderado";
         } else if (50 < engajamento < 74) {
-            setNivel("Bom");
-        } else {
-            setNivel("Alto");
+            return "Bom";
         }
-    }, [engajamento]);
+        return "Alto";
+    };
+
+    const nivel = getNivel();
 
     return (
         <Box display="flex" justifyContent="space-between">
@@ -81,7 +89,7 @@ const Perfil = observer(() => {
                         id="potecial-de-perfil"
                         gutterBottom
                     >
-                        {`Engajamento: ${nivel}`}
+                        Engajamento: {nivel}
                     </Typography>
                     <Slider
                         value={engajamento}
