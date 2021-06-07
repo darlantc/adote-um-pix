@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, computed } from "mobx";
+import { makeObservable, observable, action, computed, reaction } from "mobx";
 
 import LoginStatus from "../models/LoginStatus";
 import ErrorMessageStatus from "../models/ErrorMessageStatus";
@@ -6,16 +6,21 @@ import ErrorMessageStatus from "../models/ErrorMessageStatus";
 const LOCAL_STORAGE_KEY = "emailForSignIn";
 
 class AuthStore {
+    loggedUserProfile = null;
     loggedUser = null;
     errorMessage = null;
     emailForSignIn = false;
 
+    #loggedUserRef = null;
+
     constructor(firebaseService) {
         this.firebaseService = firebaseService;
         makeObservable(this, {
+            loggedUserProfile: observable,
             loggedUser: observable,
             errorMessage: observable,
             emailForSignIn: observable,
+            setLoggedUserProfile: action,
             setLoggedUser: action,
             setErrorMessage: action,
             setEmailForSignIn: action,
@@ -24,9 +29,23 @@ class AuthStore {
             isAuthenticated: computed,
             isAnonymous: computed,
         });
-        firebaseService.auth.onAuthStateChanged(this.setLoggedUser);
 
         this.verifyLoginStatus();
+        reaction(
+            () => this.isAuthenticated && !this.isAnonymous,
+            (hasProfile) => {
+                this.clearLoggedUserProfile();
+                if (hasProfile) {
+                    this.#loggedUserRef = this.firebaseService.usersRef.child(
+                        this.uid
+                    );
+
+                    this.#loggedUserRef.on("value", (snapshot) => {
+                        this.setLoggedUserProfile(snapshot.val());
+                    });
+                }
+            }
+        );
     }
 
     setErrorMessage = (value) => {
@@ -35,6 +54,10 @@ class AuthStore {
 
     setEmailForSignIn = (value) => {
         this.emailForSignIn = value;
+    };
+
+    setLoggedUserProfile = (value) => {
+        this.loggedUserProfile = value;
     };
 
     get uid() {
@@ -73,10 +96,15 @@ class AuthStore {
 
     verifyLoginStatus = async () => {
         const isSigningByEmail = await this.confirmEmailSignIn();
+
         if (!isSigningByEmail) {
-            if (!this.loggedUser) {
-                await this.signInAnonymously();
-            }
+            this.firebaseService.auth.onAuthStateChanged((user) => {
+                if (user) {
+                    this.setLoggedUser(user);
+                } else {
+                    this.signInAnonymously();
+                }
+            });
         }
     };
 
@@ -87,6 +115,14 @@ class AuthStore {
             url: window.location.origin,
             handleCodeInApp: true,
         };
+    };
+
+    clearLoggedUserProfile = () => {
+        if (this.#loggedUserRef) {
+            this.#loggedUserRef.off("value");
+        }
+        this.#loggedUserRef = null;
+        this.setLoggedUserProfile(null);
     };
 
     sendSignInLinkToEmail = async (email) => {
@@ -142,37 +178,22 @@ class AuthStore {
         }
     };
 
-    updateUser = async (uid) => {
-        const user = this.loggedUser;
-        const userProfileRef = this.firebaseService.database
-            .ref("users")
-            .child(uid);
+    handleUserDataUpdate = async (fullName, bio, linkedIn) => {
+        if (!this.#loggedUserRef) {
+            return;
+        }
 
-        userProfileRef.get((snapshot) => {
-            if (snapshot) {
-                const updatedUser = {
-                    ...user,
-                    ...snapshot.val(),
-                };
-
-                this.setLoggedUser(updatedUser);
-            } else {
-                console.log("No data available");
-            }
-        });
-    };
-
-    handleUserDataUpdate = async (displayName, bio, linkedIn) => {
-        const user = this.firebaseService.auth.currentUser;
-
-        user.updateProfile({
-            displayName,
+        this.#loggedUserRef.update({
+            fullName,
             bio,
             linkedIn,
         });
     };
 
     handlePhotoUpload = async (photoToUpload) => {
+        if (!this.#loggedUserRef) {
+            return;
+        }
         try {
             await this.firebaseService.storage
                 .ref(`userPhotos/${this.uid}/${photoToUpload.name}`)
@@ -183,10 +204,8 @@ class AuthStore {
                 .child(photoToUpload.name)
                 .getDownloadURL();
 
-            const user = this.firebaseService.auth.currentUser;
-
-            user.updateProfile({
-                photoUrl: `${url}`,
+            this.#loggedUserRef.update({
+                photoUrl: url,
             });
 
             console.log("Successfully updated photo URL.");

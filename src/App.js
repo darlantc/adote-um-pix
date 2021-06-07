@@ -5,10 +5,15 @@ import {
     ThemeProvider,
     makeStyles,
 } from "@material-ui/core/styles";
+import { observer } from "mobx-react";
+
+import { useMainStoreContext } from "./contexts/mainStoreContext";
 
 import PixBackground from "./assets/images/pix-background.png";
 import StyledAppBar from "./components/StyledAppBar";
 import Routes from "./routes/Routes";
+import LoginStatus from "./models/LoginStatus";
+import LoadingAnimation from "./components/LoadingAnimation";
 
 const theme = createMuiTheme({
     typography: {
@@ -29,8 +34,35 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const App = () => {
+const App = observer(() => {
+    const { authStore } = useMainStoreContext();
+    const { loggedUser, loginStatus } = authStore;
+    console.log(
+        "🚀 ~ file: Routes.jsx ~ line 24 ~ Routes ~ loginStatus",
+        loginStatus
+    );
+    console.log(
+        "🚀 ~ file: Routes.jsx ~ line 24 ~ Routes ~ loggedUser",
+        loggedUser
+    );
+
     const classes = useStyles();
+
+    if (loginStatus === LoginStatus.loading) {
+        return (
+            <div
+                style={{
+                    width: "100%",
+                    height: "300px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <LoadingAnimation />
+            </div>
+        );
+    }
 
     return (
         <BrowserRouter>
@@ -42,6 +74,6 @@ const App = () => {
             </ThemeProvider>
         </BrowserRouter>
     );
-};
+});
 
 export default App;

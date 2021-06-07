@@ -41,9 +41,7 @@ const RegistrationButton = styled(ButtonBase)({
 
 const StyledAppBar = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUser, isAuthenticated, isAnonymous } = authStore;
-
-    console.log("user", loggedUser);
+    const { isAuthenticated, isAnonymous } = authStore;
 
     const [displayModal, setDisplayModal] = useState(false);
 

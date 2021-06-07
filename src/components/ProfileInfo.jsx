@@ -5,7 +5,7 @@ import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import { observer } from "mobx-react";
 
 import DefaultUserPhoto from "../assets/images/defaultUserPhoto.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 
 const useStyles = makeStyles(() => ({
@@ -18,14 +18,15 @@ const useStyles = makeStyles(() => ({
 
 const ProfileInfo = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUser, handleUserDataUpdate, handlePhotoUpload } = authStore;
+    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } =
+        authStore;
 
     const classes = useStyles();
 
     const [currentImage, setCurrentImage] = useState(DefaultUserPhoto);
-    const [displayName, setDisplayName] = useState("");
-    const [bio, setBio] = useState("");
-    const [linkedIn, setLinkedIn] = useState("");
+    const [fullName, setFullName] = useState(loggedUserProfile.fullName || "");
+    const [bio, setBio] = useState(loggedUserProfile.bio || "");
+    const [linkedIn, setLinkedIn] = useState(loggedUserProfile.linkedIn || "");
 
     const handleFile = (event) => {
         if (event.target.files[0]) {
@@ -43,10 +44,10 @@ const ProfileInfo = observer(() => {
 
     const didUpdateProfile = (event) => {
         event.preventDefault();
-        if (loggedUser) {
-            handleUserDataUpdate(displayName, bio, linkedIn);
+        if (loggedUserProfile) {
+            handleUserDataUpdate(fullName, bio, linkedIn);
 
-            setDisplayName("");
+            setFullName("");
             setBio("");
             setLinkedIn("");
         }
@@ -87,16 +88,12 @@ const ProfileInfo = observer(() => {
             >
                 <TextField
                     className={classes.textField}
-                    value={displayName}
+                    value={fullName}
                     onChange={(event) => {
-                        setDisplayName(event.target.value);
+                        setFullName(event.target.value);
                     }}
                     justify="center"
-                    placeholder={
-                        loggedUser && loggedUser.displayName
-                            ? loggedUser.displayName
-                            : "Nome de Usuário"
-                    }
+                    placeholder="Nome de Usuário"
                     variant="outlined"
                     size="small"
                     fullWidth
@@ -107,9 +104,7 @@ const ProfileInfo = observer(() => {
                     onChange={(event) => {
                         setBio(event.target.value);
                     }}
-                    placeholder={
-                        loggedUser && loggedUser.bio ? loggedUser.bio : "Bio"
-                    }
+                    placeholder="Bio"
                     multiline
                     rows="7"
                     variant="outlined"
@@ -122,11 +117,7 @@ const ProfileInfo = observer(() => {
                     onChange={(event) => {
                         setLinkedIn(event.target.value);
                     }}
-                    placeholder={
-                        loggedUser && loggedUser.linkedIn
-                            ? loggedUser.linkedIn
-                            : "Perfil LinkedIn"
-                    }
+                    placeholder="Perfil LinkedIn"
                     variant="outlined"
                     size="small"
                     fullWidth

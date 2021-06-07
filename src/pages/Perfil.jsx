@@ -17,27 +17,23 @@ const useStyles = makeStyles(() => ({
 
 const Perfil = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUser } = authStore;
-    console.log(
-        "🚀 ~ file: Perfil.jsx ~ line 21 ~ Perfil ~ loggedUser",
-        loggedUser
-    );
+    const { loggedUserProfile } = authStore;
 
     const classes = useStyles();
 
     const getEngajamento = () => {
         let result = 0;
-        if (loggedUser) {
-            if (loggedUser.photoUrl) {
+        if (loggedUserProfile) {
+            if (loggedUserProfile.photoUrl) {
                 result += 25;
             }
-            if (loggedUser.displayName) {
+            if (loggedUserProfile.fullName) {
                 result += 25;
             }
-            if (loggedUser.bio) {
+            if (loggedUserProfile.bio) {
                 result += 25;
             }
-            if (loggedUser.linkedIn) {
+            if (loggedUserProfile.linkedIn) {
                 result += 25;
             }
         }

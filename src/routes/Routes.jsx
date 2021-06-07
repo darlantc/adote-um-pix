@@ -1,4 +1,6 @@
 import { Switch } from "react-router-dom";
+import { observer } from "mobx-react";
+
 import Route from "./RouterWrapper";
 import Homepage from "../pages/Homepage";
 import Adote from "../pages/Adote";
@@ -15,7 +17,7 @@ export const APP_ROUTES = Object.freeze({
     myContributions: "/minhas-contribuicoes",
 });
 
-export default function Routes() {
+const Routes = observer(() => {
     return (
         <Switch>
             <Route exact path={APP_ROUTES.home} component={Homepage} />
@@ -35,4 +37,6 @@ export default function Routes() {
             />
         </Switch>
     );
-}
+});
+
+export default Routes;
