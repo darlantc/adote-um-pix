@@ -17,6 +17,7 @@ class UserRequestsDatabaseAdapter {
         this.clearStore();
 
         if (!this.authStore.loggedUser) {
+            console.log("🚀 ~ NO - loggedUser");
             return;
         }
         this.loggedUserRequestsRef = this.firebaseService.userRequestsRef
@@ -31,16 +32,19 @@ class UserRequestsDatabaseAdapter {
                 });
             });
 
-            console.log("🚀 ~ loggedUserRequests", this.loggedUserRequests);
+            console.log(
+                "🚀 ~ SYNC - loggedUserRequests",
+                this.loggedUserRequests
+            );
         });
     };
 
     getUserRequests = async () => {
         console.log(
             "🚀 ~ window.location.href",
-            `${window.location.href} ${APP_ROUTES.myRequests}`
+            `${window.location.href.indexOf("minhas")} ${APP_ROUTES.myRequests}`
         );
-        if (window.location.href.indexOf() >= 0) {
+        if (window.location.href.indexOf("minhas") >= 0) {
             return this.loggedUserRequests;
         }
 
@@ -49,10 +53,7 @@ class UserRequestsDatabaseAdapter {
             .equalTo(UserRequestStatus.available);
 
         this.loggedUserRequestsRef.once("value", (snapshots) => {
-            console.log(
-                "🚀 ~ this.loggedUserRequestsRef.once ~ snapshots",
-                snapshots.val()
-            );
+            console.log("🚀 ~ Whole ~ snapshots", snapshots);
             snapshots.forEach((snapshot) => {
                 this.authStore.userRequests.push({
                     id: snapshot.key,

@@ -20,7 +20,7 @@ const Adote = observer(() => {
         if (userRequests) {
             setRequests(userRequests);
         }
-    });
+    }, [userRequests, getUserRequests]);
 
     return (
         <div>
