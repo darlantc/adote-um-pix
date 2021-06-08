@@ -37,14 +37,6 @@ const useStyles = makeStyles((theme) => ({
 const App = observer(() => {
     const { authStore } = useMainStoreContext();
     const { loggedUser, loginStatus } = authStore;
-    console.log(
-        "🚀 ~ file: Routes.jsx ~ line 24 ~ Routes ~ loginStatus",
-        loginStatus
-    );
-    console.log(
-        "🚀 ~ file: Routes.jsx ~ line 24 ~ Routes ~ loggedUser",
-        loggedUser
-    );
 
     const classes = useStyles();
 

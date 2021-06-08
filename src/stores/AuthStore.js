@@ -82,7 +82,6 @@ class AuthStore {
     };
 
     setLoggedUser = (newValue) => {
-        // User pode ser null | objeto user do Firebase
         this.loggedUser = newValue;
     };
 

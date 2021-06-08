@@ -55,11 +55,8 @@ const StyledAppBar = observer(() => {
     };
 
     const didLogOut = (event) => {
-        console.log("🚀 ~ 1");
         event.preventDefault();
-        console.log("🚀 ~ 2");
         logout();
-        console.log("🚀 ~ 3");
     };
 
     return (
