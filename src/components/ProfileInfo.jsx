@@ -23,7 +23,9 @@ const ProfileInfo = observer(() => {
 
     const classes = useStyles();
 
-    const [currentImage, setCurrentImage] = useState(DefaultUserPhoto);
+    const [currentImage, setCurrentImage] = useState(
+        loggedUserProfile.photUrl || DefaultUserPhoto
+    );
     const [fullName, setFullName] = useState(loggedUserProfile.fullName || "");
     const [bio, setBio] = useState(loggedUserProfile.bio || "");
     const [linkedIn, setLinkedIn] = useState(loggedUserProfile.linkedIn || "");

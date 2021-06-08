@@ -41,7 +41,7 @@ const RegistrationButton = styled(ButtonBase)({
 
 const StyledAppBar = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { isAuthenticated, isAnonymous } = authStore;
+    const { isAuthenticated, isAnonymous, logout } = authStore;
 
     const [displayModal, setDisplayModal] = useState(false);
 
@@ -52,6 +52,14 @@ const StyledAppBar = observer(() => {
 
     const closeModal = () => {
         setDisplayModal(false);
+    };
+
+    const didLogOut = (event) => {
+        console.log("🚀 ~ 1");
+        event.preventDefault();
+        console.log("🚀 ~ 2");
+        logout();
+        console.log("🚀 ~ 3");
     };
 
     return (
@@ -78,13 +86,20 @@ const StyledAppBar = observer(() => {
                         </ButtonBase>
 
                         {isAuthenticated && !isAnonymous ? (
-                            <Button
-                                style={{ textDecoration: "none" }}
-                                component={Link}
-                                to={APP_ROUTES.profile}
-                            >
-                                <RegistrationButton>Perfil</RegistrationButton>
-                            </Button>
+                            <Box>
+                                <Button
+                                    style={{ textDecoration: "none" }}
+                                    component={Link}
+                                    to={APP_ROUTES.profile}
+                                >
+                                    <RegistrationButton>
+                                        Perfil
+                                    </RegistrationButton>
+                                </Button>
+                                <RegistrationButton onClick={didLogOut}>
+                                    Sair
+                                </RegistrationButton>
+                            </Box>
                         ) : (
                             <RegistrationButton onClick={openModal}>
                                 Entre

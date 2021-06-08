@@ -48,18 +48,6 @@ class AuthStore {
         );
     }
 
-    setErrorMessage = (value) => {
-        this.errorMessage = value;
-    };
-
-    setEmailForSignIn = (value) => {
-        this.emailForSignIn = value;
-    };
-
-    setLoggedUserProfile = (value) => {
-        this.loggedUserProfile = value;
-    };
-
     get uid() {
         if (this.loggedUser) {
             return this.loggedUser.uid;
@@ -84,6 +72,14 @@ class AuthStore {
     get isAnonymous() {
         return this.loginStatus === LoginStatus.anonymous;
     }
+
+    setEmailForSignIn = (value) => {
+        this.emailForSignIn = value;
+    };
+
+    setLoggedUserProfile = (value) => {
+        this.loggedUserProfile = value;
+    };
 
     setLoggedUser = (newValue) => {
         // User pode ser null | objeto user do Firebase
@@ -164,6 +160,7 @@ class AuthStore {
         const emailFromStorage = window.localStorage.getItem(LOCAL_STORAGE_KEY);
         const email = emailFromStorage || emailFromUser;
         if (!email) {
+            this.setEmailForSignIn(true);
             return false;
         }
 
@@ -173,6 +170,7 @@ class AuthStore {
         } catch (error) {
             this.setErrorMessage(error.message);
         } finally {
+            this.verifyLoginStatus();
             this.setEmailForSignIn(false);
             return true;
         }
@@ -194,6 +192,7 @@ class AuthStore {
         if (!this.#loggedUserRef) {
             return;
         }
+
         try {
             await this.firebaseService.storage
                 .ref(`userPhotos/${this.uid}/${photoToUpload.name}`)
@@ -217,7 +216,6 @@ class AuthStore {
     logout = async () => {
         try {
             await this.firebaseService.auth.signOut();
-            await this.signInAnonymously();
         } catch (error) {
             this.logout();
         }
