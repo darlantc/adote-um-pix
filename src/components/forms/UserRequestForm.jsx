@@ -54,8 +54,8 @@ const UserRequestForm = observer(({ id }) => {
                 console.log("🚀 ~ UPDATE", id);
                 updateUserRequest(request, id);
             } else {
-                addUserRequest(request);
                 console.log("🚀 ~ ADD");
+                addUserRequest(request);
             }
         }
 

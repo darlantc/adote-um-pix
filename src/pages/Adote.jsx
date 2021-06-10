@@ -9,18 +9,9 @@ const Adote = observer(() => {
     const { userRequestStore } = useMainStoreContext();
     const { userRequests, getUserRequests } = userRequestStore;
 
-    const [requests, setRequests] = useState([]);
-
     useEffect(() => {
         getUserRequests();
-        console.log(
-            "🚀 ~ file: Adote.jsx ~ line 17 ~ useEffect ~ userRequests",
-            userRequests
-        );
-        if (userRequests) {
-            setRequests(userRequests);
-        }
-    }, [userRequests, getUserRequests]);
+    }, []);
 
     return (
         <div>
@@ -33,8 +24,8 @@ const Adote = observer(() => {
                 border="2px solid"
                 borderRadius="7px"
             >
-                {requests &&
-                    requests.map((request) => {
+                {userRequests &&
+                    userRequests.map((request) => {
                         return (
                             <SolicitacoesDisplay
                                 item={request}

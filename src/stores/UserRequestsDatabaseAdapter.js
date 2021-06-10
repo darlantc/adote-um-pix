@@ -1,6 +1,5 @@
 import UserRequestStatus from "../models/UserRequestStatus";
-
-import APP_ROUTES from "../routes/Routes";
+import { APP_ROUTES } from "../routes/Routes";
 
 class UserRequestsDatabaseAdapter {
     loggedUserRequests = [];
@@ -17,50 +16,53 @@ class UserRequestsDatabaseAdapter {
         this.clearStore();
 
         if (!this.authStore.loggedUser) {
-            console.log("🚀 ~ NO - loggedUser");
             return;
         }
+
         this.loggedUserRequestsRef = this.firebaseService.userRequestsRef
             .orderByChild("user/id")
             .equalTo(this.authStore.loggedUser.uid);
 
         this.loggedUserRequestsRef.on("value", (snapshots) => {
+            let userRequests = [];
             snapshots.forEach((snapshot) => {
-                this.loggedUserRequests.push({
+                userRequests.push({
                     id: snapshot.key,
                     ...snapshot.val(),
                 });
             });
 
-            console.log(
-                "🚀 ~ SYNC - loggedUserRequests",
-                this.loggedUserRequests
-            );
+            this.loggedUserRequests = userRequests;
         });
     };
 
     getUserRequests = async () => {
-        console.log(
-            "🚀 ~ window.location.href",
-            `${window.location.href.indexOf("minhas")} ${APP_ROUTES.myRequests}`
-        );
-        if (window.location.href.indexOf("minhas") >= 0) {
+        if (window.location.href.includes(APP_ROUTES.myRequests)) {
             return this.loggedUserRequests;
         }
 
-        this.loggedUserRequestsRef = this.firebaseService.userRequestsRef
-            .orderByChild("status")
-            .equalTo(UserRequestStatus.available);
+        let userRequests = [];
 
-        this.loggedUserRequestsRef.once("value", (snapshots) => {
-            console.log("🚀 ~ Whole ~ snapshots", snapshots);
+        try {
+            this.loggedUserRequestsRef = this.firebaseService.userRequestsRef
+                .orderByChild("status")
+                .equalTo(UserRequestStatus.available);
+
+            const snapshots = await this.loggedUserRequestsRef.once("value");
             snapshots.forEach((snapshot) => {
-                this.authStore.userRequests.push({
+                userRequests.push({
                     id: snapshot.key,
                     ...snapshot.val(),
                 });
             });
-        });
+        } catch (error) {
+            console.error(
+                "UserRequestsDatabaseAdapter -> getUserRequest",
+                error
+            );
+        } finally {
+            return userRequests;
+        }
     };
 
     addUserRequest = async (request) => {
@@ -68,16 +70,18 @@ class UserRequestsDatabaseAdapter {
             const { pixKey, description } = request;
             const { loggedUser } = this.authStore;
 
-            this.firebaseService.userRequestsRef.push({
-                user: {
-                    id: loggedUser.uid,
-                    name: loggedUser.displayName,
-                },
-                pixKey,
-                description,
-                createdAt: this.firebaseService.serverTimestamp,
-                status: UserRequestStatus.waitingForApproval,
-            });
+            if (this.firebaseService) {
+                this.firebaseService.userRequestsRef.push({
+                    user: {
+                        id: loggedUser.uid,
+                        name: loggedUser.displayName,
+                    },
+                    pixKey,
+                    description,
+                    createdAt: this.firebaseService.serverTimestamp,
+                    status: UserRequestStatus.waitingForApproval,
+                });
+            }
         }
     };
 

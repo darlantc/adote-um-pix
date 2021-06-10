@@ -1,80 +1,83 @@
 import { action, computed, makeObservable, observable } from "mobx";
+import { co } from "co";
 
 class UserRequestStore {
-  get;
-  add;
-  update;
-  remove;
-  userRequests = [];
-  searchString = "";
+    get;
+    add;
+    update;
+    remove;
+    userRequests = [];
+    searchString = "";
 
-  constructor(get, add, update, remove) {
-    this.get = get;
-    this.add = add;
-    this.update = update;
-    this.remove = remove;
+    constructor(get, add, update, remove) {
+        this.get = get;
+        this.add = add;
+        this.update = update;
+        this.remove = remove;
 
-    makeObservable(this, {
-      userRequests: observable,
-      searchString: observable,
-      filteredUserRequests: computed,
-      setSearchString: action,
-      setUserRequests: action,
-    });
-  }
-
-  get filteredUserRequests() {
-    if (this.userRequests.length < 1) {
-      return [];
+        makeObservable(this, {
+            userRequests: observable,
+            searchString: observable,
+            filteredUserRequests: computed,
+            setSearchString: action,
+            setUserRequests: action,
+        });
     }
 
-    return this.userRequests.filter((request) => {
-      const lowerDescription = request.description.toLowerCase();
-      const lowerString = this.searchString.toLowerCase();
-      return lowerDescription.indexOf(lowerString) >= 0;
-    });
-  }
+    get filteredUserRequests() {
+        if (this.userRequests.length < 1) {
+            return [];
+        }
 
-  setSearchString = (newValue) => {
-    this.searchString = newValue;
-  };
-
-  setUserRequests = (newValue) => {
-    this.userRequests = newValue;
-  };
-
-  getUserRequests = async () => {
-    const result = await this.get();
-    this.setUserRequests(result);
-  };
-
-  addUserRequest = async (item) => {
-    await this.add(item);
-    await this.getUserRequests();
-  };
-
-  updateUserRequest = async (item) => {
-    if (this.itemExists(item.id)) {
-      await this.update(item);
-      await this.getUserRequests();
+        return this.userRequests.filter((request) => {
+            const lowerDescription = request.description.toLowerCase();
+            const lowerString = this.searchString.toLowerCase();
+            return lowerDescription.indexOf(lowerString) >= 0;
+        });
     }
-  };
 
-  removeUserRequest = async (id) => {
-    await this.remove(id);
-    await this.getUserRequests();
-  };
+    setSearchString = (newValue) => {
+        this.searchString = newValue;
+    };
 
-  itemExists = (idToVerify) => {
-    if (this.userRequests) {
-      return this.userRequests.find(({ id }) => id === idToVerify);
-    }
-    return false;
-  };
+    setUserRequests = (newValue) => {
+        this.userRequests = newValue;
+    };
 
-  clearStore = () => {
-    this.setUserRequests([]);
-  };
+    getUserRequests = async () => {
+        const result = await this.get();
+        if (result) {
+            this.setUserRequests(result);
+        }
+    };
+
+    addUserRequest = async (item) => {
+        await this.add(item);
+        await this.getUserRequests();
+    };
+
+    updateUserRequest = async (item) => {
+        if (this.itemExists(item.id)) {
+            await this.update(item);
+            await this.getUserRequests();
+        }
+    };
+
+    removeUserRequest = async (id) => {
+        await this.remove(id);
+        await this.getUserRequests();
+    };
+
+    itemExists = (idToVerify) => {
+        if (this.userRequests) {
+            return this.userRequests.find(({ id }) => id === idToVerify);
+        }
+        return false;
+    };
+
+    clearStore = () => {
+        this.setUserRequests([]);
+    };
 }
 
 export default UserRequestStore;
