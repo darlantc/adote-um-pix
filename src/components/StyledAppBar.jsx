@@ -3,14 +3,21 @@ import {
   AppBar,
   Toolbar,
   Box,
+  Button,
   ButtonBase,
-  TextField,
   Modal,
 } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { observer } from "mobx-react";
 
 import Logo from "./Logo";
+import ModalEmailRequest from "./ModalEmailRequest";
+import LoginForm from "./forms/LoginForm";
+
+import { useMainStoreContext } from "../contexts/mainStoreContext";
+import { APP_ROUTES } from "../routes/Routes";
 
 const PixAppBar = styled(AppBar)({
   background: "linear-gradient(45deg, #FFF 30%, #000000 90%)",
@@ -32,7 +39,10 @@ const RegistrationButton = styled(ButtonBase)({
   },
 });
 
-const StyledAppBar = () => {
+const StyledAppBar = observer(() => {
+  const { authStore } = useMainStoreContext();
+  const { loggedUser } = authStore;
+
   const [displayModal, setDisplayModal] = useState(false);
 
   const openModal = (event) => {
@@ -54,55 +64,45 @@ const StyledAppBar = () => {
             justifyContent="space-between"
             width="100%"
           >
-            <Box display="flex" alignItems="center">
-              <Logo />
-              <Typography variant="h4">Adote um PIX</Typography>
-            </Box>
+            <ButtonBase
+              style={{ textDecoration: "none" }}
+              component={Link}
+              to={APP_ROUTES.home}
+            >
+              <Box display="flex" alignItems="center">
+                <Logo />
+                <Typography variant="h4">Adote um PIX</Typography>
+              </Box>
+            </ButtonBase>
 
-            <RegistrationButton variant="outlined" onClick={openModal}>
-              Registre-se
-            </RegistrationButton>
+            {loggedUser ? (
+              <Button
+                style={{ textDecoration: "none" }}
+                component={Link}
+                to={APP_ROUTES.profile}
+              >
+                <RegistrationButton>Perfil</RegistrationButton>
+              </Button>
+            ) : (
+              <RegistrationButton onClick={openModal}>Entre</RegistrationButton>
+            )}
           </Box>
         </Toolbar>
       </PixAppBar>
-      <Modal
-        open={displayModal}
-        onClose={closeModal}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        <Box
-          borderRadius={7}
-          bgcolor="background.paper"
-          position="absolute"
-          top={120}
-          left="50vw"
-          marginLeft="-165px"
-        >
-          <form
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
+      <Modal open={displayModal} onClose={closeModal}>
+        <Box display="flex" justifyContent="center">
+          <Box
+            borderRadius={7}
+            position="absolute"
+            top="15vh"
+            bgcolor="background.paper"
           >
-            <Box width={300} m={2}>
-              <Typography variant="h6">Email</Typography>
-              <TextField fullWidth required />
-              <Typography variant="h6">Password</Typography>
-              <TextField fullWidth required />
-            </Box>
-
-            <Typography> ou </Typography>
-
-            <Box width={300} m={2}>
-              <Typography variant="h6">Telefone</Typography>
-              <TextField fullWidth required />
-            </Box>
-          </form>
+            <LoginForm />
+          </Box>
         </Box>
       </Modal>
+      <ModalEmailRequest />
     </>
   );
-};
+});
 export default StyledAppBar;

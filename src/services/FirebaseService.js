@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import firebaseApp from "firebase";
 import "firebase/database";
 import "firebase/auth";
 import "firebase/storage";
@@ -41,6 +42,10 @@ class FirebaseService {
 
   get userRequestsRef() {
     return this.database.ref("userRequests");
+  }
+
+  get RecaptchaVerifier() {
+    return firebaseApp.auth.RecaptchaVerifier;
   }
 
   saveNewUserRequest = ({ userId, pixKey, description }) => {
