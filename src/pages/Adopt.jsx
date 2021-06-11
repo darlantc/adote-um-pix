@@ -1,11 +1,11 @@
 import { Typography, Box } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
-import SolicitacoesDisplay from "../components/SolicitacoesDisplay";
+import RequestsDisplay from "../components/RequestsDisplay";
 
-const Adote = observer(() => {
+const Adopt = observer(() => {
     const { userRequestStore } = useMainStoreContext();
     const { userRequests, getUserRequests } = userRequestStore;
 
@@ -27,10 +27,7 @@ const Adote = observer(() => {
                 {userRequests &&
                     userRequests.map((request) => {
                         return (
-                            <SolicitacoesDisplay
-                                item={request}
-                                key={request.id}
-                            />
+                            <RequestsDisplay item={request} key={request.id} />
                         );
                     })}
             </Box>
@@ -38,4 +35,4 @@ const Adote = observer(() => {
     );
 });
 
-export default Adote;
+export default Adopt;

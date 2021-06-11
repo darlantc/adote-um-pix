@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const PerfilInfo = () => {
+const ProfileInfo = () => {
     const classes = useStyles();
 
     const [foto, setFoto] = useState();
@@ -127,4 +127,4 @@ const PerfilInfo = () => {
     );
 };
 
-export default PerfilInfo;
+export default ProfileInfo;

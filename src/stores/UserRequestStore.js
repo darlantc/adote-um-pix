@@ -1,5 +1,4 @@
 import { action, computed, makeObservable, observable } from "mobx";
-import { co } from "co";
 
 class UserRequestStore {
     get;

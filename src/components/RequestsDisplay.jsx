@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SolicitacoesDisplay = ({ item }) => {
+const RequestsDisplay = ({ item }) => {
     const classes = useStyles();
 
     const { name, timestamp, description } = item;
@@ -45,4 +45,4 @@ const SolicitacoesDisplay = ({ item }) => {
     );
 };
 
-export default SolicitacoesDisplay;
+export default RequestsDisplay;

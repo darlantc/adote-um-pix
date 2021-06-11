@@ -6,7 +6,7 @@ import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { formatDate } from "../utils/formatting";
 import UserRequestForm from "./forms/UserRequestForm";
 
-const SolicitacaoCard = observer(({ item }) => {
+const RequestCard = observer(({ item }) => {
     const { userRequestStore } = useMainStoreContext();
     const { removeUserRequest } = userRequestStore;
 
@@ -74,4 +74,4 @@ const SolicitacaoCard = observer(({ item }) => {
     );
 });
 
-export default SolicitacaoCard;
+export default RequestCard;

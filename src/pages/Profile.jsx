@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
 
 import { APP_ROUTES } from "../routes/Routes";
-import PerfilInfo from "../components/PerfilInfo";
+import ProfileInfo from "../components/ProfileInfo";
 
 const useStyles = makeStyles(() => ({
     button: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const Perfil = observer(() => {
+const Profile = observer(() => {
     const classes = useStyles();
 
     return (
@@ -47,10 +47,10 @@ const Perfil = observer(() => {
             </Box>
 
             <Box width="65%">
-                <PerfilInfo />
+                <ProfileInfo />
             </Box>
         </Box>
     );
 });
 
-export default Perfil;
+export default Profile;
