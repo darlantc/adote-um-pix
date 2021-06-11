@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import { Container } from "@material-ui/core";
-import { createMuiTheme, ThemeProvider, makeStyles } from "@material-ui/core/styles";
+import { ThemeProvider, makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "./contexts/mainStoreContext";
@@ -11,11 +11,7 @@ import Routes from "./routes/Routes";
 import LoginStatus from "./models/LoginStatus";
 import LoadingAnimation from "./components/LoadingAnimation";
 
-const theme = createMuiTheme({
-    typography: {
-        fontFamily: "Original Surfer",
-    },
-});
+import { theme } from "./assets/jss/styles.js";
 
 const useStyles = makeStyles((theme) => ({
     container: {
