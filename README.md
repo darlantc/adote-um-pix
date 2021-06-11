@@ -19,3 +19,8 @@ Como mentor destes dois jovens programadores decidi fazer deste projeto um labor
 * Jest;
 * Testing Library;
 * Firebase;
+
+## Colaboradores
+* [Davi Bressiani](https://github.com/BressianiDavi)
+* [Darlan Tódero ten Caten](https://github.com/darlantc)
+* [Mateus Pereira](https://github.com/mat3usps)
