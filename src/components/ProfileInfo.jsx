@@ -5,7 +5,7 @@ import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import { observer } from "mobx-react";
 
 import DefaultUserPhoto from "../assets/images/defaultUserPhoto.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 
 const useStyles = makeStyles(() => ({
@@ -18,14 +18,11 @@ const useStyles = makeStyles(() => ({
 
 const ProfileInfo = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } =
-        authStore;
+    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } = authStore;
 
     const classes = useStyles();
 
-    const [currentImage, setCurrentImage] = useState(
-        loggedUserProfile.photoUrl || DefaultUserPhoto
-    );
+    const [currentImage, setCurrentImage] = useState(loggedUserProfile.photoUrl || DefaultUserPhoto);
     const [fullName, setFullName] = useState(loggedUserProfile.fullName || "");
     const [bio, setBio] = useState(loggedUserProfile.bio || "");
     const [linkedIn, setLinkedIn] = useState(loggedUserProfile.linkedIn || "");
@@ -59,13 +56,7 @@ const ProfileInfo = observer(() => {
         <div>
             <Box display="flex" justifyContent="center">
                 <label htmlFor="photo" style={{ cursor: "pointer" }}>
-                    <input
-                        id="photo"
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        onChange={handleFile}
-                    />
+                    <input id="photo" type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} />
                     <img
                         style={{
                             width: "200px",

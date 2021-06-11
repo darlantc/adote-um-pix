@@ -1,10 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import { Container } from "@material-ui/core";
-import {
-    createMuiTheme,
-    ThemeProvider,
-    makeStyles,
-} from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider, makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "./contexts/mainStoreContext";
@@ -36,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 const App = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUser, loginStatus } = authStore;
+    const { loginStatus } = authStore;
 
     const classes = useStyles();
 
