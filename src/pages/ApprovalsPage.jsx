@@ -33,12 +33,12 @@ export default function ApprovalsPage() {
                 <Typography>1/97</Typography>
             </Grid>
             <Grid item xs={12}>
-                <Card className={classes.root}>
+                <Card className={classes.root} aria-label="card">
                     <CardContent>
                         <Typography variant="h5" component="h2" gutterBottom>
                             Nome da pessoa
                         </Typography>
-                        <Typography variant="h6">Email/Telefone</Typography>
+                        <Typography variant="h6">E-mail/Telefone</Typography>
                         <Typography variant="h6">Bio:</Typography>
                         <Typography>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos dolor voluptatum
