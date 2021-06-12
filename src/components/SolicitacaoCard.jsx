@@ -22,13 +22,11 @@ const SolicitacaoCard = ({ item }) => {
                 >{`- ${status} -`}</Typography>
                 <p>{descricao}</p>
                 <Typography variant="h6" gutterBottom>
-                    Chave{`: ${chavePix}`}
+                    Chave: {chavePix}
                 </Typography>
 
                 <Box display="flex" justifyContent="center" width="100%">
-                    <Button variant="outlined" onClick={""}>
-                        Editar Solicitação
-                    </Button>
+                    <Button variant="outlined">Editar Solicitação</Button>
                 </Box>
             </Box>
         </Paper>

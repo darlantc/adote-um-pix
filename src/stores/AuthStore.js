@@ -1,7 +1,6 @@
 import { makeObservable, observable, action, computed, reaction } from "mobx";
 
 import LoginStatus from "../models/LoginStatus";
-import ErrorMessageStatus from "../models/ErrorMessageStatus";
 
 const LOCAL_STORAGE_KEY = "emailForSignIn";
 
@@ -9,7 +8,8 @@ class AuthStore {
     loggedUserProfile = null;
     loggedUser = null;
     errorMessage = null;
-    emailForSignIn = false;
+    displayEmailRedirectOptions = false;
+    needEmailForSignIn = false;
 
     #loggedUserRef = null;
 
@@ -19,11 +19,13 @@ class AuthStore {
             loggedUserProfile: observable,
             loggedUser: observable,
             errorMessage: observable,
-            emailForSignIn: observable,
+            displayEmailRedirectOptions: observable,
+            needEmailForSignIn: observable,
             setLoggedUserProfile: action,
             setLoggedUser: action,
             setErrorMessage: action,
-            setEmailForSignIn: action,
+            setDisplayEmailRedirectOptions: action,
+            setNeedEmailForSignIn: action,
             uid: computed,
             loginStatus: computed,
             isAuthenticated: computed,
@@ -73,8 +75,8 @@ class AuthStore {
         return this.loginStatus === LoginStatus.anonymous;
     }
 
-    setEmailForSignIn = (value) => {
-        this.emailForSignIn = value;
+    setNeedEmailForSignIn = (value) => {
+        this.needEmailForSignIn = value;
     };
 
     setLoggedUserProfile = (value) => {
@@ -87,6 +89,10 @@ class AuthStore {
 
     setErrorMessage = (value) => {
         this.errorMessage = value;
+    };
+
+    setDisplayEmailRedirectOptions = (value) => {
+        this.displayEmailRedirectOptions = value;
     };
 
     verifyLoginStatus = async () => {
@@ -121,7 +127,7 @@ class AuthStore {
     };
 
     sendSignInLinkToEmail = async (email) => {
-        this.setErrorMessage(ErrorMessageStatus.loading);
+        this.setDisplayEmailRedirectOptions("loading");
         try {
             await this.firebaseService.auth.sendSignInLinkToEmail(
                 email,
@@ -129,7 +135,7 @@ class AuthStore {
             );
 
             localStorage.setItem(LOCAL_STORAGE_KEY, email);
-            this.setErrorMessage(ErrorMessageStatus.none);
+            this.setDisplayEmailRedirectOptions(true);
         } catch (error) {
             this.setErrorMessage(error.message);
         }
@@ -159,7 +165,7 @@ class AuthStore {
         const emailFromStorage = window.localStorage.getItem(LOCAL_STORAGE_KEY);
         const email = emailFromStorage || emailFromUser;
         if (!email) {
-            this.setEmailForSignIn(true);
+            this.setNeedEmailForSignIn(true);
             return false;
         }
 
@@ -169,8 +175,7 @@ class AuthStore {
         } catch (error) {
             this.setErrorMessage(error.message);
         } finally {
-            this.verifyLoginStatus();
-            this.setEmailForSignIn(false);
+            this.setNeedEmailForSignIn(false);
             return true;
         }
     };

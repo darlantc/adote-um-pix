@@ -9,7 +9,12 @@ import Yahoo from "../assets/images/Yahoo.jpg";
 
 const EmailRedirectOptions = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { setErrorMessage } = authStore;
+    const { setDisplayEmailRedirectOptions } = authStore;
+
+    const didGoBack = (event) => {
+        event.preventDefault();
+        setDisplayEmailRedirectOptions(false);
+    };
 
     return (
         <div>
@@ -54,11 +59,7 @@ const EmailRedirectOptions = observer(() => {
                 Não é esse email?
             </Typography>
             <Box m={1} display="flex" justifyContent="center">
-                <Button
-                    variant="outlined"
-                    size="medium"
-                    onClick={() => setErrorMessage(null)}
-                >
+                <Button variant="outlined" size="medium" onClick={didGoBack}>
                     Voltar
                 </Button>
             </Box>

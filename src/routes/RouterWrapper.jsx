@@ -11,7 +11,7 @@ export default function RouterWrapper({
     const { authStore } = useMainStoreContext();
     const { loggedUser } = authStore;
 
-    if ((!loggedUser && isPrivate) || (loggedUser.isAnonymous && isPrivate)) {
+    if (isPrivate && (!loggedUser || loggedUser.isAnonymous)) {
         return <Redirect to={APP_ROUTES.home} />;
     }
 

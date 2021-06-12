@@ -2,11 +2,12 @@ import { TextField, Box, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
+import { useState, useEffect } from "react";
 import { observer } from "mobx-react";
 
 import DefaultUserPhoto from "../assets/images/defaultUserPhoto.png";
-import { useState } from "react";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
+import { formatLinkedIn } from "../utils/formatting";
 
 const useStyles = makeStyles(() => ({
     textField: {
@@ -18,20 +19,36 @@ const useStyles = makeStyles(() => ({
 
 const ProfileInfo = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } = authStore;
+    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } =
+        authStore;
 
     const classes = useStyles();
 
-    const [currentImage, setCurrentImage] = useState(loggedUserProfile.photoUrl || DefaultUserPhoto);
-    const [fullName, setFullName] = useState(loggedUserProfile.fullName || "");
-    const [bio, setBio] = useState(loggedUserProfile.bio || "");
-    const [linkedIn, setLinkedIn] = useState(loggedUserProfile.linkedIn || "");
+    const [currentImage, setCurrentImage] = useState(
+        (loggedUserProfile && loggedUserProfile.photoUrl) || DefaultUserPhoto
+    );
+    const [fullName, setFullName] = useState(
+        (loggedUserProfile && loggedUserProfile.fullName) || ""
+    );
+    const [bio, setBio] = useState(
+        (loggedUserProfile && loggedUserProfile.bio) || ""
+    );
+    const [linkedIn, setLinkedIn] = useState(
+        (loggedUserProfile && loggedUserProfile.linkedIn) || ""
+    );
+
+    useEffect(() => {
+        const formattedLinkedIn = formatLinkedIn(linkedIn);
+        if (formattedLinkedIn) {
+            setLinkedIn(formattedLinkedIn);
+        }
+    }, [linkedIn]);
 
     const handleFile = (event) => {
         if (event.target.files[0]) {
             const image = event.target.files[0];
 
-            if (image.type === "image/jpeg" || image.type === "image/png") {
+            if (["image/jpeg", "image/png"].includes(image.type)) {
                 setCurrentImage(URL.createObjectURL(image));
 
                 handlePhotoUpload(image);
@@ -56,7 +73,13 @@ const ProfileInfo = observer(() => {
         <div>
             <Box display="flex" justifyContent="center">
                 <label htmlFor="photo" style={{ cursor: "pointer" }}>
-                    <input id="photo" type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} />
+                    <input
+                        id="photo"
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        onChange={handleFile}
+                    />
                     <img
                         style={{
                             width: "200px",
@@ -86,7 +109,7 @@ const ProfileInfo = observer(() => {
                         setFullName(event.target.value);
                     }}
                     justify="center"
-                    placeholder="Nome de Usuário"
+                    placeholder="Seu nome completo"
                     variant="outlined"
                     size="small"
                     fullWidth
@@ -97,7 +120,7 @@ const ProfileInfo = observer(() => {
                     onChange={(event) => {
                         setBio(event.target.value);
                     }}
-                    placeholder="Bio"
+                    placeholder="Biografia"
                     multiline
                     rows="7"
                     variant="outlined"
@@ -110,7 +133,7 @@ const ProfileInfo = observer(() => {
                     onChange={(event) => {
                         setLinkedIn(event.target.value);
                     }}
-                    placeholder="Perfil LinkedIn"
+                    placeholder="LinkedIn"
                     variant="outlined"
                     size="small"
                     fullWidth

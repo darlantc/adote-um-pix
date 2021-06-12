@@ -7,28 +7,26 @@ import { emailValidation, phoneValidation } from "../../utils/validation";
 import { formatPhoneNumber } from "../../utils/formatting";
 import EmailRedirectOptions from "../EmailRedirectOptions";
 import LoadingAnimation from "../LoadingAnimation";
-import ErrorMessageStatus from "../../models/ErrorMessageStatus";
 
 const LoginForm = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { sendSignInLinkToEmail, errorMessage, signInWithPhoneNumber } =
-        authStore;
+    const {
+        sendSignInLinkToEmail,
+        errorMessage,
+        signInWithPhoneNumber,
+        displayEmailRedirectOptions,
+    } = authStore;
 
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [errorMessageField, setErrorMessageField] = useState("");
+    const [validationError, setValidationError] = useState("");
 
     useEffect(() => {
-        setTimeout(() => {
-            setErrorMessageField("");
-        }, 5000);
-    }, [errorMessageField]);
-
-    useEffect(() => {
-        if (errorMessage !== ErrorMessageStatus.loading) {
-            setErrorMessageField(errorMessage);
+        const formattedNumber = formatPhoneNumber(phoneNumber);
+        if (formattedNumber) {
+            setPhoneNumber(formattedNumber);
         }
-    }, [errorMessage]);
+    }, [phoneNumber]);
 
     const didSendLinkByEmail = (event) => {
         event.preventDefault();
@@ -37,7 +35,7 @@ const LoginForm = observer(() => {
 
             setEmail("");
         } else {
-            setErrorMessageField("O email digitado parece não ser válido.");
+            setValidationError("O email digitado parece não ser válido.");
         }
     };
 
@@ -51,31 +49,12 @@ const LoginForm = observer(() => {
 
             setPhoneNumber("");
         } else {
-            setErrorMessageField("O número digitado parece não ser válido.");
+            setValidationError("O número digitado parece não ser válido.");
         }
     };
 
-    useEffect(() => {
-        const formattedNumber = formatPhoneNumber(phoneNumber);
-        if (formattedNumber) {
-            setPhoneNumber(formattedNumber);
-        }
-    }, [phoneNumber]);
-
-    if (errorMessage === ErrorMessageStatus.loading) {
-        return (
-            <div
-                style={{
-                    width: "300px",
-                    height: "300px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <LoadingAnimation />
-            </div>
-        );
+    if (displayEmailRedirectOptions === "loading") {
+        return <LoadingAnimation />;
     }
 
     return (
@@ -85,7 +64,7 @@ const LoginForm = observer(() => {
                 padding: "10px",
             }}
         >
-            {errorMessage === ErrorMessageStatus.none ? (
+            {displayEmailRedirectOptions ? (
                 <EmailRedirectOptions />
             ) : (
                 <div
@@ -146,7 +125,8 @@ const LoginForm = observer(() => {
 
                     <div id="recatcha-container"></div>
 
-                    <Typography variant="p">{errorMessageField}</Typography>
+                    <p>{errorMessage}</p>
+                    <p>{validationError}</p>
                 </div>
             )}
         </div>

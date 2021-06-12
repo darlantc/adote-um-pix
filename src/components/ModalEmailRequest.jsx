@@ -7,7 +7,8 @@ import { emailValidation } from "../utils/validation";
 
 const ModalEmailRequest = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { confirmEmailSignIn, emailForSignIn } = authStore;
+    const { confirmEmailSignIn, needEmailForSignIn } = authStore;
+    console.log("🚀 ~ needEmailForSignIn", needEmailForSignIn);
 
     const [email, setEmail] = useState("");
     const [validationError, setValidationError] = useState("");
@@ -19,14 +20,14 @@ const ModalEmailRequest = observer(() => {
             setEmail("");
         } else {
             setValidationError("O email digitado parece não ser válido");
-            setInterval(() => {
+            setTimeout(() => {
                 setValidationError("");
             }, 5000);
         }
     };
 
     return (
-        <Modal open={emailForSignIn}>
+        <Modal open={needEmailForSignIn}>
             <Box display="flex" justifyContent="center">
                 <Box
                     borderRadius={7}
@@ -52,7 +53,7 @@ const ModalEmailRequest = observer(() => {
                             Confirmar
                         </Button>
                     </Box>
-                    <Typography variant="p">{validationError}</Typography>
+                    <p>{validationError}</p>
                 </Box>
             </Box>
         </Modal>

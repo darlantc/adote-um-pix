@@ -21,7 +21,7 @@ const Perfil = observer(() => {
 
     const classes = useStyles();
 
-    const getEngajamento = () => {
+    const getEngagement = () => {
         let result = 0;
         if (loggedUserProfile) {
             if (loggedUserProfile.photoUrl) {
@@ -41,20 +41,20 @@ const Perfil = observer(() => {
         return result;
     };
 
-    const engajamento = getEngajamento();
+    const engagement = getEngagement();
 
-    const getNivel = () => {
-        if (engajamento <= 24) {
+    const getStatus = () => {
+        if (engagement <= 24) {
             return "Baixo";
-        } else if (24 < engajamento < 49) {
+        } else if (24 < engagement < 49) {
             return "Moderado";
-        } else if (50 < engajamento < 74) {
+        } else if (50 < engagement < 74) {
             return "Bom";
         }
         return "Alto";
     };
 
-    const nivel = getNivel();
+    const status = getStatus();
 
     return (
         <Box display="flex" justifyContent="space-between">
@@ -85,10 +85,10 @@ const Perfil = observer(() => {
                         id="potecial-de-perfil"
                         gutterBottom
                     >
-                        Engajamento: {nivel}
+                        Engajamento: {status}
                     </Typography>
                     <Slider
-                        value={engajamento}
+                        value={engagement}
                         aria-labelledby="potecial-de-perfil"
                     />
                 </Box>
