@@ -8,7 +8,6 @@ import { emailValidation } from "../utils/validation";
 const ModalEmailRequest = observer(() => {
     const { authStore } = useMainStoreContext();
     const { confirmEmailSignIn, needEmailForSignIn } = authStore;
-    console.log("🚀 ~ needEmailForSignIn", needEmailForSignIn);
 
     const [email, setEmail] = useState("");
     const [validationError, setValidationError] = useState("");
