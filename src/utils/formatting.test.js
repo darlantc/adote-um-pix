@@ -1,9 +1,4 @@
-import {
-    formatCpf,
-    formatDate,
-    formatPhoneNumber,
-    formatLinkedIn,
-} from "./formatting";
+import { formatCpf, formatDate, formatPhoneNumber, formatLinkedIn } from "./formatting";
 
 describe("formatCpf", () => {
     it("should return formatted CPF if cpf is valid", () => {
@@ -24,9 +19,7 @@ describe("formatPhoneNumber", () => {
         expect(formatPhoneNumber("11975486225")).toBe("(11) 97548-6225");
     });
     it("should return null if cpf is invalid", () => {
-        expect(formatPhoneNumber("f90!d7e-342e-4a16-898c-81cf/75c047")).toBe(
-            null
-        );
+        expect(formatPhoneNumber("f90!d7e-342e-4a16-898c-81cf/75c047")).toBe(null);
         expect(formatPhoneNumber("z9e42d7e452e4a16898c81cr057")).toBe(null);
         expect(formatPhoneNumber("")).toBe(null);
         expect(formatPhoneNumber(null)).toBe(null);
@@ -46,17 +39,20 @@ describe("formatDate", () => {
 });
 
 describe("formatLinkedIn", () => {
-    it("should return complete linkedIn url if user digits complete url or valid profile path param", () => {
-        expect(formatLinkedIn("mateus")).toBe("www.linkedin.com/in/mateus");
-        expect(formatLinkedIn("www.linkedin.com/in/douglas")).toBe(
-            "www.linkedin.com/in/douglas"
-        );
-        expect(formatLinkedIn(54321)).toBe("www.linkedin.com/in/54321");
+    it.each([
+        ["mateus", "linkedin.com/in/mateus"],
+        ["https://linkedin.com/in/amelia", "linkedin.com/in/amelia"],
+        ["https://www.linkedin.com/in/douglas", "linkedin.com/in/douglas"],
+        ["www.linkedin.com/in/suzan", "linkedin.com/in/suzan"],
+        [54321, "linkedin.com/in/54321"],
+    ])("with input='%s' should return '%s'", (input, expected) => {
+        expect(formatLinkedIn(input)).toBe(expected);
     });
-    it("should return null if linkedIn url or path param is invalid", () => {
-        expect(formatLinkedIn("")).toBe(null);
-        expect(formatLinkedIn("z9e42d7e452e//898c8-cr057")).toBe(null);
-        expect(formatLinkedIn(0)).toBe(null);
-        expect(formatLinkedIn(null)).toBe(null);
-    });
+
+    it.each(["", "z9e42d7e452e//898c8-cr057", 0, null])(
+        "should return null if linkedIn url or path param is invalid",
+        (input) => {
+            expect(formatLinkedIn(input)).toBe(null);
+        }
+    );
 });
