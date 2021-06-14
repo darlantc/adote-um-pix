@@ -1,128 +1,229 @@
-import { makeObservable, observable, action } from "mobx";
+import { makeObservable, observable, action, computed, reaction } from "mobx";
 
 import LoginStatus from "../models/LoginStatus";
 
+const LOCAL_STORAGE_KEY = "emailForSignIn";
+
 class AuthStore {
-  loggedUser = null;
-  loginStatus = LoginStatus.offline;
-  errorMessage = null;
-  emailForSignIn = null;
+    loggedUserProfile = null;
+    loggedUser = null;
+    errorMessage = null;
+    displayEmailRedirectOptions = false;
+    needEmailForSignIn = false;
 
-  constructor(firebaseService) {
-    this.firebaseService = firebaseService;
-    makeObservable(this, {
-      loggedUser: observable,
-      loginStatus: observable,
-      errorMessage: observable,
-      emailForSignIn: observable,
-      setLoggedUser: action,
-      setLoginStatus: action,
-      setErrorMessage: action,
-      setEmailForSignIn: action,
-    });
-    this.confirmEmailSignIn();
-  }
+    #loggedUserRef = null;
 
-  setLoggedUser = (value) => {
-    this.loggedUser = value;
-  };
+    constructor(firebaseService) {
+        this.firebaseService = firebaseService;
+        makeObservable(this, {
+            loggedUserProfile: observable,
+            loggedUser: observable,
+            errorMessage: observable,
+            displayEmailRedirectOptions: observable,
+            needEmailForSignIn: observable,
+            setLoggedUserProfile: action,
+            setLoggedUser: action,
+            setErrorMessage: action,
+            setDisplayEmailRedirectOptions: action,
+            setNeedEmailForSignIn: action,
+            uid: computed,
+            loginStatus: computed,
+            isAuthenticated: computed,
+            isAnonymous: computed,
+        });
 
-  setLoginStatus = (value) => {
-    this.loginStatus = value;
-  };
+        this.verifyLoginStatus();
+        reaction(
+            () => this.isAuthenticated && !this.isAnonymous,
+            (hasProfile) => {
+                this.clearLoggedUserProfile();
+                if (hasProfile) {
+                    this.#loggedUserRef = this.firebaseService.usersRef.child(
+                        this.uid
+                    );
 
-  setErrorMessage = (value) => {
-    this.errorMessage = value;
-  };
-
-  setEmailForSignIn = (value) => {
-    this.emailForSignIn = value;
-  };
-
-  configSignInEmail = () => {
-    return {
-      url: "http://localhost:3000/",
-      handleCodeInApp: true,
-    };
-  };
-
-  sendSignInLinkToEmail = async (email) => {
-    this.setLoginStatus(LoginStatus.loading);
-    try {
-      await this.firebaseService.auth.sendSignInLinkToEmail(
-        email,
-        this.configSignInEmail()
-      );
-
-      localStorage.setItem("emailForSignIn", email);
-
-      this.setLoginStatus(LoginStatus.online);
-    } catch (error) {
-      this.errorMessage(error.message);
-    }
-  };
-
-  confirmEmailSignIn = async (typedEmail) => {
-    const ref = window.location.href;
-    let email;
-    if (this.firebaseService.auth.isSignInWithEmailLink(ref)) {
-      if (typedEmail) {
-        email = typedEmail;
-      } else {
-        email = window.localStorage.getItem("emailForSignIn");
-        if (!email) {
-          this.setEmailForSignIn("A ser informado.");
-        }
-      }
-
-      try {
-        const result = await this.firebaseService.auth.signInWithEmailLink(
-          email,
-          ref
+                    this.#loggedUserRef.on("value", (snapshot) => {
+                        this.setLoggedUserProfile(snapshot.val());
+                    });
+                }
+            }
         );
-
-        window.localStorage.removeItem("emailForSignIn");
-        this.setLoggedUser(result.user);
-        this.setLoginStatus(LoginStatus.online);
-      } catch (error) {
-        this.errorMessage(error.message);
-      }
     }
-  };
 
-  recaptchaSetter = (phoneNumber) => {
-    window.RecaptchaVerifier = new this.firebaseService.RecaptchaVerifier(
-      "recaptcha-container",
-      {
-        size: "normal",
-        callback: (response) => {
-          console.log("recaptcha response", response);
-          this.signInWithPhoneNumber(phoneNumber);
-        },
-        "expired-callback": () => {
-          console.log("expired recaptcha");
-        },
-        defaultCountry: "BR",
-      }
-    );
-  };
-
-  signInWithPhoneNumber = async (phoneNumber) => {
-    let appVerifier = window.recaptchaVerifier;
-    if (!appVerifier) {
-      this.recaptchaSetter(phoneNumber);
-      return;
+    get uid() {
+        if (this.loggedUser) {
+            return this.loggedUser.uid;
+        }
+        return null;
     }
-    try {
-      const result = await this.firebaseService
-        .auth()
-        .signInWithPhoneNumber(`+55${phoneNumber}`, appVerifier);
 
-      this.setLoggedUser(result.user);
-    } catch (error) {
-      this.setErrorMessage(error.message);
+    get loginStatus() {
+        if (!this.loggedUser) {
+            return LoginStatus.loading;
+        }
+        if (this.loggedUser.isAnonymous) {
+            return LoginStatus.anonymous;
+        }
+        return LoginStatus.online;
     }
-  };
+
+    get isAuthenticated() {
+        return this.loggedUser;
+    }
+
+    get isAnonymous() {
+        return this.loginStatus === LoginStatus.anonymous;
+    }
+
+    setNeedEmailForSignIn = (value) => {
+        this.needEmailForSignIn = value;
+    };
+
+    setLoggedUserProfile = (value) => {
+        this.loggedUserProfile = value;
+    };
+
+    setLoggedUser = (newValue) => {
+        this.loggedUser = newValue;
+    };
+
+    setErrorMessage = (value) => {
+        this.errorMessage = value;
+    };
+
+    setDisplayEmailRedirectOptions = (value) => {
+        this.displayEmailRedirectOptions = value;
+    };
+
+    verifyLoginStatus = async () => {
+        const isSigningByEmail = await this.confirmEmailSignIn();
+
+        if (!isSigningByEmail) {
+            this.firebaseService.auth.onAuthStateChanged((user) => {
+                if (user) {
+                    this.setLoggedUser(user);
+                } else {
+                    this.signInAnonymously();
+                }
+            });
+        }
+    };
+
+    signInAnonymously = () => this.firebaseService.auth.signInAnonymously();
+
+    configSignInEmail = () => {
+        return {
+            url: window.location.origin,
+            handleCodeInApp: true,
+        };
+    };
+
+    clearLoggedUserProfile = () => {
+        if (this.#loggedUserRef) {
+            this.#loggedUserRef.off("value");
+        }
+        this.#loggedUserRef = null;
+        this.setLoggedUserProfile(null);
+    };
+
+    sendSignInLinkToEmail = async (email) => {
+        this.setDisplayEmailRedirectOptions("loading");
+        try {
+            await this.firebaseService.auth.sendSignInLinkToEmail(
+                email,
+                this.configSignInEmail()
+            );
+
+            localStorage.setItem(LOCAL_STORAGE_KEY, email);
+            this.setDisplayEmailRedirectOptions(true);
+        } catch (error) {
+            this.setErrorMessage(error.message);
+        }
+    };
+
+    authenticateUserWithEmail = async (email) => {
+        const credential =
+            this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
+                email,
+                window.location.href
+            );
+        try {
+            await this.firebaseService.auth.currentUser.linkWithCredential(
+                credential
+            );
+        } catch (error) {
+            this.setErrorMessage(error.message);
+        }
+    };
+
+    confirmEmailSignIn = async (emailFromUser) => {
+        const href = window.location.href;
+        if (!this.firebaseService.auth.isSignInWithEmailLink(href)) {
+            return false;
+        }
+
+        const emailFromStorage = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+        const email = emailFromStorage || emailFromUser;
+        if (!email) {
+            this.setNeedEmailForSignIn(true);
+            return false;
+        }
+
+        try {
+            await this.firebaseService.auth.signInWithEmailLink(email, href);
+            window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+        } catch (error) {
+            this.setErrorMessage(error.message);
+        } finally {
+            this.setNeedEmailForSignIn(false);
+            return true;
+        }
+    };
+
+    handleUserDataUpdate = async (fullName, bio, linkedIn) => {
+        if (!this.#loggedUserRef) {
+            return;
+        }
+
+        this.#loggedUserRef.update({
+            fullName,
+            bio,
+            linkedIn,
+        });
+    };
+
+    handlePhotoUpload = async (photoToUpload) => {
+        if (!this.#loggedUserRef) {
+            return;
+        }
+
+        try {
+            await this.firebaseService.storage
+                .ref(`userPhotos/${this.uid}/${photoToUpload.name}`)
+                .put(photoToUpload);
+
+            const url = await this.firebaseService.storage
+                .ref(`userPhotos/${this.uid}`)
+                .child(photoToUpload.name)
+                .getDownloadURL();
+
+            this.#loggedUserRef.update({
+                photoUrl: url,
+            });
+
+            console.log("Successfully updated photo URL.");
+        } catch (error) {
+            console.log("Error uploading photo.", error);
+        }
+    };
+
+    logout = async () => {
+        try {
+            await this.firebaseService.auth.signOut();
+        } catch (error) {
+            this.logout();
+        }
+    };
 }
 
 export default AuthStore;
