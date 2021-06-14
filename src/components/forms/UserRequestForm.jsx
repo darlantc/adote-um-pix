@@ -16,7 +16,7 @@ import {
     pixRandomKeyValidation,
     emailValidation,
 } from "../../utils/validation";
-import { formatCpf } from "../../utils/formatting";
+import { formatCpf, formatPhoneNumber } from "../../utils/formatting";
 
 const useStyles = makeStyles((theme) => ({
     soliciteButton: {

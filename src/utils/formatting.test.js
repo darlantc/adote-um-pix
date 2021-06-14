@@ -1,4 +1,4 @@
-import { formatCpf, formatDate } from "./formatting";
+import { formatCpf, formatDate, formatPhoneNumber } from "./formatting";
 
 describe("formatCpf", () => {
   it("should return formatted CPF if cpf is valid", () => {
@@ -10,6 +10,19 @@ describe("formatCpf", () => {
     expect(formatCpf("z9e42d7e452e4a16898c81cr057")).toBe(null);
     expect(formatCpf("")).toBe(null);
     expect(formatCpf(null)).toBe(null);
+  });
+});
+
+describe("formatPhoneNumber", () => {
+  it("should return formatted phone number if number is valid", () => {
+    expect(formatPhoneNumber(71982792521)).toBe("(71) 98279-2521");
+    expect(formatPhoneNumber("11975486225")).toBe("(11) 97548-6225");
+  });
+  it("should return null if cpf is invalid", () => {
+    expect(formatPhoneNumber("f90!d7e-342e-4a16-898c-81cf/75c047")).toBe(null);
+    expect(formatPhoneNumber("z9e42d7e452e4a16898c81cr057")).toBe(null);
+    expect(formatPhoneNumber("")).toBe(null);
+    expect(formatPhoneNumber(null)).toBe(null);
   });
 });
 

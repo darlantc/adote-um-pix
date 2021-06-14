@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 
 import Logo from "./Logo";
+import ModalEmailRequest from "./ModalEmailRequest";
 import LoginForm from "./forms/LoginForm";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
@@ -40,7 +41,7 @@ const RegistrationButton = styled(ButtonBase)({
 
 const StyledAppBar = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUser } = authStore;
+    const { loggedUser, logout } = authStore;
 
     const [displayModal, setDisplayModal] = useState(false);
 
@@ -87,7 +88,9 @@ const StyledAppBar = observer(() => {
                                         Perfil
                                     </RegistrationButton>
                                 </Button>
-                                <RegistrationButton>Sair</RegistrationButton>
+                                <RegistrationButton onClick={logout}>
+                                    Sair
+                                </RegistrationButton>
                             </Box>
                         ) : (
                             <RegistrationButton onClick={openModal}>
@@ -109,6 +112,7 @@ const StyledAppBar = observer(() => {
                     </Box>
                 </Box>
             </Modal>
+            <ModalEmailRequest />
         </>
     );
 });
