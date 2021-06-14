@@ -1,4 +1,6 @@
 import { Switch } from "react-router-dom";
+import { observer } from "mobx-react";
+
 import Route from "./RouterWrapper";
 import Homepage from "../pages/Homepage";
 import Adote from "../pages/Adote";
@@ -7,27 +9,34 @@ import Solicite from "../pages/Solicite";
 import MinhasSolicitacoes from "../pages/MinhasSolicitacoes";
 
 export const APP_ROUTES = Object.freeze({
-  myRequests: "/minhas-solicitacoes",
-  home: "/",
-  request: "/solicite",
-  adopt: "/adote",
-  profile: "/perfil",
-  myContributions: "/minhas-contribuicoes",
+    myRequests: "/minhas-solicitacoes",
+    home: "/",
+    request: "/solicite",
+    adopt: "/adote",
+    profile: "/perfil",
+    myContributions: "/minhas-contribuicoes",
 });
 
-export default function Routes() {
-  return (
-    <Switch>
-      <Route exact path={APP_ROUTES.home} component={Homepage} />
-      <Route exact path={APP_ROUTES.request} component={Solicite} />
-      <Route
-        exact
-        path={APP_ROUTES.myRequests}
-        component={MinhasSolicitacoes}
-        isPrivate
-      />
-      <Route exact path={APP_ROUTES.adopt} component={Adote} isPrivate />
-      <Route exact path={APP_ROUTES.profile} component={Perfil} isPrivate />
-    </Switch>
-  );
-}
+const Routes = observer(() => {
+    return (
+        <Switch>
+            <Route exact path={APP_ROUTES.home} component={Homepage} />
+            <Route exact path={APP_ROUTES.request} component={Solicite} />
+            <Route
+                exact
+                path={APP_ROUTES.myRequests}
+                component={MinhasSolicitacoes}
+                isPrivate
+            />
+            <Route exact path={APP_ROUTES.adopt} component={Adote} isPrivate />
+            <Route
+                exact
+                path={APP_ROUTES.profile}
+                component={Perfil}
+                isPrivate
+            />
+        </Switch>
+    );
+});
+
+export default Routes;
