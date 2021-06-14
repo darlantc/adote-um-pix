@@ -17,6 +17,9 @@ export const formatPhoneNumber = (validPhoneNumber) => {
 };
 
 export const formatDate = (timestamp) => {
+    if (!timestamp) {
+        return null;
+    }
     const rawDate = String(fromUnixTime(timestamp));
     return rawDate.slice(0, 25);
 };
