@@ -2,9 +2,12 @@ import { TextField, Box, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
+import { useState, useEffect } from "react";
+import { observer } from "mobx-react";
 
 import DefaultUserPhoto from "../assets/images/defaultUserPhoto.png";
-import { useState } from "react";
+import { useMainStoreContext } from "../contexts/mainStoreContext";
+import { formatLinkedIn } from "../utils/formatting";
 
 const useStyles = makeStyles(() => ({
     textField: {
@@ -14,117 +17,142 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const ProfileInfo = () => {
+const ProfileInfo = observer(() => {
+    const { authStore } = useMainStoreContext();
+    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } =
+        authStore;
+
     const classes = useStyles();
 
-    const [foto, setFoto] = useState();
-    const [nome, setNome] = useState("");
-    const [bio, setBio] = useState("");
-    const [linkedIn, setLinkedIn] = useState("");
+    const [currentImage, setCurrentImage] = useState(
+        (loggedUserProfile && loggedUserProfile.photoUrl) || DefaultUserPhoto
+    );
+    const [fullName, setFullName] = useState(
+        (loggedUserProfile && loggedUserProfile.fullName) || ""
+    );
+    const [bio, setBio] = useState(
+        (loggedUserProfile && loggedUserProfile.bio) || ""
+    );
+    const [linkedIn, setLinkedIn] = useState(
+        (loggedUserProfile && loggedUserProfile.linkedIn) || ""
+    );
+
+    useEffect(() => {
+        const formattedLinkedIn = formatLinkedIn(linkedIn);
+        if (formattedLinkedIn) {
+            setLinkedIn(formattedLinkedIn);
+        }
+    }, [linkedIn]);
 
     const handleFile = (event) => {
         if (event.target.files[0]) {
             const image = event.target.files[0];
 
-            if (image.type === "image/jpeg" || image.type === "image/png") {
-                setFoto(URL.createObjectURL(image));
+            if (["image/jpeg", "image/png"].includes(image.type)) {
+                setCurrentImage(URL.createObjectURL(image));
+
+                handlePhotoUpload(image);
             } else {
                 alert("Envie uma imagem do tipo PNG ou JPEG");
             }
         }
     };
 
+    const didUpdateProfile = (event) => {
+        event.preventDefault();
+        if (loggedUserProfile) {
+            handleUserDataUpdate(fullName, bio, linkedIn);
+
+            setFullName("");
+            setBio("");
+            setLinkedIn("");
+        }
+    };
+
     return (
-        <Box
-            display="flex"
-            flexDirection="column"
-            justifyItems="center"
-            alignItems="center"
-        >
-            <Box>
-                <label htmlFor="foto" style={{ cursor: "pointer" }}>
+        <div>
+            <Box display="flex" justifyContent="center">
+                <label htmlFor="photo" style={{ cursor: "pointer" }}>
                     <input
-                        id="foto"
+                        id="photo"
                         type="file"
                         accept="image/*"
                         style={{ display: "none" }}
                         onChange={handleFile}
                     />
-                    {foto ? (
-                        <img
-                            style={{
-                                width: "200px",
-                                height: "200px",
-                                borderRadius: "50%",
-                                margin: "5px",
-                                objectFit: "cover",
-                            }}
-                            src={foto}
-                            alt="user"
-                        />
-                    ) : (
-                        <img
-                            style={{
-                                width: "200px",
-                                height: "200px",
-                                borderRadius: "50%",
-                                margin: "5px",
-                            }}
-                            src={DefaultUserPhoto}
-                            alt="user"
-                        />
-                    )}
+                    <img
+                        style={{
+                            width: "200px",
+                            height: "200px",
+                            borderRadius: "50%",
+                            margin: "5px",
+                        }}
+                        src={currentImage}
+                        alt="user"
+                    />
                 </label>
             </Box>
 
-            <TextField
-                className={classes.textField}
-                value={nome}
-                onChange={(event) => {
-                    setNome(event.target.value);
+            <form
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyItems: "center",
+                    alignItems: "center",
                 }}
-                justify="center"
-                placeholder="Nome de Usuário"
-                variant="outlined"
-                size="small"
-                fullWidth
-            />
-            <TextField
-                className={classes.textField}
-                value={bio}
-                onChange={(event) => {
-                    setBio(event.target.value);
-                }}
-                placeholder="Bio de Usuário"
-                multiline
-                rows="7"
-                variant="outlined"
-                size="small"
-                fullWidth
-            />
-            <TextField
-                className={classes.textField}
-                value={linkedIn}
-                onChange={(event) => {
-                    setLinkedIn(event.target.value);
-                }}
-                placeholder="Perfil LinkedIn"
-                variant="outlined"
-                size="small"
-                fullWidth
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <LinkedInIcon />
-                        </InputAdornment>
-                    ),
-                }}
-            />
-            <Box m={0.5}>
-                <Button variant="outlined">Salvar Perfil</Button>
-            </Box>
-        </Box>
+                onSubmit={didUpdateProfile}
+            >
+                <TextField
+                    className={classes.textField}
+                    value={fullName}
+                    onChange={(event) => {
+                        setFullName(event.target.value);
+                    }}
+                    justify="center"
+                    placeholder="Seu nome completo"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                />
+                <TextField
+                    className={classes.textField}
+                    value={bio}
+                    onChange={(event) => {
+                        setBio(event.target.value);
+                    }}
+                    placeholder="Biografia"
+                    multiline
+                    rows="7"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                />
+                <TextField
+                    className={classes.textField}
+                    value={linkedIn}
+                    onChange={(event) => {
+                        setLinkedIn(event.target.value);
+                    }}
+                    placeholder="LinkedIn"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <LinkedInIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <Box m={0.5}>
+                    <Button type="submit" variant="outlined">
+                        Salvar Perfil
+                    </Button>
+                </Box>
+            </form>
+        </div>
     );
-};
+});
 
 export default ProfileInfo;

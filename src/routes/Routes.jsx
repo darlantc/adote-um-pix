@@ -1,4 +1,6 @@
 import { Switch } from "react-router-dom";
+import { observer } from "mobx-react";
+
 import Route from "./RouterWrapper";
 import Homepage from "../pages/Homepage";
 import Adopt from "../pages/Adopt";

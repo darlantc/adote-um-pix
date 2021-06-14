@@ -2,7 +2,6 @@ import { Typography, Box, Button } from "@material-ui/core";
 import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
-import LoginStatus from "../models/LoginStatus";
 import EmailRedirectButton from "./EmailRedirectButton";
 import Google from "../assets/images/Gmail.jpg";
 import Outlook from "../assets/images/Outlook.jpg";
@@ -10,7 +9,12 @@ import Yahoo from "../assets/images/Yahoo.jpg";
 
 const EmailRedirectOptions = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { setLoginStatus } = authStore;
+    const { setDisplayEmailRedirectOptions } = authStore;
+
+    const didGoBack = (event) => {
+        event.preventDefault();
+        setDisplayEmailRedirectOptions(false);
+    };
 
     return (
         <div>
@@ -27,11 +31,12 @@ const EmailRedirectOptions = observer(() => {
                 {window.localStorage.getItem("emailForSignIn")}
             </Typography>
 
-            <Box
-                m={2}
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                }}
             >
                 <EmailRedirectButton
                     href="https://mail.google.com/mail/"
@@ -48,17 +53,13 @@ const EmailRedirectOptions = observer(() => {
                     src={Yahoo}
                     alt="Yahoo"
                 />
-            </Box>
+            </div>
 
             <Typography variant="h6" align="center">
                 Não é esse email?
             </Typography>
             <Box m={1} display="flex" justifyContent="center">
-                <Button
-                    variant="outlined"
-                    size="medium"
-                    onClick={() => setLoginStatus(LoginStatus.offline)}
-                >
+                <Button variant="outlined" size="medium" onClick={didGoBack}>
                     Voltar
                 </Button>
             </Box>

@@ -7,6 +7,7 @@ import "firebase/storage";
 class FirebaseService {
     auth;
     database;
+    authParam;
 
     constructor() {
         if (!firebase.apps.length) {
@@ -23,7 +24,9 @@ class FirebaseService {
         }
 
         this.auth = firebase.auth(); //the Firebase auth namespace
+        this.authParam = firebaseApp.auth;
         this.database = firebase.database(); //the real-time database
+        this.storage = firebase.storage();
     }
 
     get rootRef() {

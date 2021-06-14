@@ -1,7 +1,7 @@
 const LoginStatus = Object.freeze({
-  loading: "loading",
-  online: "online",
-  offline: "offline",
+    anonymous: "anonymous",
+    loading: "loading",
+    online: "online",
 });
 
 export default LoginStatus;

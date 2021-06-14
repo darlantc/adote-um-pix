@@ -41,7 +41,7 @@ const RegistrationButton = styled(ButtonBase)({
 
 const StyledAppBar = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUser, logout } = authStore;
+    const { isAuthenticated, isAnonymous, logout } = authStore;
 
     const [displayModal, setDisplayModal] = useState(false);
 
@@ -52,6 +52,11 @@ const StyledAppBar = observer(() => {
 
     const closeModal = () => {
         setDisplayModal(false);
+    };
+
+    const didLogOut = (event) => {
+        event.preventDefault();
+        logout();
     };
 
     return (
@@ -77,7 +82,7 @@ const StyledAppBar = observer(() => {
                             </Box>
                         </ButtonBase>
 
-                        {loggedUser ? (
+                        {isAuthenticated && !isAnonymous ? (
                             <Box>
                                 <Button
                                     style={{ textDecoration: "none" }}
@@ -88,7 +93,7 @@ const StyledAppBar = observer(() => {
                                         Perfil
                                     </RegistrationButton>
                                 </Button>
-                                <RegistrationButton onClick={logout}>
+                                <RegistrationButton onClick={didLogOut}>
                                     Sair
                                 </RegistrationButton>
                             </Box>

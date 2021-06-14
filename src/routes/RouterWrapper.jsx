@@ -3,24 +3,19 @@ import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { APP_ROUTES } from "../routes/Routes";
+import { useMainStoreContext } from "../contexts/mainStoreContext";
 
 const RouterWrapper = observer(
-  ({ component: Component, isPrivate, ...rest }) => {
-    const { authStore } = useMainStoreContext();
-    const { loggedUser } = authStore;
+    ({ component: Component, isPrivate, ...rest }) => {
+        const { authStore } = useMainStoreContext();
+        const { loggedUser } = authStore;
 
-    const loading = false;
+        if (isPrivate && (!loggedUser || loggedUser.isAnonymous)) {
+            return <Redirect to={APP_ROUTES.home} />;
+        }
 
-    if (loading) {
-      return <div></div>;
+        return <Route {...rest} render={(props) => <Component {...props} />} />;
     }
-
-    if (!loggedUser && isPrivate) {
-      return <Redirect to={APP_ROUTES.home} />;
-    }
-
-    return <Route {...rest} render={(props) => <Component {...props} />} />;
-  }
 );
 
 export default RouterWrapper;

@@ -39,28 +39,12 @@ const UserRequestForm = observer(({ id }) => {
 
     const [description, setDescription] = useState("");
     const [pixKey, setPixKey] = useState("");
-
     const [firstTry, setFirstTry] = useState(true);
     const [validationError, setValidationError] = useState("");
 
     const handleSave = (event) => {
         event.preventDefault();
         setFirstTry(false);
-
-        if (loggedUser) {
-            const request = { userId: loggedUser.uid, pixKey, description };
-
-            if (id) {
-                console.log("🚀 ~ UPDATE", id);
-                updateUserRequest(request, id);
-            } else {
-                console.log("🚀 ~ ADD");
-                addUserRequest(request);
-            }
-        }
-
-        setPixKey("");
-        setDescription("");
     };
 
     const fourWayValidation = (event) => {
@@ -68,25 +52,23 @@ const UserRequestForm = observer(({ id }) => {
         setPixKey(event.target.value);
 
         const cpf = cpfValidation(event.target.value);
-        const contact = phoneValidation(event.target.value);
+        const phoneNumber = phoneValidation(event.target.value);
         const email = emailValidation(event.target.value);
         const key = pixRandomKeyValidation(event.target.value);
 
-        if (cpf && !contact) {
+        if (cpf && !phoneNumber) {
             const formattedCpf = formatCpf(cpf);
 
             setPixKey(formattedCpf);
             setValidationError("");
-        } else if (contact && !cpf) {
-            const formattedContact = `(${contact.slice(0, 2)}) ${
-                contact[2]
-            } ${contact.slice(3, 7)}-${contact.slice(7)}`;
+        } else if (phoneNumber && !cpf) {
+            const formattedPhoneNumber = formatPhoneNumber(phoneNumber);
 
-            setPixKey(formattedContact);
+            setPixKey(formattedPhoneNumber);
             setValidationError("");
         } else if (email || key) {
             setValidationError("");
-        } else if (!cpf && !contact && !email && !key && !firstTry) {
+        } else if (!cpf && !phoneNumber && !email && !key && !firstTry) {
             setValidationError("Aparentemente a chave digitada não é válida.");
         }
     };
