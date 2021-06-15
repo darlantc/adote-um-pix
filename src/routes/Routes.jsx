@@ -10,6 +10,7 @@ import MinhasSolicitacoes from "../pages/MinhasSolicitacoes";
 import ApprovalsPage from "../pages/ApprovalsPage";
 
 export const APP_ROUTES = Object.freeze({
+    admin: "/admin",
     approvals: "/aprovacoes",
     myRequests: "/minhas-solicitacoes",
     home: "/",
