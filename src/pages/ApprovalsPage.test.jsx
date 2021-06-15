@@ -9,7 +9,7 @@ describe("<ApprovalsPage />", () => {
         expect(getByLabelText("card")).toBeInTheDocument();
     });
 
-    it.each(["Nome da pessoa", "E-mail/Telefone", "Bio:", "Descrição:", "Chave Pix:"])(
+    it.each(["Nome da pessoa", "1/97", "E-mail/Telefone", "Bio:", "Descrição:", "Chave Pix:"])(
         "should have label '%s'",
         (expected) => {
             const { getByText } = getRenderer();
