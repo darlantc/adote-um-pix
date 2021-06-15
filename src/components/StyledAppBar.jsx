@@ -33,7 +33,7 @@ const RegistrationButton = styled(ButtonBase)({
 
 const StyledAppBar = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUser } = authStore;
+    const { isAuthenticated, isAnonymous, logout } = authStore;
 
     const [displayModal, setDisplayModal] = useState(false);
 
@@ -44,6 +44,11 @@ const StyledAppBar = observer(() => {
 
     const closeModal = () => {
         setDisplayModal(false);
+    };
+
+    const didLogOut = (event) => {
+        event.preventDefault();
+        logout();
     };
 
     return (
@@ -57,14 +62,17 @@ const StyledAppBar = observer(() => {
                                 <Typography variant="h4">Adote um PIX</Typography>
                             </Box>
                         </ButtonBase>
-
                         <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.approvals}>
                             <RegistrationButton>Aprovações</RegistrationButton>
                         </Button>
-                        {loggedUser ? (
-                            <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.profile}>
-                                <RegistrationButton>Perfil</RegistrationButton>
-                            </Button>
+
+                        {isAuthenticated && !isAnonymous ? (
+                            <Box>
+                                <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.profile}>
+                                    <RegistrationButton>Perfil</RegistrationButton>
+                                </Button>
+                                <RegistrationButton onClick={didLogOut}>Sair</RegistrationButton>
+                            </Box>
                         ) : (
                             <RegistrationButton onClick={openModal}>Entre</RegistrationButton>
                         )}
