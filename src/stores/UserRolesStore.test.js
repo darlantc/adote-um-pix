@@ -2,11 +2,6 @@ import { APP_ROUTES } from "../routes/Routes";
 import UserRolesStore from "./UserRolesStore";
 
 describe("UserRolesStore", () => {
-    it("should init SUT", () => {
-        const sut = makeSut();
-        expect(sut instanceof UserRolesStore).toBe(true);
-    });
-
     it("should return false with invalid user", () => {
         const sut = makeSut();
         const user = null;
