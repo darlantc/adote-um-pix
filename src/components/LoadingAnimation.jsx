@@ -10,14 +10,9 @@ const LoadingAnimation = () => {
                 justifyContent: "center",
                 alignItems: "center",
             }}
+            data-testid="div-container"
         >
-            <div className="load-animation">
-                <img
-                    src={LogoImage}
-                    style={{ width: "150px" }}
-                    alt="LoadingAnimation"
-                />
-            </div>
+            <img className="load-animation" src={LogoImage} style={{ width: "150px" }} alt="Loading Animation" />
         </div>
     );
 };
