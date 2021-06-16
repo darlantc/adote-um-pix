@@ -7,7 +7,7 @@ import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import { cpfValidation, phoneValidation, pixRandomKeyValidation, emailValidation } from "../../utils/validation";
 import { formatCpf, formatPhoneNumber } from "../../utils/formatting";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     soliciteButton: {
         backgroundColor: "#2CA089",
         color: "#FFFFFF",
@@ -36,13 +36,11 @@ const UserRequestForm = observer(({ id }) => {
         setFirstTry(false);
 
         if (loggedUser) {
-            const request = { userId: loggedUser.uid, pixKey, description };
+            const request = { id, pixKey, description };
 
             if (id) {
-                console.log("🚀 ~ UPDATE", id);
-                updateUserRequest(request, id);
+                updateUserRequest(request);
             } else {
-                console.log("🚀 ~ ADD");
                 addUserRequest(request);
             }
         }

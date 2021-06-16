@@ -38,7 +38,6 @@ class MainStore {
             () => this.authStore.loggedUser,
             (isAuthenticated) => {
                 if (isAuthenticated) {
-                    console.log("🚀 isAuthenticated");
                     this.userRequestsDatabase.syncLoggedUserRequests();
                 } else {
                     this.storesToBeClearedOnLogout.forEach((store) => store.clearStore());

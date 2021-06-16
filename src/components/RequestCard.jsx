@@ -35,14 +35,9 @@ const RequestCard = observer(({ item }) => {
                     <Typography variant="h5" gutterBottom>
                         Solicitação
                     </Typography>
-                    <Typography variant="h6">
-                        {formatDate(createdAt)}
-                    </Typography>
+                    <Typography variant="h6">{formatDate(createdAt)}</Typography>
                 </Box>
-                <Typography
-                    variant="h6"
-                    gutterBottom
-                >{`- ${status} -`}</Typography>
+                <Typography variant="h6" gutterBottom>{`- ${status} -`}</Typography>
                 <p>{description}</p>
                 <Typography variant="h6" gutterBottom>
                     Chave{`: ${pixKey}`}
@@ -59,14 +54,8 @@ const RequestCard = observer(({ item }) => {
             </Box>
             <Modal open={displayModal} onClose={closeModal}>
                 <Box display="flex" justifyContent="center" alignItems="center">
-                    <Box
-                        borderRadius={7}
-                        bgcolor="background.paper"
-                        padding="10px"
-                        position="absolute"
-                        top="15vh"
-                    >
-                        <UserRequestForm id={item.id} />
+                    <Box borderRadius={7} bgcolor="background.paper" padding="10px" position="absolute" top="15vh">
+                        <UserRequestForm id={id} />
                     </Box>
                 </Box>
             </Modal>
