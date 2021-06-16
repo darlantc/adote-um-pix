@@ -1,6 +1,6 @@
 # Adote um Pix
 
-Este projeto surgiu durante conversas com os alunos **Mateus Pereira** e **Davi Bressiani** durante aulas no projeto [+1 Code](https://mais1code.com.br/).
+Este projeto surgiu em conversas com os alunos **Mateus Pereira** e **Davi Bressiani** durante aulas no projeto [+1 Code](https://mais1code.com.br/).
 Como mentor destes dois jovens programadores decidi fazer deste projeto um laboratório para ensina-los os seguintes conceitos:
 
 * Código limpo e legível;
