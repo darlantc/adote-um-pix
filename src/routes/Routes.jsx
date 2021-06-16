@@ -1,5 +1,4 @@
 import { Switch } from "react-router-dom";
-import { observer } from "mobx-react";
 
 import Route from "./RouterWrapper";
 import Homepage from "../pages/Homepage";
@@ -22,19 +21,9 @@ export default function Routes() {
         <Switch>
             <Route exact path={APP_ROUTES.home} component={Homepage} />
             <Route exact path={APP_ROUTES.request} component={Request} />
-            <Route
-                exact
-                path={APP_ROUTES.myRequests}
-                component={MyRequests}
-                isPrivate
-            />
+            <Route exact path={APP_ROUTES.myRequests} component={MyRequests} isPrivate />
             <Route exact path={APP_ROUTES.adopt} component={Adopt} isPrivate />
-            <Route
-                exact
-                path={APP_ROUTES.profile}
-                component={Profile}
-                isPrivate
-            />
+            <Route exact path={APP_ROUTES.profile} component={Profile} isPrivate />
         </Switch>
     );
 }

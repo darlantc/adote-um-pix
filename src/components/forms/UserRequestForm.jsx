@@ -1,21 +1,10 @@
-import {
-    TextField,
-    FormHelperText,
-    Typography,
-    Button,
-    Box,
-} from "@material-ui/core";
+import { TextField, FormHelperText, Typography, Button, Box } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../../contexts/mainStoreContext";
-import {
-    cpfValidation,
-    phoneValidation,
-    pixRandomKeyValidation,
-    emailValidation,
-} from "../../utils/validation";
+import { cpfValidation, phoneValidation, pixRandomKeyValidation, emailValidation } from "../../utils/validation";
 import { formatCpf, formatPhoneNumber } from "../../utils/formatting";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +34,21 @@ const UserRequestForm = observer(({ id }) => {
     const handleSave = (event) => {
         event.preventDefault();
         setFirstTry(false);
+
+        if (loggedUser) {
+            const request = { userId: loggedUser.uid, pixKey, description };
+
+            if (id) {
+                console.log("🚀 ~ UPDATE", id);
+                updateUserRequest(request, id);
+            } else {
+                console.log("🚀 ~ ADD");
+                addUserRequest(request);
+            }
+        }
+
+        setPixKey("");
+        setDescription("");
     };
 
     const fourWayValidation = (event) => {
@@ -89,8 +93,7 @@ const UserRequestForm = observer(({ id }) => {
                 required
             />
             <FormHelperText>
-                Descrever em detalhes pode aumentar suas chances de encontrar um
-                doador para ajuda-lo
+                Descrever em detalhes pode aumentar suas chances de encontrar um doador para ajuda-lo
             </FormHelperText>
             <Typography variant="h5" gutterBottom>
                 Digite sua chave PIX
@@ -106,12 +109,7 @@ const UserRequestForm = observer(({ id }) => {
             />
             <FormHelperText error>{validationError}</FormHelperText>
             <Box display="flex" justifyContent="center">
-                <Button
-                    className={classes.soliciteButton}
-                    type="submit"
-                    variant="outlined"
-                    size="medium"
-                >
+                <Button className={classes.soliciteButton} type="submit" variant="outlined" size="medium">
                     Salvar
                 </Button>
             </Box>

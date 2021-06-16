@@ -17,10 +17,10 @@ export const formatPhoneNumber = (validPhoneNumber) => {
 };
 
 export const formatDate = (timestamp) => {
-    if (!timestamp) {
+    const rawDate = String(fromUnixTime(timestamp));
+    if (!timestamp || rawDate === "Invalid Date") {
         return null;
     }
-    const rawDate = String(fromUnixTime(timestamp));
     return rawDate.slice(0, 25);
 };
 

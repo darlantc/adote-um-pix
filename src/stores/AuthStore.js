@@ -38,9 +38,7 @@ class AuthStore {
             (hasProfile) => {
                 this.clearLoggedUserProfile();
                 if (hasProfile) {
-                    this.#loggedUserRef = this.firebaseService.usersRef.child(
-                        this.uid
-                    );
+                    this.#loggedUserRef = this.firebaseService.usersRef.child(this.uid);
 
                     this.#loggedUserRef.on("value", (snapshot) => {
                         this.setLoggedUserProfile(snapshot.val());
@@ -129,10 +127,7 @@ class AuthStore {
     sendSignInLinkToEmail = async (email) => {
         this.setDisplayEmailRedirectOptions("loading");
         try {
-            await this.firebaseService.auth.sendSignInLinkToEmail(
-                email,
-                this.configSignInEmail()
-            );
+            await this.firebaseService.auth.sendSignInLinkToEmail(email, this.configSignInEmail());
 
             localStorage.setItem(LOCAL_STORAGE_KEY, email);
             this.setDisplayEmailRedirectOptions(true);
@@ -142,15 +137,12 @@ class AuthStore {
     };
 
     authenticateUserWithEmail = async (email) => {
-        const credential =
-            this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
-                email,
-                window.location.href
-            );
+        const credential = this.firebaseService.authParam.EmailAuthProvider.credentialWithLink(
+            email,
+            window.location.href
+        );
         try {
-            await this.firebaseService.auth.currentUser.linkWithCredential(
-                credential
-            );
+            await this.firebaseService.auth.currentUser.linkWithCredential(credential);
         } catch (error) {
             this.setErrorMessage(error.message);
         }
@@ -164,6 +156,7 @@ class AuthStore {
 
         const emailFromStorage = window.localStorage.getItem(LOCAL_STORAGE_KEY);
         const email = emailFromStorage || emailFromUser;
+
         if (!email) {
             this.setNeedEmailForSignIn(true);
             return false;
@@ -175,6 +168,7 @@ class AuthStore {
         } catch (error) {
             this.setErrorMessage(error.message);
         } finally {
+            this.verifyLoginStatus();
             this.setNeedEmailForSignIn(false);
             return true;
         }
@@ -198,9 +192,7 @@ class AuthStore {
         }
 
         try {
-            await this.firebaseService.storage
-                .ref(`userPhotos/${this.uid}/${photoToUpload.name}`)
-                .put(photoToUpload);
+            await this.firebaseService.storage.ref(`userPhotos/${this.uid}/${photoToUpload.name}`).put(photoToUpload);
 
             const url = await this.firebaseService.storage
                 .ref(`userPhotos/${this.uid}`)

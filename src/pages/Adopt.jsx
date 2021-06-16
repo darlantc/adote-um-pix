@@ -11,24 +11,17 @@ const Adopt = observer(() => {
 
     useEffect(() => {
         getUserRequests();
-    }, []);
+    }, [getUserRequests]);
 
     return (
         <div>
             <Typography variant="h3" gutterBottom>
                 Adote
             </Typography>
-            <Box
-                margin="5px"
-                maxWidth="700px"
-                border="2px solid"
-                borderRadius="7px"
-            >
+            <Box margin="5px" maxWidth="700px" border="2px solid" borderRadius="7px">
                 {userRequests &&
                     userRequests.map((request) => {
-                        return (
-                            <RequestsDisplay item={request} key={request.id} />
-                        );
+                        return <RequestsDisplay item={request} key={request.id} />;
                     })}
             </Box>
         </div>

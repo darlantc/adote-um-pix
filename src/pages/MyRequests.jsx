@@ -12,7 +12,7 @@ const MyRequests = observer(() => {
 
     useEffect(() => {
         getUserRequests();
-    }, []);
+    }, [getUserRequests]);
 
     return (
         <div>
@@ -23,15 +23,11 @@ const MyRequests = observer(() => {
                 {userRequests ? (
                     <Carousel>
                         {userRequests.map((request) => {
-                            return (
-                                <RequestCard key={request.id} item={request} />
-                            );
+                            return <RequestCard key={request.id} item={request} />;
                         })}
                     </Carousel>
                 ) : (
-                    <Typography variant="h5">
-                        Nenhuma solicitação encontrada.
-                    </Typography>
+                    <Typography variant="h5">Nenhuma solicitação encontrada.</Typography>
                 )}
             </Box>
         </div>

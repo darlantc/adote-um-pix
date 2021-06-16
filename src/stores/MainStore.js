@@ -12,17 +12,9 @@ class MainStore {
         this.firebaseService = firebaseService;
         this.authStore = new AuthStore(firebaseService);
 
-        this.userRequestsDatabase = this.getUserRequestsDatabase(
-            this.authStore,
-            firebaseService
-        );
+        this.userRequestsDatabase = this.getUserRequestsDatabase(this.authStore, firebaseService);
         this.storesToBeClearedOnLogout.push(this.userRequestsDatabase);
-        const [
-            getUserRequest,
-            addUserRequest,
-            updateUserRequest,
-            deleteUserRequest,
-        ] = this.userRequestsDatabase;
+        const [getUserRequest, addUserRequest, updateUserRequest, deleteUserRequest] = this.userRequestsDatabase;
 
         this.userRequestStore = new UserRequestStore(
             getUserRequest,
@@ -36,17 +28,9 @@ class MainStore {
     }
 
     getUserRequestsDatabase = (authStore, firebaseService) => {
-        const adapter = new UserRequestsDatabaseAdapter(
-            authStore,
-            firebaseService
-        );
+        const adapter = new UserRequestsDatabaseAdapter(authStore, firebaseService);
 
-        return [
-            adapter.getUserRequests,
-            adapter.addUserRequest,
-            adapter.updateUserRequest,
-            adapter.removeUserRequest,
-        ];
+        return [adapter.getUserRequests, adapter.addUserRequest, adapter.updateUserRequest, adapter.removeUserRequest];
     };
 
     clearStores = () => {
@@ -54,11 +38,10 @@ class MainStore {
             () => this.authStore.loggedUser,
             (isAuthenticated) => {
                 if (isAuthenticated) {
+                    console.log("🚀 isAuthenticated");
                     this.userRequestsDatabase.syncLoggedUserRequests();
                 } else {
-                    this.storesToBeClearedOnLogout.forEach((store) =>
-                        store.clearStore()
-                    );
+                    this.storesToBeClearedOnLogout.forEach((store) => store.clearStore());
                 }
             }
         );
