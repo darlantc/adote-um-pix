@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import { Typography, Grid, Avatar } from "@material-ui/core";
+import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 
 const useStyles = makeStyles({
@@ -24,8 +25,22 @@ const useStyles = makeStyles({
     },
 });
 
-export default function ApprovalsPage() {
+export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     const classes = useStyles();
+
+    if (!requestsList) {
+        return null;
+    }
+
+    if (requestsList.length < 1) {
+        return (
+            <Grid container justify="center">
+                <Grid item xs={12}>
+                    <Typography>Não existe nada para avaliar no momento.</Typography>
+                </Grid>
+            </Grid>
+        );
+    }
 
     return (
         <Grid container>
@@ -58,16 +73,20 @@ export default function ApprovalsPage() {
                         <Typography>Chave Pix:</Typography>
                     </CardContent>
                     <CardActions>
-                        <Button variant="contained" color="primary" size="small">
+                        <Button variant="contained" color="primary" size="small" onClick={onApprove}>
                             Aprovar
                         </Button>
-                        <Button variant="contained" color="secondary" size="small">
+                        <Button variant="contained" color="secondary" size="small" onClick={onReject}>
                             Recusar
                         </Button>
                     </CardActions>
                 </Card>
             </Grid>
             <Grid container item xs={12} justify="flex-end">
+                {/* TODO: Aplicar lógica pra exibir esses botões no momento correto */}
+                <IconButton variant="contained" color="primary">
+                    <ChevronLeft />
+                </IconButton>
                 <IconButton variant="contained" color="primary">
                     <ChevronRight />
                 </IconButton>
