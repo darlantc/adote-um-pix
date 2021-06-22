@@ -20,7 +20,15 @@ describe("<ApprovalsPage />", () => {
         expect(getByLabelText("card")).toBeInTheDocument();
     });
 
-    it.each(["Nome da pessoa", "1/97", "E-mail/Telefone", "Bio:", "Descrição:", "Chave Pix:"])(
+    it.each([[[createRequest(), createRequest()]], [[createRequest(), createRequest(), createRequest()]]])(
+        "should display count correctly = '%p'",
+        (requestsList) => {
+            const { getByText } = getRenderer({ requestsList });
+            expect(getByText(`1 de ${requestsList.length}`)).toBeInTheDocument();
+        }
+    );
+
+    it.each(["Nome da pessoa", "E-mail/Telefone", "Bio:", "Descrição:", "Chave Pix:"])(
         "should have label '%s'",
         (expected) => {
             const { getByText } = getRenderer({ requestsList: [createRequest()] });
@@ -57,6 +65,7 @@ describe("<ApprovalsPage />", () => {
         expect(onApprove).toBeCalledTimes(3);
     });
 
+    // TODO: Escrever teste da exibição do index
     // TODO: Escrever testes para os botões de avançar / voltar
 });
 

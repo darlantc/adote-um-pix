@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { Typography, Grid, Avatar } from "@material-ui/core";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
+import { useState } from "react";
 
 const useStyles = makeStyles({
     root: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles({
 
 export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     const classes = useStyles();
+    const [index, setIndex] = useState(0);
 
     if (!requestsList) {
         return null;
@@ -42,10 +44,14 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
         );
     }
 
+    const request = requestsList[index];
+
     return (
         <Grid container>
             <Grid container item xs={12} justify="flex-end">
-                <Typography>1/97</Typography>
+                <Typography>
+                    {index + 1} de {requestsList.length}
+                </Typography>
             </Grid>
             <Grid item xs={12}>
                 <Card className={classes.root} aria-label="card">
@@ -65,11 +71,7 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                             dolorum, illum quibusdam aliquid. Eum, harum?
                         </Typography>
                         <Typography variant="h6">Descrição:</Typography>
-                        <Typography>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos dolor voluptatum
-                            recusandae suscipit facere sequi tempore, nobis quae commodi vel magni natus, magnam sit
-                            dolorum, illum quibusdam aliquid. Eum, harum?
-                        </Typography>
+                        <Typography>{request.description}</Typography>
                         <Typography>Chave Pix:</Typography>
                     </CardContent>
                     <CardActions>
@@ -87,10 +89,16 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                 <IconButton variant="contained" color="primary">
                     <ChevronLeft />
                 </IconButton>
-                <IconButton variant="contained" color="primary">
-                    <ChevronRight />
-                </IconButton>
+                {requestsList.length > index + 1 && (
+                    <IconButton variant="contained" color="primary" onClick={nextRequest}>
+                        <ChevronRight />
+                    </IconButton>
+                )}
             </Grid>
         </Grid>
     );
+
+    function nextRequest() {
+        setIndex(index + 1);
+    }
 }
