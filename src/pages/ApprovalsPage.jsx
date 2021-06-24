@@ -84,21 +84,30 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                     </CardActions>
                 </Card>
             </Grid>
-            <Grid container item xs={12} justify="flex-end">
+            <Grid container item xs={12}>
                 {/* TODO: Aplicar lógica pra exibir esses botões no momento correto */}
-                <IconButton variant="contained" color="primary">
-                    <ChevronLeft />
-                </IconButton>
-                {requestsList.length > index + 1 && (
-                    <IconButton variant="contained" color="primary" onClick={nextRequest}>
-                        <ChevronRight />
-                    </IconButton>
-                )}
+                <Grid container item xs={6} justify="flex-start">
+                    {index > 0 && (
+                        <IconButton variant="contained" color="primary" onClick={backRequest}>
+                            <ChevronLeft />
+                        </IconButton>
+                    )}
+                </Grid>
+                <Grid container item xs={6} justify="flex-end">
+                    {requestsList.length > index + 1 && (
+                        <IconButton variant="contained" color="primary" onClick={nextRequest}>
+                            <ChevronRight />
+                        </IconButton>
+                    )}
+                </Grid>
             </Grid>
         </Grid>
     );
 
     function nextRequest() {
         setIndex(index + 1);
+    }
+    function backRequest() {
+        setIndex(index - 1);
     }
 }
