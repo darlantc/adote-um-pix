@@ -32,8 +32,8 @@ describe("formatPhoneNumber", () => {
 
 describe("formatDate", () => {
     it.each([
-        [1620276521252, "Mon Jul 09 53314 08:27:32"],
-        ["1620299923252", "Sat Apr 06 53315 05:00:52"],
+        [1620276521252, "06/05/2021"],
+        ["1620299923252", "06/05/2021"],
     ])("with input '%s' should return formatted date '%s'", (input, expected) => {
         expect(formatDate(input)).toBe(expected);
     });

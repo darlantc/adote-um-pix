@@ -4,12 +4,12 @@ import UserRequestForm from "../components/forms/UserRequestForm";
 
 const Request = () => {
     return (
-        <div>
+        <>
             <Typography variant="h3" gutterBottom>
                 Solicite
             </Typography>
             <UserRequestForm />
-        </div>
+        </>
     );
 };
 
