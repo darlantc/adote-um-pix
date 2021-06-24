@@ -1,4 +1,4 @@
-import fromUnixTime from "date-fns/fromUnixTime";
+import { format, fromUnixTime } from "date-fns";
 
 export const formatCpf = (validCPF) => {
     const cpf = validCPF ? String(validCPF) : "";
@@ -17,11 +17,11 @@ export const formatPhoneNumber = (validPhoneNumber) => {
 };
 
 export const formatDate = (timestamp) => {
-    if (!timestamp) {
+    const rawDate = String(fromUnixTime(timestamp / 1000));
+    if (!timestamp || rawDate === "Invalid Date") {
         return null;
     }
-    const rawDate = String(fromUnixTime(timestamp));
-    return rawDate.slice(0, 25);
+    return format(new Date(rawDate), "dd/MM/yyyy");
 };
 
 export const formatLinkedIn = (input) => {

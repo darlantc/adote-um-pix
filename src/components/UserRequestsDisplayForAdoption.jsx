@@ -1,4 +1,4 @@
-import { Typography, Button, Box } from "@material-ui/core";
+import { Typography, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { formatDate } from "../utils/formatting";
@@ -21,28 +21,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SolicitacoesDisplay = ({ item }) => {
+const UserRequestsDisplayForAdoption = ({ item }) => {
     const classes = useStyles();
 
-    const { nome, timestamp, descricao } = item;
+    const { name, timestamp, description } = item;
 
     return (
         <Box className={classes.adoteBox}>
-            <Typography variant="h4">{nome}</Typography>
+            <Typography variant="h4">{name}</Typography>
             <Typography variant="h5">{formatDate(timestamp)}</Typography>
-            <p>{descricao}</p>
-
-            <Box display="flex" justifyContent="center" width="100%">
-                <Button
-                    className={classes.adoteButton}
-                    variant="outlined"
-                    size="medium"
-                >
-                    Salvar
-                </Button>
-            </Box>
+            <p>{description}</p>
         </Box>
     );
 };
 
-export default SolicitacoesDisplay;
+export default UserRequestsDisplayForAdoption;

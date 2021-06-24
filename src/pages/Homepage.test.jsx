@@ -6,7 +6,12 @@ import Homepage from "./Homepage";
 import { APP_ROUTES } from "../routes/Routes";
 
 describe("<Homepage />", () => {
-    it.each(["Adote um PIX", "Como ajudar?"])("should have heading '%s'", (expected) => {
+    it.each([
+        "Adote um PIX",
+        "Aproximando grandes corações e boas oportunidades.",
+        "Como obter ajuda?",
+        "Como ajudar?",
+    ])("should have heading '%s'", (expected) => {
         const { getByRole } = getRenderer();
         expect(getByRole("heading", { name: expected })).toBeInTheDocument();
     });
