@@ -36,22 +36,7 @@ class UserRequestsDatabaseAdapter {
 
     getUserRequests = async () => {
         if (window.location.href.includes(APP_ROUTES.myRequests)) {
-            this.loggedUserRequestsRef = this.firebaseService.userRequestsRef
-                .orderByChild("user/id")
-                .equalTo(this.authStore.loggedUser.uid);
-
-            let userRequests = [];
-            this.loggedUserRequestsRef.on("value", (snapshots) => {
-                console.log("🚀 ~ userRequests", userRequests);
-                snapshots.forEach((snapshot) => {
-                    userRequests.push({
-                        id: snapshot.key,
-                        ...snapshot.val(),
-                    });
-                });
-            });
-
-            return userRequests;
+            return this.loggedUserRequests;
         }
 
         let userRequests = [];

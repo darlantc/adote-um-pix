@@ -6,21 +6,21 @@ import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { formatDate } from "../utils/formatting";
 import UserRequestForm from "./forms/UserRequestForm";
 
-const RequestCard = observer(({ item }) => {
+const UserRequestCardForCarousel = observer(({ request }) => {
     const { userRequestStore } = useMainStoreContext();
     const { removeUserRequest } = userRequestStore;
 
-    const { description, pixKey, createdAt, status, id } = item;
+    const { description, pixKey, createdAt, id } = request;
 
-    const [displayModal, setDisplayModal] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = (event) => {
         event.preventDefault();
-        setDisplayModal(true);
+        setIsModalOpen(true);
     };
 
-    const closeModal = () => {
-        setDisplayModal(false);
+    const closeModal = (event) => {
+        setIsModalOpen(false);
     };
 
     const didRemove = (event) => {
@@ -32,13 +32,9 @@ const RequestCard = observer(({ item }) => {
         <Paper variant="outlined" elevation={3}>
             <Box p={1}>
                 <Box display="flex" justifyContent="space-between">
-                    <Typography variant="h5" gutterBottom>
-                        Solicitação
-                    </Typography>
+                    <p>{description}</p>
                     <Typography variant="h6">{formatDate(createdAt)}</Typography>
                 </Box>
-                <Typography variant="h6" gutterBottom>{`- ${status} -`}</Typography>
-                <p>{description}</p>
                 <Typography variant="h6" gutterBottom>
                     Chave{`: ${pixKey}`}
                 </Typography>
@@ -52,10 +48,15 @@ const RequestCard = observer(({ item }) => {
                     </Button>
                 </Box>
             </Box>
-            <Modal open={displayModal} onClose={closeModal}>
+            <Modal open={isModalOpen} onClose={closeModal}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                     <Box borderRadius={7} bgcolor="background.paper" padding="10px" position="absolute" top="15vh">
-                        <UserRequestForm id={id} />
+                        <UserRequestForm
+                            id={id}
+                            currentDescription={description}
+                            currentPixKey={pixKey}
+                            close={closeModal}
+                        />
                     </Box>
                 </Box>
             </Modal>
@@ -63,4 +64,4 @@ const RequestCard = observer(({ item }) => {
     );
 });
 
-export default RequestCard;
+export default UserRequestCardForCarousel;

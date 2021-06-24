@@ -14,13 +14,13 @@ class MainStore {
 
         this.userRequestsDatabase = this.getUserRequestsDatabase(this.authStore, firebaseService);
         this.storesToBeClearedOnLogout.push(this.userRequestsDatabase);
-        const [getUserRequest, addUserRequest, updateUserRequest, deleteUserRequest] = this.userRequestsDatabase;
+        const { getUserRequests, addUserRequest, updateUserRequest, removeUserRequest } = this.userRequestsDatabase;
 
         this.userRequestStore = new UserRequestStore(
-            getUserRequest,
+            getUserRequests,
             addUserRequest,
             updateUserRequest,
-            deleteUserRequest
+            removeUserRequest
         );
         this.storesToBeClearedOnLogout.push(this.userRequestStore);
 
@@ -30,7 +30,7 @@ class MainStore {
     getUserRequestsDatabase = (authStore, firebaseService) => {
         const adapter = new UserRequestsDatabaseAdapter(authStore, firebaseService);
 
-        return [adapter.getUserRequests, adapter.addUserRequest, adapter.updateUserRequest, adapter.removeUserRequest];
+        return adapter;
     };
 
     clearStores = () => {
