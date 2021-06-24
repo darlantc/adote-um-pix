@@ -19,23 +19,16 @@ const useStyles = makeStyles(() => ({
 
 const ProfileInfo = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } =
-        authStore;
+    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } = authStore;
 
     const classes = useStyles();
 
     const [currentImage, setCurrentImage] = useState(
         (loggedUserProfile && loggedUserProfile.photoUrl) || DefaultUserPhoto
     );
-    const [fullName, setFullName] = useState(
-        (loggedUserProfile && loggedUserProfile.fullName) || ""
-    );
-    const [bio, setBio] = useState(
-        (loggedUserProfile && loggedUserProfile.bio) || ""
-    );
-    const [linkedIn, setLinkedIn] = useState(
-        (loggedUserProfile && loggedUserProfile.linkedIn) || ""
-    );
+    const [fullName, setFullName] = useState((loggedUserProfile && loggedUserProfile.fullName) || "");
+    const [bio, setBio] = useState((loggedUserProfile && loggedUserProfile.bio) || "");
+    const [linkedIn, setLinkedIn] = useState((loggedUserProfile && loggedUserProfile.linkedIn) || "");
 
     useEffect(() => {
         const formattedLinkedIn = formatLinkedIn(linkedIn);
@@ -70,16 +63,10 @@ const ProfileInfo = observer(() => {
     };
 
     return (
-        <div>
+        <>
             <Box display="flex" justifyContent="center">
                 <label htmlFor="photo" style={{ cursor: "pointer" }}>
-                    <input
-                        id="photo"
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        onChange={handleFile}
-                    />
+                    <input id="photo" type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} />
                     <img
                         style={{
                             width: "200px",
@@ -151,7 +138,7 @@ const ProfileInfo = observer(() => {
                     </Button>
                 </Box>
             </form>
-        </div>
+        </>
     );
 });
 

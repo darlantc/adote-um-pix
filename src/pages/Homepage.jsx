@@ -62,7 +62,7 @@ const Homepage = () => {
     const classes = useStyles();
 
     return (
-        <div>
+        <>
             <Typography variant="h3">Adote um PIX</Typography>
             <Typography variant="h6" gutterBottom>
                 Aproximando grandes corações e boas oportunidades.
@@ -91,10 +91,9 @@ const Homepage = () => {
                         </Typography>
 
                         <p>
-                            Está precisando daquele empurrãozinho para voltar ao
-                            mercado de trabalho? Compartilhe a sua necessidade
-                            conosco. Nós da Adote um PIX acolhemos e conectamos
-                            a sua história com alguém que pode te ajudar.
+                            Está precisando daquele empurrãozinho para voltar ao mercado de trabalho? Compartilhe a sua
+                            necessidade conosco. Nós da Adote um PIX acolhemos e conectamos a sua história com alguém
+                            que pode te ajudar.
                         </p>
 
                         <Box display="flex" justifyContent="center">
@@ -117,11 +116,9 @@ const Homepage = () => {
                         </Typography>
 
                         <p>
-                            Está com disponibilidade financeira e o coração
-                            aberto para contribuir com aquele salve que pode
-                            mudar a trajetória de alguém? Faça parte do nosso
-                            time de padrinhos PIX. Com certeza tem alguém aqui
-                            acreditando em você.
+                            Está com disponibilidade financeira e o coração aberto para contribuir com aquele salve que
+                            pode mudar a trajetória de alguém? Faça parte do nosso time de padrinhos PIX. Com certeza
+                            tem alguém aqui acreditando em você.
                         </p>
 
                         <Box display="flex" justifyContent="center">
@@ -137,7 +134,7 @@ const Homepage = () => {
                     </Box>
                 </Grid>
             </Grid>
-        </div>
+        </>
     );
 };
 
