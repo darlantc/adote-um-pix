@@ -3,8 +3,6 @@ import { render } from "@testing-library/react";
 import ApprovalsPage from "./ApprovalsPage";
 import { theme } from "../assets/jss/styles.js";
 import UserRequestBuilder from "../models/builders/UserRequestBuilder";
-import ChevronRight from "@material-ui/icons/ChevronRight";
-import ChevronLeft from "@material-ui/icons/ChevronLeft";
 
 describe("<ApprovalsPage />", () => {
     it("should not present if requestsList is undefined", () => {
@@ -67,52 +65,38 @@ describe("<ApprovalsPage />", () => {
         expect(onApprove).toBeCalledTimes(3);
     });
 
-    it.each("should allow user to next resquest(card", () => {
-        const nextRequest = jest.fn();
-        const { getByRole } = getRenderer({ requestsList: [createRequest()], nextRequest });
+    it("should allow user navigate to next and back to previous request based on index", () => {
+        const { getByText, getByLabelText, queryByLabelText } = getRenderer({
+            requestsList: [createRequest(), createRequest(), createRequest(), createRequest()],
+        });
+        expect(queryByLabelText("Voltar")).not.toBeInTheDocument();
 
-        expect(nextRequest).not.toBeCalled();
+        const nextButton = getByLabelText("Avançar");
+        nextButton.click();
+        expect(getByText("2 de 4")).toBeInTheDocument();
 
-        getByRole("button", { name: ChevronRight }).click();
-        getByRole("button", { name: ChevronRight }).click();
-        getByRole("button", { name: ChevronRight }).click();
-        expect(nextRequest).toBeCalledTimes(3);
+        nextButton.click();
+        nextButton.click();
+        expect(getByText("4 de 4")).toBeInTheDocument();
+        expect(queryByLabelText("Avançar")).not.toBeInTheDocument();
+
+        const previousButton = getByLabelText("Voltar");
+
+        previousButton.click();
+        expect(getByText("3 de 4")).toBeInTheDocument();
+
+        previousButton.click();
+        previousButton.click();
+        expect(getByText("1 de 4")).toBeInTheDocument();
+        expect(queryByLabelText("Voltar")).not.toBeInTheDocument();
     });
-
-    it.each("should allow user to back request(card)", () => {
-        const backRequest = jest.fn();
-        const { getByRole } = getRenderer({ requestsList: [createRequest()], backRequest });
-
-        expect(backRequest).not.toBeCalled();
-
-        getByRole("button", { name: ChevronLeft }).click();
-        getByRole("button", { name: ChevronLeft }).click();
-        getByRole("button", { name: ChevronLeft }).click();
-        expect(backRequest).toBeCalledTimes(3);
-    });
-
-    // it.each(["ChevronRight", "ChevronLeft"])("should have a button with label '%s'", (expected) => {
-    //const { getByRole } = getRenderer({
-    //    requestsList: [createRequest()],
-    // });
-    //expect(getByRole("button", { name: expected })).toBeInTheDocument();
-    //});
-
-    // TODO: Escrever teste da exibição do index
-    // TODO: Escrever testes para os botões de avançar / voltar
 });
 
 // Helpers
-function getRenderer({ requestsList, onReject, onApprove, nextRequest, backRequest }) {
+function getRenderer({ requestsList, onReject, onApprove }) {
     return render(
         <ThemeProvider theme={theme}>
-            <ApprovalsPage
-                requestsList={requestsList}
-                onReject={onReject}
-                onApprove={onApprove}
-                backRequest={backRequest}
-                nextRequest={nextRequest}
-            />
+            <ApprovalsPage requestsList={requestsList} onReject={onReject} onApprove={onApprove} />
         </ThemeProvider>
     );
 }
