@@ -12,7 +12,7 @@ const EmailRedirectButton = ({ href, src, alt }) => {
             }}
         >
             <Button variant="outlined" size="medium">
-                <img data-testid="logo" src={src} alt={alt} style={{ width: "200px" }} />
+                <img src={src} alt={alt} style={{ width: "200px" }} />
             </Button>
         </a>
     );
