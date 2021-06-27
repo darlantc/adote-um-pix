@@ -1,13 +1,15 @@
-import { TextField, FormHelperText, Typography, Button, Box } from "@material-ui/core";
+import { TextField, FormHelperText, Typography, Button, Box, Modal } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
+import { Link } from "react-router-dom";
 
 import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import { cpfValidation, phoneValidation, pixRandomKeyValidation, emailValidation } from "../../utils/validation";
 import { formatCpf, formatPhoneNumber } from "../../utils/formatting";
+import { APP_ROUTES } from "../../routes/Routes";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     soliciteButton: {
         backgroundColor: "#2CA089",
         color: "#FFFFFF",
@@ -19,36 +21,44 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const UserRequestForm = observer(({ id }) => {
+const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close }) => {
     const { authStore, userRequestStore } = useMainStoreContext();
     const { addUserRequest, updateUserRequest } = userRequestStore;
     const { loggedUser } = authStore;
 
     const classes = useStyles();
 
-    const [description, setDescription] = useState("");
-    const [pixKey, setPixKey] = useState("");
-    const [firstTry, setFirstTry] = useState(true);
+    const [description, setDescription] = useState(currentDescription || "");
+    const [pixKey, setPixKey] = useState(currentPixKey || "");
+    const [isFirstTry, setIsFirstTry] = useState(true);
     const [validationError, setValidationError] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUpdatePopUpOpen, setIsUpdatePopUpOpen] = useState(false);
 
     const handleSave = (event) => {
         event.preventDefault();
-        setFirstTry(false);
+        setIsFirstTry(false);
 
         if (loggedUser) {
-            const request = { userId: loggedUser.uid, pixKey, description };
+            const request = { id, pixKey, description };
 
             if (id) {
-                console.log("🚀 ~ UPDATE", id);
-                updateUserRequest(request, id);
+                updateUserRequest(request);
+                setIsUpdatePopUpOpen(true);
             } else {
-                console.log("🚀 ~ ADD");
                 addUserRequest(request);
+                setIsModalOpen(true);
             }
         }
 
         setPixKey("");
         setDescription("");
+    };
+
+    const closeFormForUpdate = (event) => {
+        event.preventDefault();
+        setIsUpdatePopUpOpen(false);
+        close();
     };
 
     const fourWayValidation = (event) => {
@@ -72,7 +82,7 @@ const UserRequestForm = observer(({ id }) => {
             setValidationError("");
         } else if (email || key) {
             setValidationError("");
-        } else if (!cpf && !phoneNumber && !email && !key && !firstTry) {
+        } else if (!cpf && !phoneNumber && !email && !key && !isFirstTry) {
             setValidationError("Aparentemente a chave digitada não é válida.");
         }
     };
@@ -113,6 +123,33 @@ const UserRequestForm = observer(({ id }) => {
                     Salvar
                 </Button>
             </Box>
+            <Modal open={isModalOpen}>
+                <Box display="flex" alignContent="center" justifyContent="center">
+                    <Box borderRadius={7} position="absolute" top="15vh" bgcolor="background.paper" padding="10px">
+                        <Typography variant="h6"> Sua solicitação foi registrada com sucesso. </Typography>
+                        <Box display="flex" justifyContent="space-between">
+                            <Button variant="outlined" onClick={() => setIsModalOpen(false)} marg>
+                                Nova Solicitação
+                            </Button>
+                            <Button variant="outlined" component={Link} to={APP_ROUTES.myRequests}>
+                                Ir para Solicitações
+                            </Button>
+                        </Box>
+                    </Box>
+                </Box>
+            </Modal>
+            <Modal open={isUpdatePopUpOpen}>
+                <Box display="flex" alignContent="center" justifyContent="center">
+                    <Box borderRadius={7} position="absolute" top="15vh" bgcolor="background.paper" padding="10px">
+                        <Typography variant="h6"> Sua solicitação foi atualizada. </Typography>
+                        <Box display="flex" justifyContent="center">
+                            <Button variant="outlined" onClick={closeFormForUpdate}>
+                                Voltar
+                            </Button>
+                        </Box>
+                    </Box>
+                </Box>
+            </Modal>
         </form>
     );
 });
