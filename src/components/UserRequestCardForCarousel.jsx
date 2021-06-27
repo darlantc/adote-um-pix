@@ -1,10 +1,13 @@
 import { Typography, Button, Box, Paper, Modal } from "@material-ui/core";
 import { useState } from "react";
 import { observer } from "mobx-react";
+import "react-toastify/dist/ReactToastify.css"
+import { toast } from 'react-toastify';
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { formatDate } from "../utils/formatting";
 import UserRequestForm from "./forms/UserRequestForm";
+import CustomToast from "./CustomToast";
 
 const UserRequestCardForCarousel = observer(({ request }) => {
     const { userRequestStore } = useMainStoreContext();
@@ -26,6 +29,7 @@ const UserRequestCardForCarousel = observer(({ request }) => {
     const didRemove = (event) => {
         event.preventDefault();
         removeUserRequest(id);
+        toast(<CustomToast message="Solicitação excluída!" />)
     };
 
     return (
