@@ -88,7 +88,7 @@ class UserRequestsDatabaseAdapter {
         return this.firebaseService.userRequestsRef.child(id).remove();
     };
 
-    clearStore = () => {
+    clear = () => {
         if (this.loggedUserRequestsRef) {
             this.loggedUserRequestsRef.off("value");
             this.loggedUserRequestsRef = null;

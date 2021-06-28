@@ -2,18 +2,20 @@ import { reaction } from "mobx";
 import UserRequestStore from "./UserRequestStore";
 import UserRequestsDatabaseAdapter from "./UserRequestsDatabaseAdapter";
 import AuthStore from "./AuthStore";
+import InternalEventsStore, { InternalEvents } from "./InternalEventsStore";
 
 class MainStore {
     storesToBeClearedOnLogout = [];
     userRequestsDatabase;
+    internalEventsStore;
     firebaseService;
 
     constructor(firebaseService) {
         this.firebaseService = firebaseService;
-        this.authStore = new AuthStore(firebaseService);
+        this.internalEventsStore = new InternalEventsStore();
+        this.authStore = new AuthStore(internalEventsStore, firebaseService);
 
-        this.userRequestsDatabase = this.getUserRequestsDatabase(this.authStore, firebaseService);
-        this.storesToBeClearedOnLogout.push(this.userRequestsDatabase);
+        this.getUserRequestsDatabase(this.authStore, firebaseService);
         const { getUserRequests, addUserRequest, updateUserRequest, removeUserRequest } = this.userRequestsDatabase;
 
         this.userRequestStore = new UserRequestStore(
@@ -28,7 +30,18 @@ class MainStore {
     }
 
     getUserRequestsDatabase = (authStore, firebaseService) => {
-        const adapter = new UserRequestsDatabaseAdapter(authStore, firebaseService);
+        this.userRequestsDatabase = new UserRequestsDatabaseAdapter(authStore, firebaseService);
+        this.internalEventsStore.subscribeTo({
+            event: InternalEvents.login,
+            observer: this.userRequestsDatabase,
+            callback: (isAuthenticated) => {
+                if (isAuthenticated) {
+                    this.userRequestsDatabase.syncLoggedUserRequests();
+                } else {
+                    this.userRequestsDatabase.clear();
+                }
+            },
+        });
 
         return adapter;
     };
@@ -37,9 +50,7 @@ class MainStore {
         reaction(
             () => this.authStore.loggedUser,
             (isAuthenticated) => {
-                if (isAuthenticated) {
-                    this.userRequestsDatabase.syncLoggedUserRequests();
-                } else {
+                if (!isAuthenticated) {
                     this.storesToBeClearedOnLogout.forEach((store) => store.clearStore());
                 }
             }

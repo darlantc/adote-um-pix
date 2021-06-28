@@ -4,6 +4,8 @@ import LoginStatus from "../models/LoginStatus";
 
 const LOCAL_STORAGE_KEY = "emailForSignIn";
 
+import { InternalEvents } from "./InternalEventsStore";
+
 class AuthStore {
     loggedUserProfile = null;
     loggedUser = null;
@@ -13,8 +15,10 @@ class AuthStore {
 
     #loggedUserRef = null;
 
-    constructor(firebaseService) {
+    constructor(internalEventsStore, firebaseService) {
+        this.internalEventsStore = internalEventsStore;
         this.firebaseService = firebaseService;
+
         makeObservable(this, {
             loggedUserProfile: observable,
             loggedUser: observable,
@@ -83,6 +87,11 @@ class AuthStore {
 
     setLoggedUser = (newValue) => {
         this.loggedUser = newValue;
+
+        this.internalEventsStore.notify({
+            event: InternalEvents.login,
+            params: !!newValue,
+        });
     };
 
     setErrorMessage = (value) => {
@@ -98,9 +107,9 @@ class AuthStore {
 
         if (!isSigningByEmail) {
             this.firebaseService.auth.onAuthStateChanged((user) => {
-                if (user) {
-                    this.setLoggedUser(user);
-                } else {
+                this.setLoggedUser(user);
+
+                if (!user) {
                     this.signInAnonymously();
                 }
             });
