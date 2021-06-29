@@ -1,35 +1,39 @@
 import { formatCpf, formatDate, formatPhoneNumber, formatLinkedIn } from "./formatting";
 
 describe("formatCpf", () => {
-    it("should return formatted CPF if cpf is valid", () => {
-        expect(formatCpf(16021334433)).toBe("160.213.344-33");
-        expect(formatCpf("85214856225")).toBe("852.148.562-25");
+    it.each([
+        [16021334433, "160.213.344-33"],
+        ["85214856225", "852.148.562-25"],
+    ])("should return formatted CPF if cpf is valid", (input, expected) => {
+        expect(formatCpf(input)).toBe(expected);
     });
-    it("should return null if cpf is invalid", () => {
-        expect(formatCpf("f90!d7e-342e-4a16-898c-81cf/75c047")).toBeNull();
-        expect(formatCpf("z9e42d7e452e4a16898c81cr057")).toBeNull();
-        expect(formatCpf("")).toBeNull();
-        expect(formatCpf(null)).toBeNull();
-    });
+    it.each(["f90!d7e-342e-4a16-898c-81cf/75c047", "z9e42d7e452e4a16898c81cr057", "", null])(
+        "should return null if cpf is invalid",
+        (input) => {
+            expect(formatPhoneNumber(input)).toBeNull();
+        }
+    );
 });
 
 describe("formatPhoneNumber", () => {
-    it("should return formatted phone number if number is valid", () => {
-        expect(formatPhoneNumber(71982792521)).toBe("(71) 98279-2521");
-        expect(formatPhoneNumber("11975486225")).toBe("(11) 97548-6225");
+    it.each([
+        [71982792521, "(71) 98279-2521"],
+        ["11975486225", "(11) 97548-6225"],
+    ])("should return formatted phone number if number is valid", (input, expected) => {
+        expect(formatPhoneNumber(input)).toBe(expected);
     });
-    it("should return null if cpf is invalid", () => {
-        expect(formatPhoneNumber("f90!d7e-342e-4a16-898c-81cf/75c047")).toBeNull();
-        expect(formatPhoneNumber("z9e42d7e452e4a16898c81cr057")).toBeNull();
-        expect(formatPhoneNumber("")).toBeNull();
-        expect(formatPhoneNumber(null)).toBeNull();
-    });
+    it.each(["f90!d7e-342e-4a16-898c-81cf/75c047", "z9e42d7e452e4a16898c81cr057", "", null])(
+        "should return null if cpf is invalid",
+        (input) => {
+            expect(formatPhoneNumber(input)).toBeNull();
+        }
+    );
 });
 
 describe("formatDate", () => {
     it.each([
-        [1620276521252, "Mon Jul 09 53314 08:27:32"],
-        ["1620299923252", "Sat Apr 06 53315 05:00:52"],
+        [1620276521252, "06/05/2021"],
+        ["1620299923252", "06/05/2021"],
     ])("with input '%s' should return formatted date '%s'", (input, expected) => {
         expect(formatDate(input)).toBe(expected);
     });

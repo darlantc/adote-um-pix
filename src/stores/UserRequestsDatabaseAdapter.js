@@ -11,11 +11,9 @@ class UserRequestsDatabaseAdapter {
     }
 
     syncLoggedUserRequests = () => {
-        console.log("1");
         this.clearStore();
 
         if (!this.authStore.loggedUser) {
-            console.log("2");
             return;
         }
 
@@ -25,7 +23,6 @@ class UserRequestsDatabaseAdapter {
 
         this.loggedUserRequestsRef.on("value", (snapshots) => {
             let userRequests = [];
-            console.log("🚀 ~ userRequests", userRequests);
             snapshots.forEach((snapshot) => {
                 userRequests.push({
                     id: snapshot.key,
@@ -34,7 +31,6 @@ class UserRequestsDatabaseAdapter {
             });
 
             this.loggedUserRequests = userRequests;
-            console.log("🚀 ~ userRequests", userRequests);
         });
     };
 

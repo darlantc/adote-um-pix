@@ -62,7 +62,7 @@ const Homepage = () => {
     const classes = useStyles();
 
     return (
-        <div>
+        <>
             <Typography variant="h3">Adote um PIX</Typography>
             <Typography variant="h6" gutterBottom>
                 Aproximando grandes corações e boas oportunidades.
@@ -134,7 +134,7 @@ const Homepage = () => {
                     </Box>
                 </Grid>
             </Grid>
-        </div>
+        </>
     );
 };
 
