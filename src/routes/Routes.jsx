@@ -29,6 +29,7 @@ const Routes = observer(() => {
             <Route exact path={APP_ROUTES.adopt} component={Adote} isPrivate />
             <Route exact path={APP_ROUTES.profile} component={Perfil} isPrivate />
             <Route exact path={APP_ROUTES.approvals} component={ApprovalsPage}>
+                {/* TODO: Remover esse código temporário  */}
                 <ApprovalsPage
                     requestsList={[
                         UserRequestBuilder.aUserRequest().withCustomDescription("abc").build(),
