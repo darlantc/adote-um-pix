@@ -30,6 +30,8 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     const classes = useStyles();
     const [index, setIndex] = useState(0);
 
+    // TODO: Descobrir como receber aqui o UserStore
+
     if (!requestsList) {
         return null;
     }
