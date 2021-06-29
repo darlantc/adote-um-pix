@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 
-const EmailRedirectButton = ({ href, src, alt }) => {
+const EmailRedirectButton = ({ href, image, title }) => {
     return (
         <a
             href={href}
@@ -12,7 +12,7 @@ const EmailRedirectButton = ({ href, src, alt }) => {
             }}
         >
             <Button variant="outlined" size="medium">
-                <img src={src} alt={alt} style={{ width: "200px" }} />
+                <img src={image} alt={title} style={{ width: "200px" }} />
             </Button>
         </a>
     );
