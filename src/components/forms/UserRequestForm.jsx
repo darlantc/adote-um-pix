@@ -1,13 +1,16 @@
-import { TextField, FormHelperText, Typography, Button, Box, Modal } from "@material-ui/core";
+import { TextField, FormHelperText, Typography, Button, Box } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css"
+import { toast } from 'react-toastify';
 
 import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import { cpfValidation, phoneValidation, pixRandomKeyValidation, emailValidation } from "../../utils/validation";
 import { formatCpf, formatPhoneNumber } from "../../utils/formatting";
 import { APP_ROUTES } from "../../routes/Routes";
+import CustomToast from "../CustomToast";
 
 const useStyles = makeStyles(() => ({
     soliciteButton: {
@@ -21,10 +24,13 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
+toast.configure()
+
 const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close }) => {
-    const { authStore, userRequestStore } = useMainStoreContext();
+    const {  userRequestStore } = useMainStoreContext();
     const { addUserRequest, updateUserRequest } = userRequestStore;
-    const { loggedUser } = authStore;
+
+    const history = useHistory()
 
     const classes = useStyles();
 
@@ -32,33 +38,27 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
     const [pixKey, setPixKey] = useState(currentPixKey || "");
     const [isFirstTry, setIsFirstTry] = useState(true);
     const [validationError, setValidationError] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isUpdatePopUpOpen, setIsUpdatePopUpOpen] = useState(false);
 
     const handleSave = (event) => {
         event.preventDefault();
         setIsFirstTry(false);
 
-        if (loggedUser) {
+        
             const request = { id, pixKey, description };
 
             if (id) {
                 updateUserRequest(request);
-                setIsUpdatePopUpOpen(true);
+                close()
+                toast(<CustomToast message="Solicitação atualizada!" />)
             } else {
                 addUserRequest(request);
-                setIsModalOpen(true);
+                toast(<CustomToast message="Solicitação enviada!" />)
+                history.push(APP_ROUTES.myRequests);
             }
-        }
+        
 
         setPixKey("");
         setDescription("");
-    };
-
-    const closeFormForUpdate = (event) => {
-        event.preventDefault();
-        setIsUpdatePopUpOpen(false);
-        close();
     };
 
     const fourWayValidation = (event) => {
@@ -123,33 +123,6 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
                     Salvar
                 </Button>
             </Box>
-            <Modal open={isModalOpen}>
-                <Box display="flex" alignContent="center" justifyContent="center">
-                    <Box borderRadius={7} position="absolute" top="15vh" bgcolor="background.paper" padding="10px">
-                        <Typography variant="h6"> Sua solicitação foi registrada com sucesso. </Typography>
-                        <Box display="flex" justifyContent="space-between">
-                            <Button variant="outlined" onClick={() => setIsModalOpen(false)} marg>
-                                Nova Solicitação
-                            </Button>
-                            <Button variant="outlined" component={Link} to={APP_ROUTES.myRequests}>
-                                Ir para Solicitações
-                            </Button>
-                        </Box>
-                    </Box>
-                </Box>
-            </Modal>
-            <Modal open={isUpdatePopUpOpen}>
-                <Box display="flex" alignContent="center" justifyContent="center">
-                    <Box borderRadius={7} position="absolute" top="15vh" bgcolor="background.paper" padding="10px">
-                        <Typography variant="h6"> Sua solicitação foi atualizada. </Typography>
-                        <Box display="flex" justifyContent="center">
-                            <Button variant="outlined" onClick={closeFormForUpdate}>
-                                Voltar
-                            </Button>
-                        </Box>
-                    </Box>
-                </Box>
-            </Modal>
         </form>
     );
 });
