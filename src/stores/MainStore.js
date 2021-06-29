@@ -13,7 +13,7 @@ class MainStore {
     constructor(firebaseService) {
         this.firebaseService = firebaseService;
         this.internalEventsStore = new InternalEventsStore();
-        this.authStore = new AuthStore(internalEventsStore, firebaseService);
+        this.authStore = new AuthStore(this.internalEventsStore, firebaseService);
 
         this.getUserRequestsDatabase(this.authStore, firebaseService);
         const { getUserRequests, addUserRequest, updateUserRequest, removeUserRequest } = this.userRequestsDatabase;
@@ -42,8 +42,6 @@ class MainStore {
                 }
             },
         });
-
-        return adapter;
     };
 
     clearStores = () => {

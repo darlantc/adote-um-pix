@@ -27,7 +27,7 @@ class InternalEventsStore {
 
     notify = ({ event, params }) => {
         if (this.subscribers[event]) {
-            this.subscribers[event].forEach(({ callback }) => callback());
+            this.subscribers[event].forEach(({ callback }) => callback(params));
         }
     };
 }

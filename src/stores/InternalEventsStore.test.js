@@ -56,7 +56,21 @@ describe("InternalEventsStore", () => {
             expect(callback2).toBeCalledTimes(2);
         });
 
-        // TODO: escrever teste que garante o envio / recebimento de params
+        it.only("should receive and send correct params", () => {
+            const sut = makeSUT();
+
+            const callbackTest = jest.fn();
+
+            sut.subscribeTo({
+                event: InternalEvents.login,
+                observer: "The class",
+                callback: callbackTest,
+            });
+
+            sut.notify({ event: InternalEvents.login, params: "Test" });
+
+            expect(callbackTest).toBeCalledWith("Test");
+        });
     });
 });
 

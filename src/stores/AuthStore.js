@@ -1,10 +1,9 @@
 import { makeObservable, observable, action, computed, reaction } from "mobx";
 
 import LoginStatus from "../models/LoginStatus";
+import { InternalEvents } from "./InternalEventsStore";
 
 const LOCAL_STORAGE_KEY = "emailForSignIn";
-
-import { InternalEvents } from "./InternalEventsStore";
 
 class AuthStore {
     loggedUserProfile = null;
