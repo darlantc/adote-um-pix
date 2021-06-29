@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import UserRequestModel from "./UserRequestModel";
 
 describe("UserRequestModel", () => {
@@ -14,6 +16,7 @@ describe("UserRequestModel", () => {
     it("Should create with valid data", () => {
         expect(
             makeSUT({
+                id: uuid(),
                 createdAt: 1619887317208,
                 description: "lorem ipsum dolor asit amet",
                 userId: "48914",
