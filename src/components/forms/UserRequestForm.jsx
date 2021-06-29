@@ -1,8 +1,8 @@
-import { TextField, FormHelperText, Typography, Button, Box, Modal } from "@material-ui/core";
+import { TextField, FormHelperText, Typography, Button, Box } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css"
 import { toast } from 'react-toastify';
 
@@ -30,13 +30,14 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
     const {  userRequestStore } = useMainStoreContext();
     const { addUserRequest, updateUserRequest } = userRequestStore;
 
+    const history = useHistory()
+
     const classes = useStyles();
 
     const [description, setDescription] = useState(currentDescription || "");
     const [pixKey, setPixKey] = useState(currentPixKey || "");
     const [isFirstTry, setIsFirstTry] = useState(true);
     const [validationError, setValidationError] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleSave = (event) => {
         event.preventDefault();
@@ -51,7 +52,8 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
                 toast(<CustomToast message="Solicitação atualizada!" />)
             } else {
                 addUserRequest(request);
-                setIsModalOpen(true);
+                toast(<CustomToast message="Solicitação enviada!" />)
+                history.push(APP_ROUTES.myRequests);
             }
         
 
@@ -121,21 +123,6 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
                     Salvar
                 </Button>
             </Box>
-            <Modal open={isModalOpen}>
-                <Box display="flex" alignContent="center" justifyContent="center">
-                    <Box borderRadius={7} position="absolute" top="15vh" bgcolor="background.paper" padding="10px">
-                        <Typography variant="h6"> Sua solicitação foi registrada com sucesso. </Typography>
-                        <Box display="flex" justifyContent="space-between">
-                            <Button variant="outlined" onClick={() => setIsModalOpen(false)}>
-                                Nova Solicitação
-                            </Button>
-                            <Button variant="outlined" component={Link} to={APP_ROUTES.myRequests}>
-                                Ir para Solicitações
-                            </Button>
-                        </Box>
-                    </Box>
-                </Box>
-            </Modal>
         </form>
     );
 });
