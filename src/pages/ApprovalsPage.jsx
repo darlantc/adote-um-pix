@@ -85,7 +85,6 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                 </Card>
             </Grid>
             <Grid container item xs={12}>
-                {/* TODO: Aplicar lógica pra exibir esses botões no momento correto */}
                 <Grid container item xs={6} justify="flex-start">
                     {index > 0 && (
                         <IconButton variant="contained" color="primary" onClick={backRequest} aria-label="Voltar">
