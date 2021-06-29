@@ -61,14 +61,17 @@ const UserRequestCardForCarousel = observer(({ request }) => {
                 <Box display="flex" justifyContent="center" alignItems="center">
                     <Box borderRadius={7} bgcolor="background.paper" padding="10px" position="absolute" top="15vh">
                         {alternateModalPresentation === "remove" ? (
-                            <Box display="flex" justifyContent="space-between" width="310px">
-                                <Button variant="outlined" onClick={closeModal}>
-                                    Voltar
-                                </Button>
-                                <Button variant="outlined" onClick={didRemove}>
-                                    Excluir Solicitação
-                                </Button>
-                            </Box>
+                            <>
+                                <Typography variant="h6">Confirmar exclusão de solicitação?</Typography>
+                                <Box display="flex" justifyContent="space-between" width="310px">
+                                    <Button variant="outlined" onClick={closeModal}>
+                                        Voltar
+                                    </Button>
+                                    <Button variant="outlined" onClick={didRemove}>
+                                        Excluir
+                                    </Button>
+                                </Box>
+                            </>
                         ) : (
                             <UserRequestForm
                                 id={id}
