@@ -2,6 +2,7 @@ import { reaction } from "mobx";
 import UserRequestStore from "./UserRequestStore";
 import UserRequestsDatabaseAdapter from "./UserRequestsDatabaseAdapter";
 import AuthStore from "./AuthStore";
+import UserStore from "./UserStore";
 
 class MainStore {
     storesToBeClearedOnLogout = [];
@@ -24,6 +25,8 @@ class MainStore {
         );
         this.storesToBeClearedOnLogout.push(this.userRequestStore);
 
+        this.userStore = new UserStore(this.getUser);
+
         this.clearStores();
     }
 
@@ -44,6 +47,14 @@ class MainStore {
                 }
             }
         );
+    };
+
+    getUser = () => {
+        // TODO: Criar a conexão desse callback com o banco de dados Firebase
+        return {
+            bio: "abc",
+            name: "Test",
+        };
     };
 }
 
