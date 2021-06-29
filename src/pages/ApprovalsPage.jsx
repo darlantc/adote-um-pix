@@ -46,6 +46,10 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
 
     const request = requestsList[index];
 
+    // TODO: Nós temos o id do usuário em request.user.id
+    // Em posse desse id eu preciso descobrir os dados do usuário
+    // name, bio, email / phone
+
     return (
         <Grid container>
             <Grid container item xs={12} justify="flex-end">
@@ -59,11 +63,15 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                         <Grid container item xs={12}>
                             <Avatar className={classes.orange}>N</Avatar>
 
-                            <Typography variant="h5" component="h2" gutterBottom>
-                                Nome da pessoa
-                            </Typography>
+                            {request.user.name && (
+                                <Typography variant="h5" component="h2" gutterBottom>
+                                    {request.user.name}
+                                </Typography>
+                            )}
                         </Grid>
-                        <Typography variant="h6">E-mail/Telefone</Typography>
+                        {(request.user.email || request.user.phone) && (
+                            <Typography variant="h6">{request.user.email || request.user.phone}</Typography>
+                        )}
                         <Typography variant="h6">Bio:</Typography>
                         <Typography>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos dolor voluptatum
