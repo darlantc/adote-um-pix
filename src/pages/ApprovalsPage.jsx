@@ -30,6 +30,8 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     const classes = useStyles();
     const [index, setIndex] = useState(0);
 
+    // TODO: Descobrir como receber aqui o UserStore
+
     if (!requestsList) {
         return null;
     }
@@ -46,6 +48,10 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
 
     const request = requestsList[index];
 
+    // TODO: Nós temos o id do usuário em request.user.id
+    // Em posse desse id eu preciso descobrir os dados do usuário
+    // name, bio, email / phone
+
     return (
         <Grid container>
             <Grid container item xs={12} justify="flex-end">
@@ -61,11 +67,15 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                                 <Avatar className={classes.orange}>N</Avatar>
                             </Grid>
 
-                            <Typography variant="h5" component="h2" gutterBottom>
-                                Nome da pessoa
-                            </Typography>
+                            {request.user.name && (
+                                <Typography variant="h5" component="h2" gutterBottom>
+                                    {request.user.name}
+                                </Typography>
+                            )}
                         </Grid>
-                        <Typography variant="h6">E-mail/Telefone</Typography>
+                        {(request.user.email || request.user.phone) && (
+                            <Typography variant="h6">{request.user.email || request.user.phone}</Typography>
+                        )}
                         <Typography variant="h6">Bio:</Typography>
                         <Typography>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos dolor voluptatum
@@ -87,7 +97,6 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                 </Card>
             </Grid>
             <Grid container item xs={12}>
-                {/* TODO: Aplicar lógica pra exibir esses botões no momento correto */}
                 <Grid container item xs={6} justify="flex-start">
                     {index > 0 && (
                         <IconButton variant="contained" color="primary" onClick={backRequest} aria-label="Voltar">
