@@ -57,7 +57,9 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                 <Card className={classes.root} aria-label="card">
                     <CardContent>
                         <Grid container item xs={12}>
-                            <Avatar className={classes.orange}>N</Avatar>
+                            <Grid container item xs={1}>
+                                <Avatar className={classes.orange}>N</Avatar>
+                            </Grid>
 
                             <Typography variant="h5" component="h2" gutterBottom>
                                 Nome da pessoa
