@@ -1,14 +1,6 @@
-import {
-    Typography,
-    AppBar,
-    Toolbar,
-    Box,
-    Button,
-    ButtonBase,
-    Modal,
-} from "@material-ui/core";
+import { Typography, AppBar, Toolbar, Box, Button, ButtonBase, Modal } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 
@@ -17,7 +9,9 @@ import ModalEmailRequest from "./ModalEmailRequest";
 import LoginForm from "./forms/LoginForm";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
+import { InternalEvents } from "../stores/InternalEventsStore";
 import { APP_ROUTES } from "../routes/Routes";
+import { userLoginNotification } from "./CustomToast";
 
 const PixAppBar = styled(AppBar)({
     background: "linear-gradient(45deg, #FFF 30%, #000000 90%)",
@@ -40,8 +34,23 @@ const RegistrationButton = styled(ButtonBase)({
 });
 
 const StyledAppBar = observer(() => {
-    const { authStore } = useMainStoreContext();
+    const { authStore, internalEventsStore } = useMainStoreContext();
+    const { subscribeTo, unsubscribe } = internalEventsStore;
     const { isAuthenticated, isAnonymous, logout } = authStore;
+
+    useEffect(() => {
+        subscribeTo({
+            event: InternalEvents.login,
+            observer: "StyledAppBar",
+            callback: (params) => {
+                userLoginNotification(params);
+            },
+        });
+
+        return () => {
+            unsubscribe("StyledAppBar", InternalEvents.login);
+        };
+    }, [subscribeTo, unsubscribe]);
 
     const [displayModal, setDisplayModal] = useState(false);
 
@@ -63,56 +72,30 @@ const StyledAppBar = observer(() => {
         <>
             <PixAppBar position="relative">
                 <Toolbar>
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        width="100%"
-                    >
-                        <ButtonBase
-                            style={{ textDecoration: "none" }}
-                            component={Link}
-                            to={APP_ROUTES.home}
-                        >
+                    <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                        <ButtonBase style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.home}>
                             <Box display="flex" alignItems="center">
                                 <Logo />
-                                <Typography variant="h4">
-                                    Adote um PIX
-                                </Typography>
+                                <Typography variant="h4">Adote um PIX</Typography>
                             </Box>
                         </ButtonBase>
 
                         {isAuthenticated && !isAnonymous ? (
                             <Box>
-                                <Button
-                                    style={{ textDecoration: "none" }}
-                                    component={Link}
-                                    to={APP_ROUTES.profile}
-                                >
-                                    <RegistrationButton>
-                                        Perfil
-                                    </RegistrationButton>
+                                <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.profile}>
+                                    <RegistrationButton>Perfil</RegistrationButton>
                                 </Button>
-                                <RegistrationButton onClick={didLogOut}>
-                                    Sair
-                                </RegistrationButton>
+                                <RegistrationButton onClick={didLogOut}>Sair</RegistrationButton>
                             </Box>
                         ) : (
-                            <RegistrationButton onClick={openModal}>
-                                Entre
-                            </RegistrationButton>
+                            <RegistrationButton onClick={openModal}>Entre</RegistrationButton>
                         )}
                     </Box>
                 </Toolbar>
             </PixAppBar>
             <Modal open={displayModal} onClose={closeModal}>
                 <Box display="flex" justifyContent="center">
-                    <Box
-                        borderRadius={7}
-                        position="absolute"
-                        top="15vh"
-                        bgcolor="background.paper"
-                    >
+                    <Box borderRadius={7} position="absolute" top="15vh" bgcolor="background.paper">
                         <LoginForm />
                     </Box>
                 </Box>

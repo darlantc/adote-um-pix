@@ -7,13 +7,13 @@ import { MainStoreContext } from "./contexts/mainStoreContext";
 import FirebaseService from "./services/FirebaseService";
 
 const firebaseService = new FirebaseService();
-const { authStore, userRequestStore } = new MainStore(firebaseService);
+const { authStore, userRequestStore, internalEventsStore } = new MainStore(firebaseService);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <MainStoreContext.Provider value={{ authStore, userRequestStore }}>
-      <App />
-    </MainStoreContext.Provider>
-  </React.StrictMode>,
-  document.getElementById("root")
+    <React.StrictMode>
+        <MainStoreContext.Provider value={{ authStore, userRequestStore, internalEventsStore }}>
+            <App />
+        </MainStoreContext.Provider>
+    </React.StrictMode>,
+    document.getElementById("root")
 );

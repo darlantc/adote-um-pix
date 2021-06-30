@@ -1,22 +1,36 @@
 import { Typography, Button, Box, Paper, Modal } from "@material-ui/core";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { observer } from "mobx-react";
-import "react-toastify/dist/ReactToastify.css";
-import { toast } from "react-toastify";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
+import { userRequestNotification } from "./CustomToast";
 import { formatDate } from "../utils/formatting";
 import UserRequestForm from "./forms/UserRequestForm";
-import CustomToast from "./CustomToast";
+import { InternalEvents } from "../stores/InternalEventsStore";
 
 const UserRequestCardForCarousel = observer(({ request }) => {
-    const { userRequestStore } = useMainStoreContext();
+    const { userRequestStore, internalEventsStore } = useMainStoreContext();
     const { removeUserRequest } = userRequestStore;
+    const { subscribeTo, unsubscribe } = internalEventsStore;
 
     const { description, pixKey, createdAt, id } = request;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [alternateModalPresentation, setAlternateModalPresentation] = useState("");
+
+    useEffect(() => {
+        subscribeTo({
+            event: InternalEvents.notification,
+            observer: "UserRequestCardForCarousel",
+            callback: (params) => {
+                userRequestNotification(params);
+            },
+        });
+
+        return () => {
+            unsubscribe("UserRequestCardForCarousel", InternalEvents.notification);
+        };
+    });
 
     const openModal = (event) => {
         event.preventDefault();
@@ -29,14 +43,14 @@ const UserRequestCardForCarousel = observer(({ request }) => {
     };
 
     const openRemovePopup = (event) => {
-        setIsModalOpen(true);
+        event.preventDefault();
         setAlternateModalPresentation("remove");
+        setIsModalOpen(true);
     };
 
     const didRemove = (event) => {
         event.preventDefault();
         removeUserRequest(id);
-        toast(<CustomToast message="Solicitação excluída!" />);
     };
 
     return (
@@ -63,7 +77,7 @@ const UserRequestCardForCarousel = observer(({ request }) => {
                         {alternateModalPresentation === "remove" ? (
                             <>
                                 <Typography variant="h6">Confirmar exclusão de solicitação?</Typography>
-                                <Box display="flex" justifyContent="space-between" width="310px">
+                                <Box display="flex" justifyContent="space-evenly">
                                     <Button variant="outlined" onClick={closeModal}>
                                         Voltar
                                     </Button>

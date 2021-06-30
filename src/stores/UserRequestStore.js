@@ -1,5 +1,7 @@
 import { action, computed, makeObservable, observable } from "mobx";
 
+import { InternalEvents } from "./InternalEventsStore";
+
 class UserRequestStore {
     get;
     add;
@@ -8,11 +10,13 @@ class UserRequestStore {
     userRequests = [];
     searchString = "";
 
-    constructor(get, add, update, remove) {
+    constructor(get, add, update, remove, InternalEvents) {
         this.get = get;
+
         this.add = add;
         this.update = update;
         this.remove = remove;
+        this.internalEventsStore = InternalEvents;
 
         makeObservable(this, {
             userRequests: observable,
@@ -53,18 +57,33 @@ class UserRequestStore {
     addUserRequest = async (item) => {
         await this.add(item);
         await this.getUserRequests();
+
+        this.internalEventsStore.notify({
+            event: InternalEvents.notification,
+            params: { type: "success", message: "Solicitação adicionada!" },
+        });
     };
 
     updateUserRequest = async (item) => {
         if (this.itemExists(item.id)) {
             await this.update(item);
             await this.getUserRequests();
+
+            this.internalEventsStore.notify({
+                event: InternalEvents.notification,
+                params: { type: "success", message: "Solicitação atualizada!" },
+            });
         }
     };
 
     removeUserRequest = async (id) => {
         await this.remove(id);
         await this.getUserRequests();
+
+        this.internalEventsStore.notify({
+            event: InternalEvents.notification,
+            params: { type: "error", message: "Solicitação excluída!" },
+        });
     };
 
     itemExists = (idToVerify) => {

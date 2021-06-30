@@ -89,7 +89,7 @@ class AuthStore {
 
         this.internalEventsStore.notify({
             event: InternalEvents.login,
-            params: !!newValue,
+            params: newValue,
         });
     };
 

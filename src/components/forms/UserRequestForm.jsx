@@ -1,16 +1,15 @@
 import { TextField, FormHelperText, Typography, Button, Box } from "@material-ui/core";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
 import { useHistory } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css"
-import { toast } from 'react-toastify';
 
 import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import { cpfValidation, phoneValidation, pixRandomKeyValidation, emailValidation } from "../../utils/validation";
 import { formatCpf, formatPhoneNumber } from "../../utils/formatting";
 import { APP_ROUTES } from "../../routes/Routes";
-import CustomToast from "../CustomToast";
+import { InternalEvents } from "../../stores/InternalEventsStore";
+import { userRequestNotification } from "../CustomToast";
 
 const useStyles = makeStyles(() => ({
     soliciteButton: {
@@ -24,13 +23,26 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-toast.configure()
-
 const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close }) => {
-    const {  userRequestStore } = useMainStoreContext();
+    const { userRequestStore, internalEventsStore } = useMainStoreContext();
     const { addUserRequest, updateUserRequest } = userRequestStore;
+    const { subscribeTo, unsubscribe } = internalEventsStore;
 
-    const history = useHistory()
+    useEffect(() => {
+        subscribeTo({
+            event: InternalEvents.notification,
+            observer: "UserRequestForm",
+            callback: (params) => {
+                userRequestNotification(params);
+            },
+        });
+
+        return () => {
+            unsubscribe("UserRequestForm", InternalEvents.notification);
+        };
+    });
+
+    const history = useHistory();
 
     const classes = useStyles();
 
@@ -43,19 +55,15 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
         event.preventDefault();
         setIsFirstTry(false);
 
-        
-            const request = { id, pixKey, description };
+        const request = { id, pixKey, description };
 
-            if (id) {
-                updateUserRequest(request);
-                close()
-                toast(<CustomToast message="Solicitação atualizada!" />)
-            } else {
-                addUserRequest(request);
-                toast(<CustomToast message="Solicitação enviada!" />)
-                history.push(APP_ROUTES.myRequests);
-            }
-        
+        if (id) {
+            updateUserRequest(request);
+            close();
+        } else {
+            addUserRequest(request);
+            history.push(APP_ROUTES.myRequests);
+        }
 
         setPixKey("");
         setDescription("");

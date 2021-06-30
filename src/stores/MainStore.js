@@ -22,7 +22,8 @@ class MainStore {
             getUserRequests,
             addUserRequest,
             updateUserRequest,
-            removeUserRequest
+            removeUserRequest,
+            this.internalEventsStore
         );
         this.storesToBeClearedOnLogout.push(this.userRequestStore);
 

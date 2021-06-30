@@ -11,7 +11,7 @@ class UserRequestsDatabaseAdapter {
     }
 
     syncLoggedUserRequests = () => {
-        this.clearStore();
+        this.clear();
 
         if (!this.authStore.loggedUser) {
             return;
