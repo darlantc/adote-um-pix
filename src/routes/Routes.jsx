@@ -8,6 +8,7 @@ import Perfil from "../pages/Perfil";
 import Solicite from "../pages/Solicite";
 import MinhasSolicitacoes from "../pages/MinhasSolicitacoes";
 import ApprovalsPage from "../pages/ApprovalsPage";
+import UserRequestBuilder from "../models/builders/UserRequestBuilder";
 
 export const APP_ROUTES = Object.freeze({
     admin: "/admin",
@@ -28,7 +29,16 @@ const Routes = observer(() => {
             <Route exact path={APP_ROUTES.myRequests} component={MinhasSolicitacoes} isPrivate />
             <Route exact path={APP_ROUTES.adopt} component={Adote} isPrivate />
             <Route exact path={APP_ROUTES.profile} component={Perfil} isPrivate />
-            <Route exact path={APP_ROUTES.approvals} component={ApprovalsPage} />
+            <Route exact path={APP_ROUTES.approvals} component={ApprovalsPage}>
+                {/* TODO: Remover esse código temporário  */}
+                <ApprovalsPage
+                    requestsList={[
+                        UserRequestBuilder.aUserRequest().withCustomDescription("abc").build(),
+                        UserRequestBuilder.aUserRequest().build(),
+                        UserRequestBuilder.aUserRequest().build(),
+                    ]}
+                />
+            </Route>
         </Switch>
     );
 });
