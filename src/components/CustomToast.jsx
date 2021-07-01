@@ -34,9 +34,7 @@ export const userRequestNotification = ({ type, message }) => {
 export const userLoginNotification = (loggedUser) => {
     if (loggedUser === null) {
         toast.error(<CustomToast message="Usuário desconectado!" />);
-        return;
-    }
-    if (loggedUser.isAnonymous === false) {
+    } else if (!loggedUser.isAnonymous) {
         toast.success(<CustomToast message="Usuário conectado!" />);
     }
 };
