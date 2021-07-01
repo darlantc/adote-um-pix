@@ -4,15 +4,14 @@ const LoadingAnimation = () => {
     return (
         <div
             style={{
-                width: "300px",
-                height: "300px",
+                width: 300,
+                height: 300,
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
             }}
-            data-testid="div-container"
         >
-            <img className="load-animation" src={LogoImage} style={{ width: "150px" }} alt="Loading Animation" />
+            <img className="load-animation" src={LogoImage} style={{ width: "150px" }} alt="Animação de Carregamento" />
         </div>
     );
 };

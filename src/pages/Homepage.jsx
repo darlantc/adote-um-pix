@@ -90,7 +90,7 @@ const Homepage = () => {
                             Como obter ajuda?
                         </Typography>
 
-                        <p data-testid="need-help">
+                        <p>
                             Está precisando daquele empurrãozinho para voltar ao mercado de trabalho? Compartilhe a sua
                             necessidade conosco. Nós da Adote um PIX acolhemos e conectamos a sua história com alguém
                             que pode te ajudar.
@@ -115,7 +115,7 @@ const Homepage = () => {
                             Como ajudar?
                         </Typography>
 
-                        <p data-testid="can-help">
+                        <p>
                             Está com disponibilidade financeira e o coração aberto para contribuir com aquele salve que
                             pode mudar a trajetória de alguém? Faça parte do nosso time de padrinhos PIX. Com certeza
                             tem alguém aqui acreditando em você.

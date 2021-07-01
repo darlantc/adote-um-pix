@@ -4,7 +4,12 @@ import Logo from "./Logo";
 describe("<Logo />", () => {
     it("should render a img logo", () => {
         const { getByAltText } = getRenderer();
-        expect(getByAltText("logo")).toHaveStyle("margin: 10px; height: 40px; width: 40px");
+        expect(getByAltText("logo")).toHaveStyle({
+            margin: 10,
+            width: 40,
+            height: 40,
+            objectFit: "cover",
+        });
     });
 });
 
