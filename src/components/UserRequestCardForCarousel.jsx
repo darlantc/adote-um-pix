@@ -16,7 +16,6 @@ const UserRequestCardForCarousel = observer(({ request }) => {
     const { description, pixKey, createdAt, id } = request;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [alternateModalPresentation, setAlternateModalPresentation] = useState("");
 
     useEffect(() => {
         subscribeTo({
@@ -34,18 +33,16 @@ const UserRequestCardForCarousel = observer(({ request }) => {
 
     const openModal = (event) => {
         event.preventDefault();
-        setAlternateModalPresentation("");
         setIsModalOpen(true);
     };
 
-    const closeModal = (event) => {
+    const closeModal = () => {
         setIsModalOpen(false);
     };
 
     const openRemovePopup = (event) => {
         event.preventDefault();
-        setAlternateModalPresentation("remove");
-        setIsModalOpen(true);
+        setIsModalOpen("remove");
     };
 
     const didRemove = (event) => {
@@ -74,7 +71,7 @@ const UserRequestCardForCarousel = observer(({ request }) => {
             <Modal open={isModalOpen} onClose={closeModal}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                     <Box borderRadius={7} bgcolor="background.paper" padding="10px" position="absolute" top="15vh">
-                        {alternateModalPresentation === "remove" ? (
+                        {isModalOpen === "remove" ? (
                             <>
                                 <Typography variant="h6">Confirmar exclusão de solicitação?</Typography>
                                 <Box display="flex" justifyContent="space-evenly">
