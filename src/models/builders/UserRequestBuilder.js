@@ -18,6 +18,12 @@ class UserRequestBuilder {
         return new UserRequestBuilder();
     }
 
+    static aExistingUserRequest(id) {
+        const builder = new UserRequestBuilder();
+        builder.model.id = id;
+        return builder;
+    }
+
     withCustomDescription(description) {
         this.model.description = description;
         return this;

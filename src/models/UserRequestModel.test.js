@@ -1,5 +1,4 @@
 import { v4 as uuid } from "uuid";
-
 import UserRequestModel from "./UserRequestModel";
 
 describe("UserRequestModel", () => {
@@ -31,7 +30,7 @@ describe("UserRequestModel", () => {
                 user: {
                     id: uuid(),
                 },
-                pixKey: "f7de57ab-ee77-4493-aabc-f819f6b1d0b4",
+                pixKey: uuid(),
                 status: "waitingForApproval",
             })
         ).toBeTruthy();
