@@ -52,8 +52,10 @@ class MainStore {
     getUser = () => {
         // TODO: Criar a conexão desse callback com o banco de dados Firebase
         return {
-            bio: "abc",
-            name: "Test",
+            photoUrl: null,
+            name: "Mateus",
+            linkedIn: "mateuspereiras",
+            bio: "Padeiro",
         };
     };
 }

@@ -19,7 +19,7 @@ const Adopt = observer(() => {
                 Adote
             </Typography>
             <Box margin="5px" maxWidth="700px" border="2px solid" borderRadius="7px">
-                {userRequests ? (
+                {userRequests.length > 0 ? (
                     userRequests.map((request) => {
                         return <UserRequestsDisplayForAdoption item={request} key={request.id} />;
                     })
