@@ -70,6 +70,7 @@ class UserRequestsDatabaseAdapter {
                     user: {
                         id: loggedUser.uid,
                         name: loggedUser.displayName,
+                        photoUrl: loggedUser.photoUrl,
                     },
                     pixKey,
                     description,

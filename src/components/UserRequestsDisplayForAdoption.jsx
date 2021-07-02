@@ -1,7 +1,10 @@
-import { Typography, Box } from "@material-ui/core";
+import { Typography, Box, Modal, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
 
 import { formatDate } from "../utils/formatting";
+import Default from "../assets/images/defaultUserPhoto.png";
+import UserRequestFullInfoDisplay from "./UserRequestFullInfoDisplay";
 
 const useStyles = makeStyles((theme) => ({
     adoteButton: {
@@ -21,16 +24,40 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const UserRequestsDisplayForAdoption = ({ item }) => {
+const UserRequestsDisplayForAdoption = ({ request }) => {
     const classes = useStyles();
 
-    const { name, timestamp, description } = item;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const { user, createdAt, description } = request;
+
+    const userImage = user.photoUrl ? user.photoUrl : Default;
+
+    const openModal = (event) => {
+        event.preventDefault();
+        setIsModalOpen(true);
+    };
 
     return (
-        <Box className={classes.adoteBox}>
-            <Typography variant="h4">{name}</Typography>
-            <Typography variant="h5">{formatDate(timestamp)}</Typography>
-            <p>{description}</p>
+        <Box>
+            <Box className={classes.adoteBox}>
+                <Box>
+                    <img src={userImage} alt="Imagem de usuário" />
+                    <Box>
+                        <Typography variant="h4">{user.name}</Typography>
+                        <Typography variant="h5">{formatDate(createdAt)}</Typography>
+                    </Box>
+                </Box>
+                <Typography variant="h6">{description}</Typography>
+                <Box>
+                    <Button variant="outlined" className={classes.adoteButton} onClick={openModal}>
+                        Mais Informações
+                    </Button>
+                </Box>
+            </Box>
+            <Modal open={isModalOpen}>
+                <UserRequestFullInfoDisplay request={request} />
+            </Modal>
         </Box>
     );
 };
