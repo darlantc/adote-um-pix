@@ -56,6 +56,7 @@ class MainStore {
             name: "Mateus",
             linkedIn: "mateuspereiras",
             bio: "Padeiro",
+            pixKey: "06029908588",
         };
     };
 }

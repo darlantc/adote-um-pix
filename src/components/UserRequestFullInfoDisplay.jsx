@@ -10,51 +10,79 @@ const useStyles = makeStyles((theme) => ({
     adoteButton: {
         backgroundColor: "#0088AA",
         color: "#FFFFFF",
-        marginTop: "10px",
+        marginLeft: "10px",
     },
     adoteBox: {
         backgroundColor: "#00CCFF",
         color: "#FFFFFF",
         borderRadius: "7px",
         border: "2px",
-        borderColor: "#0088AA",
+        height: "fit-content",
+        width: "100%",
         padding: "10px",
         maxWidth: "655px",
         margin: "5px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
     },
 }));
 
-const UserRequestFullInfoDisplay = observer(({ request }) => {
+const UserRequestFullInfoDisplay = observer(({ request, close }) => {
     const classes = useStyles();
 
     const { userStore } = useMainStoreContext();
-    const { getUser } = userStore;
+    const { getUserProfile } = userStore;
 
     const { user, createdAt, description } = request;
 
-    const userFullInfo = getUser(user.id);
+    const userFullInfo = getUserProfile(user.id);
 
     const { photoUrl, name, linkedIn, bio, pixKey } = userFullInfo;
 
     const userImage = photoUrl ? photoUrl : Default;
 
     return (
-        <Box>
-            <Typography variant="h5">{formatDate(createdAt)}</Typography>
-            <img src={userImage} alt="userImage" />
-            <Typography variant="h2">{name}</Typography>
-            <a href={linkedIn}>
-                <Typography variant="h4">{linkedIn}</Typography>
-            </a>
-            <Typography variant="body1">{bio}</Typography>
-            <Box className={classes.adoteBox}>
-                <Typography variant="h6">{description} </Typography>
-                <Typography variant="h5">{pixKey} </Typography>
-                <Box>
-                    <Button variant="outlined" className={classes.adoteButton}>
-                        Adotar
-                    </Button>
-                </Box>
+        <Box className={classes.adoteBox}>
+            <Typography variant="h6">{formatDate(createdAt)}</Typography>
+            <div
+                style={{
+                    backgroundColor: "#0088AA",
+                    borderRadius: "7px",
+                    width: "96%",
+                    padding: "10px",
+                    margin: "5px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <img src={userImage} alt="userImage" style={{ width: "150px", borderRadius: "50%" }} />
+                <Typography variant="h4">{name}</Typography>
+                <a href={linkedIn} style={{ textDecoration: "none" }} target="_blank" rel="noreferrer">
+                    <Typography variant="h6" align="center">
+                        {linkedIn}
+                    </Typography>
+                </a>
+                <Typography variant="body1" align="center" gutterBottom>
+                    {bio}
+                </Typography>
+            </div>
+            <Typography variant="body1" align="center">
+                {description}
+            </Typography>
+            <Typography variant="h6" align="center" gutterBottom>
+                {pixKey}
+            </Typography>
+            <Box display="flex" alignContent="center" justifyContent="center" height="30px">
+                <Button variant="outlined" onClick={close}>
+                    Voltar
+                </Button>
+                <Button variant="outlined" className={classes.adoteButton}>
+                    Adotar
+                </Button>
             </Box>
         </Box>
     );

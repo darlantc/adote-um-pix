@@ -21,7 +21,7 @@ const Adopt = observer(() => {
             <Box margin="5px" maxWidth="700px" border="2px solid" borderRadius="7px">
                 {userRequests.length > 0 ? (
                     userRequests.map((request) => {
-                        return <UserRequestsDisplayForAdoption item={request} key={request.id} />;
+                        return <UserRequestsDisplayForAdoption request={request} key={request.id} />;
                     })
                 ) : (
                     <Box
@@ -31,7 +31,7 @@ const Adopt = observer(() => {
                         padding="20px"
                         flexDirection="column"
                     >
-                        <Typography variant="h5" align="center" gutterbottom>
+                        <Typography variant="h5" align="center" gutterBottom>
                             Nenhuma solicitação encontrada, retorne mais tarde.
                         </Typography>
                     </Box>

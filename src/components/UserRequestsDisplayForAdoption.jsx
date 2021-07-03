@@ -1,4 +1,4 @@
-import { Typography, Box, Modal, Button } from "@material-ui/core";
+import { Typography, Box, Modal } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 
@@ -21,6 +21,11 @@ const useStyles = makeStyles((theme) => ({
         padding: "10px",
         maxWidth: "655px",
         margin: "5px",
+        transition: "0.5s",
+        cursor: "pointer",
+        "&:hover": {
+            transform: "scale(1.05)",
+        },
     },
 }));
 
@@ -38,25 +43,33 @@ const UserRequestsDisplayForAdoption = ({ request }) => {
         setIsModalOpen(true);
     };
 
+    const closeModal = (event) => {
+        event.preventDefault();
+        setIsModalOpen(false);
+    };
+
     return (
         <Box>
-            <Box className={classes.adoteBox}>
-                <Box>
-                    <img src={userImage} alt="Imagem de usuário" />
-                    <Box>
-                        <Typography variant="h4">{user.name}</Typography>
-                        <Typography variant="h5">{formatDate(createdAt)}</Typography>
-                    </Box>
+            <Box className={classes.adoteBox} onClick={openModal}>
+                <Box display="flex" justifyContent="center">
+                    <img
+                        src={userImage}
+                        alt="Imagem de usuário"
+                        style={{ width: "70px", marginRight: "10px", borderRadius: "50%" }}
+                    />
+                    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                        <Typography variant="h5">{user.name}</Typography>
+                        <Typography variant="h6">{formatDate(createdAt)}</Typography>
+                    </div>
                 </Box>
-                <Typography variant="h6">{description}</Typography>
-                <Box>
-                    <Button variant="outlined" className={classes.adoteButton} onClick={openModal}>
-                        Mais Informações
-                    </Button>
-                </Box>
+                <Typography variant="body1" align="center">
+                    {description}
+                </Typography>
             </Box>
             <Modal open={isModalOpen}>
-                <UserRequestFullInfoDisplay request={request} />
+                <Box display="flex" justifyContent="center" width="100%" height="100%" alignContent="center">
+                    <UserRequestFullInfoDisplay request={request} close={closeModal} />
+                </Box>
             </Modal>
         </Box>
     );
