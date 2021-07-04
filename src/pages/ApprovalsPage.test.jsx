@@ -1,3 +1,4 @@
+import { uuid, v4 } from "uuid";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { render } from "@testing-library/react";
 import ApprovalsPage from "./ApprovalsPage";
@@ -28,13 +29,31 @@ describe("<ApprovalsPage />", () => {
         }
     );
 
-    it.each(["Nome da pessoa", "E-mail/Telefone", "Bio:", "Descrição:", "Chave Pix:"])(
-        "should have label '%s'",
-        (expected) => {
-            const { getByText } = getRenderer({ requestsList: [createRequest()] });
-            expect(getByText(expected)).toBeInTheDocument();
-        }
-    );
+    it.each(["Bio:", "Descrição:", "Chave Pix:"])("should have label '%s'", (expected) => {
+        const { getByText } = getRenderer({ requestsList: [createRequest()] });
+        expect(getByText(expected)).toBeInTheDocument();
+    });
+
+    it.each(["Maria José", "José da Silva"])("should display user name '%s'", (expected) => {
+        const user = {
+            id: uuid(),
+            name: expected,
+        };
+        const { getByText } = getRenderer({ requestsList: [createRequest(user)] });
+        expect(getByText(expected)).toBeInTheDocument();
+    });
+
+    it.each([
+        ["email", "MariaJose@gmail.com"],
+        ["phone", "(11)972835789"],
+    ])("should display %s '%s'", (key, expected) => {
+        const user = {
+            id: uuid(),
+            [key]: expected,
+        };
+        const { getByText } = getRenderer({ requestsList: [createRequest(user)] });
+        expect(getByText(expected)).toBeInTheDocument();
+    });
 
     it.each(["Aprovar", "Recusar"])("should have a button with label '%s'", (expected) => {
         const { getByRole } = getRenderer({ requestsList: [createRequest()] });
@@ -101,6 +120,9 @@ function getRenderer({ requestsList, onReject, onApprove }) {
     );
 }
 
-function createRequest() {
-    return UserRequestBuilder.aUserRequest().build();
+function createRequest(user) {
+    const customUser = user || {
+        id: uuid(),
+    };
+    return UserRequestBuilder.aUserRequest().withCustomUser(customUser).build;
 }

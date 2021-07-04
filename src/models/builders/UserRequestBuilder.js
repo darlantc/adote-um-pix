@@ -52,6 +52,11 @@ class UserRequestBuilder {
         return this;
     }
 
+    withCustomUser(user) {
+        this.model.user = user;
+        return this;
+    }
+
     build() {
         return this.model;
     }
