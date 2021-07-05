@@ -10,12 +10,12 @@ describe("<EmailRedirectButton />", () => {
     });
 
     describe("<img />", () => {
-        it.each(["Custom Image", "Another Image"])("should have alt '%s'", (expected) => {
+        it.each(["Custom Image", "Another Image"])("should have title '%s'", (expected) => {
             const { getByAltText } = getRenderer({ title: expected });
             expect(getByAltText(expected)).toBeInTheDocument();
         });
 
-        it.each(["https://test.com", "https://testing.com"])("should have src '%s'", (expected) => {
+        it.each(["https://test.com", "https://testing.com"])("should use image '%s'", (expected) => {
             const { getByAltText } = getRenderer({ image: expected, title: "image" });
             expect(getByAltText("image")).toHaveAttribute("src", expected);
         });
