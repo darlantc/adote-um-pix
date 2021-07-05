@@ -5,9 +5,9 @@ describe("<Logo />", () => {
     it("should render a img logo", () => {
         const { getByAltText } = getRenderer();
         expect(getByAltText("logo")).toHaveStyle({
-            margin: 10,
-            width: 40,
-            height: 40,
+            margin: "10px",
+            width: "40px",
+            height: "40px",
             objectFit: "cover",
         });
     });
