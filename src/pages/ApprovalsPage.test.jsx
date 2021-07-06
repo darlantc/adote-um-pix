@@ -1,4 +1,4 @@
-import { uuid, v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { render } from "@testing-library/react";
 import ApprovalsPage from "./ApprovalsPage";
