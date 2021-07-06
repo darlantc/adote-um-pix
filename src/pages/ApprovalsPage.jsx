@@ -8,7 +8,7 @@ import { Typography, Grid, Avatar } from "@material-ui/core";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles({
     root: {
@@ -32,6 +32,23 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     const { userStore } = useMainStoreContext();
 
     const [index, setIndex] = useState(0);
+    const [userProfile, setUserProfile] = useState(null);
+
+    useEffect(() => {
+        async function getUpdatedUserProfile(id) {
+            const user = await userStore.getUserProfile(id);
+            if (user) {
+                setUserProfile(user);
+            }
+        }
+
+        if (requestsList && requestsList[index]?.user) {
+            const { user } = requestsList[index];
+            setUserProfile(user);
+
+            getUpdatedUserProfile(user.id);
+        }
+    }, [index, userStore]);
 
     if (!requestsList) {
         return null;
@@ -46,12 +63,9 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
             </Grid>
         );
     }
-
     const request = requestsList[index];
 
-    // TODO: Nós temos o id do usuário em request.user.id
-    // Em posse desse id eu preciso descobrir os dados do usuário
-    // name, bio, email / phone
+    // TODO: mostrar um loading enquanto os dados do usuário são carregados.
 
     return (
         <Grid container>
@@ -68,14 +82,14 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                                 <Avatar className={classes.orange}>N</Avatar>
                             </Grid>
 
-                            {request.user.name && (
+                            {userProfile?.name && (
                                 <Typography variant="h5" component="h2" gutterBottom>
-                                    {request.user.name}
+                                    {userProfile.name}
                                 </Typography>
                             )}
                         </Grid>
-                        {(request.user.email || request.user.phone) && (
-                            <Typography variant="h6">{request.user.email || request.user.phone}</Typography>
+                        {(userProfile?.email || userProfile?.phone) && (
+                            <Typography variant="h6">{userProfile.email || userProfile.phone}</Typography>
                         )}
                         <Typography variant="h6">Bio:</Typography>
                         <Typography>
