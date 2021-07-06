@@ -36,8 +36,11 @@ class MainStore {
         return adapter;
     };
 
-    getUser = () => {
+    getUser = async () => {
         // TODO: Criar a conexão desse callback com o banco de dados Firebase
+
+        // Código temporário para simular uma resposta assíncrona após 3 segundos
+        await new Promise((resolve) => setTimeout(resolve, 3000));
         return {
             id: "abc",
             name: "Test",
