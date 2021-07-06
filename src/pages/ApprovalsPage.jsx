@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { Typography, Grid, Avatar } from "@material-ui/core";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
+import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { useState } from "react";
 
 const useStyles = makeStyles({
@@ -28,9 +29,9 @@ const useStyles = makeStyles({
 
 export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     const classes = useStyles();
-    const [index, setIndex] = useState(0);
+    const { userStore } = useMainStoreContext();
 
-    // TODO: Descobrir como receber aqui o UserStore
+    const [index, setIndex] = useState(0);
 
     if (!requestsList) {
         return null;

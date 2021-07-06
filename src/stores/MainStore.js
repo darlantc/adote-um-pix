@@ -28,8 +28,6 @@ class MainStore {
         this.storesToBeClearedOnLogout.push(this.userRequestStore);
 
         this.clearStores();
-
-        this.userStore = new UserStore(this.getUser);
     }
 
     getUserRequestsDatabase = (authStore, firebaseService) => {
