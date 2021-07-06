@@ -26,9 +26,17 @@ const ProfileInfo = observer(() => {
     const [currentImage, setCurrentImage] = useState(
         (loggedUserProfile && loggedUserProfile.photoUrl) || DefaultUserPhoto
     );
-    const [name, setName] = useState((loggedUserProfile && loggedUserProfile.name) || "");
-    const [bio, setBio] = useState((loggedUserProfile && loggedUserProfile.bio) || "");
-    const [linkedIn, setLinkedIn] = useState((loggedUserProfile && loggedUserProfile.linkedIn) || "");
+    const [name, setName] = useState("");
+    const [bio, setBio] = useState("");
+    const [linkedIn, setLinkedIn] = useState("");
+
+    useEffect(() => {
+        if (loggedUserProfile) {
+            setName(loggedUserProfile.name);
+            setBio(loggedUserProfile.bio);
+            setLinkedIn(loggedUserProfile.linkedIn);
+        }
+    }, [loggedUserProfile]);
 
     useEffect(() => {
         const formattedLinkedIn = formatLinkedIn(linkedIn);
@@ -55,10 +63,6 @@ const ProfileInfo = observer(() => {
         event.preventDefault();
         if (loggedUserProfile) {
             handleUserDataUpdate(name, bio, linkedIn);
-
-            setName("");
-            setBio("");
-            setLinkedIn("");
         }
     };
 

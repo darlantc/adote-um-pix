@@ -63,14 +63,14 @@ class UserRequestsDatabaseAdapter {
     addUserRequest = async (request) => {
         if (request) {
             const { pixKey, description } = request;
-            const { loggedUser } = this.authStore;
+            const { loggedUserProfile, loggedUser } = this.authStore;
 
             if (this.firebaseService) {
                 this.firebaseService.userRequestsRef.push({
                     user: {
                         id: loggedUser.uid,
-                        name: loggedUser.name,
-                        photoUrl: loggedUser.photoUrl,
+                        name: loggedUserProfile.name,
+                        photoUrl: loggedUserProfile.photoUrl,
                     },
                     pixKey,
                     description,

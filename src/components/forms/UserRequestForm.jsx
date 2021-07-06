@@ -128,7 +128,7 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
                     <Box borderRadius={7} position="absolute" top="15vh" bgcolor="background.paper" padding="10px">
                         <Typography variant="h6"> Sua solicitação foi registrada com sucesso. </Typography>
                         <Box display="flex" justifyContent="space-between">
-                            <Button variant="outlined" onClick={() => setIsModalOpen(false)} marg>
+                            <Button variant="outlined" onClick={() => setIsModalOpen(false)}>
                                 Nova Solicitação
                             </Button>
                             <Button variant="outlined" component={Link} to={APP_ROUTES.myRequests}>

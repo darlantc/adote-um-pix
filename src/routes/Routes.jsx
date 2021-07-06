@@ -6,6 +6,7 @@ import Adopt from "../pages/Adopt";
 import Profile from "../pages/Profile";
 import Request from "../pages/Request";
 import MyRequests from "../pages/MyRequests";
+import MyContributions from "../pages/MyContributions";
 
 export const APP_ROUTES = Object.freeze({
     myRequests: "/minhas-solicitacoes",
@@ -22,7 +23,8 @@ export default function Routes() {
             <Route exact path={APP_ROUTES.home} component={Homepage} />
             <Route exact path={APP_ROUTES.request} component={Request} />
             <Route exact path={APP_ROUTES.myRequests} component={MyRequests} isPrivate />
-            <Route exact path={APP_ROUTES.adopt} component={Adopt} isPrivate />
+            <Route exact path={APP_ROUTES.myContributions} component={MyContributions} isPrivate />
+            <Route path={APP_ROUTES.adopt} component={Adopt} isPrivate />
             <Route exact path={APP_ROUTES.profile} component={Profile} isPrivate />
         </Switch>
     );

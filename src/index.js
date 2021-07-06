@@ -10,10 +10,8 @@ const firebaseService = new FirebaseService();
 const { authStore, userRequestStore, userStore } = new MainStore(firebaseService);
 
 ReactDOM.render(
-    <React.StrictMode>
-        <MainStoreContext.Provider value={{ authStore, userRequestStore, userStore }}>
-            <App />
-        </MainStoreContext.Provider>
-    </React.StrictMode>,
+    <MainStoreContext.Provider value={{ authStore, userRequestStore, userStore }}>
+        <App />
+    </MainStoreContext.Provider>,
     document.getElementById("root")
 );
