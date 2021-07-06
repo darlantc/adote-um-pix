@@ -124,5 +124,5 @@ function createRequest(user) {
     const customUser = user || {
         id: uuid(),
     };
-    return UserRequestBuilder.aUserRequest().withCustomUser(customUser).build;
+    return UserRequestBuilder.aUserRequest().withCustomUser(customUser).build();
 }
