@@ -26,7 +26,7 @@ const Profile = observer(() => {
             if (loggedUserProfile.photoUrl) {
                 result += 25;
             }
-            if (loggedUserProfile.fullName) {
+            if (loggedUserProfile.name) {
                 result += 25;
             }
             if (loggedUserProfile.bio) {

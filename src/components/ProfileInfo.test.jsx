@@ -49,7 +49,7 @@ describe("<ProfileInfo />", () => {
 
 function getRenderer({ user }) {
     return render(
-        <MainStoreContext.Provider value={{ authStore: createAuthStore({ user: user }) }}>
+        <MainStoreContext.Provider value={{ authStore: createAuthStore({ user }) }}>
             <ProfileInfo />
         </MainStoreContext.Provider>
     );
