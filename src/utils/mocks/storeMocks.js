@@ -1,13 +1,18 @@
 import FirebaseService from "../../services/FirebaseService";
 import AuthStore from "../../stores/AuthStore";
 
-export function createAuthStore({ user }) {
+export function createAuthStore({ user, needEmail }) {
     const firebaseService = mockFirebaseService();
     const authStore = new AuthStore(firebaseService);
 
     if (user) {
         authStore.setLoggedUserProfile(user);
     }
+
+    if (needEmail) {
+        authStore.setNeedEmailForSignIn(true);
+    }
+
     return authStore;
 }
 
