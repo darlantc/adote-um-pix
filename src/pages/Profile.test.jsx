@@ -6,17 +6,27 @@ import { createAuthStore } from "../utils/mocks/storeMocks";
 import Profile from "./Profile";
 
 describe("<Profile />", () => {
+    it("should have heading with page title", () => {
+        const { getByRole } = getRenderer({});
+        expect(getByRole("heading", { name: "Perfil" })).toBeInTheDocument();
+    });
+
     it.each([
-        [{ photoUrl: true, name: true, linkedIn: true }, 75],
+        [{ photoUrl: "true", name: "true", linkedIn: "true" }, 75],
         [{}, 0],
     ])("should display user engagement accordind to number of truly properties in '%s'", (user, engagement) => {
         const { getByDisplayValue } = getRenderer({ user });
         expect(getByDisplayValue(engagement)).toBeInTheDocument();
     });
 
-    it("should have heading with page title", () => {
-        const { getByRole } = getRenderer({});
-        expect(getByRole("heading", { name: "Perfil" })).toBeInTheDocument();
+    it.each([
+        ["Alto", { photoUrl: "true", name: "true", linkedIn: "true", bio: "true" }],
+        ["Bom", { photoUrl: "true", name: "true", bio: "true" }],
+        ["Moderado", { photoUrl: "true", bio: "true" }],
+        ["Baixo", {}],
+    ])("should have heading with engagement level '%s'", (engagementLevel, user) => {
+        const { getByText } = getRenderer({ user });
+        expect(getByText(`Engajamento: ${engagementLevel}`)).toBeInTheDocument();
     });
 
     it("should have a paragraph", () => {

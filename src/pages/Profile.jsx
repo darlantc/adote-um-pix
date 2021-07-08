@@ -43,11 +43,11 @@ const Profile = observer(() => {
     const engagement = getEngagement();
 
     const getStatus = () => {
-        if (engagement <= 24) {
+        if (engagement <= 25) {
             return "Baixo";
-        } else if (24 < engagement < 49) {
+        } else if (engagement <= 50) {
             return "Moderado";
-        } else if (50 < engagement < 74) {
+        } else if (engagement <= 75) {
             return "Bom";
         }
         return "Alto";
