@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import Loader from "react-content-loader";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -66,6 +67,43 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     const request = requestsList[index];
 
     // TODO: mostrar um loading enquanto os dados do usuário são carregados.
+    if (!userProfile.name) {
+        return (
+            <Grid container>
+                <Grid item xs={12}>
+                    <Card className={classes.root} aria-label="card">
+                        <CardContent>
+                            <Loader />
+                        </CardContent>
+                        <CardActions>
+                            <Button variant="contained" color="primary" size="small" onClick={onApprove}>
+                                Aprovar
+                            </Button>
+                            <Button variant="contained" color="secondary" size="small" onClick={onReject}>
+                                Recusar
+                            </Button>
+                        </CardActions>
+                    </Card>
+                </Grid>
+                <Grid container item xs={12}>
+                    <Grid container item xs={6} justify="flex-start">
+                        {index > 0 && (
+                            <IconButton variant="contained" color="primary" onClick={backRequest} aria-label="Voltar">
+                                <ChevronLeft />
+                            </IconButton>
+                        )}
+                    </Grid>
+                    <Grid container item xs={6} justify="flex-end">
+                        {requestsList.length > index + 1 && (
+                            <IconButton variant="contained" color="primary" onClick={nextRequest} aria-label="Avançar">
+                                <ChevronRight />
+                            </IconButton>
+                        )}
+                    </Grid>
+                </Grid>
+            </Grid>
+        );
+    }
 
     return (
         <Grid container>
