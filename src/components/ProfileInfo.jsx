@@ -30,9 +30,9 @@ const ProfileInfo = observer(() => {
 
     useEffect(() => {
         if (loggedUserProfile) {
-            setName(loggedUserProfile.name);
-            setBio(loggedUserProfile.bio);
-            setLinkedIn(loggedUserProfile.linkedIn);
+            setName(loggedUserProfile?.name || "");
+            setBio(loggedUserProfile?.bio || "");
+            setLinkedIn(loggedUserProfile?.linkedIn || "");
         }
     }, [loggedUserProfile]);
 
