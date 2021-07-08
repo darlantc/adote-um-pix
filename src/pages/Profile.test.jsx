@@ -42,6 +42,11 @@ describe("<Profile />", () => {
         const { getByRole } = getRenderer({});
         expect(getByRole("button", { name: expected })).toBeInTheDocument();
     });
+
+    it("should display ProfileInfo component", () => {
+        const { getByTestId } = getRenderer({});
+        expect(getByTestId("ProfileInfo")).toBeInTheDocument();
+    });
 });
 
 function getRenderer({ user }) {

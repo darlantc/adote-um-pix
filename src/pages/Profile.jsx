@@ -81,7 +81,7 @@ const Profile = observer(() => {
                 </FormHelperText>
             </Box>
 
-            <Box width="65%">
+            <Box width="65%" data-testid="ProfileInfo">
                 <ProfileInfo />
             </Box>
         </Box>
