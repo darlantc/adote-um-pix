@@ -18,6 +18,7 @@ const ModalEmailRequest = observer(() => {
             confirmEmailSignIn(email);
             setEmail("");
         } else {
+            // TODO: Avaliar o uso desse else para exibição de erros
             setValidationError("O email digitado parece não ser válido");
             setTimeout(() => {
                 setValidationError("");
@@ -37,21 +38,14 @@ const ModalEmailRequest = observer(() => {
                     width="50%"
                 >
                     <Typography variant="h6">Confirme o seu email:</Typography>
-                    <TextField
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        fullWidth
-                        required
-                    />
+                    {/* TODO: Garantir em teste que quando o usuário digita nesse input o valor muda realmente */}
+                    <TextField value={email} onChange={(event) => setEmail(event.target.value)} fullWidth required />
                     <Box m={2} display="flex" justifyContent="center">
-                        <Button
-                            variant="outlined"
-                            size="medium"
-                            onClick={didConfirmEmail}
-                        >
+                        <Button variant="outlined" size="medium" onClick={didConfirmEmail}>
                             Confirmar
                         </Button>
                     </Box>
+                    {/* TODO: Validar que esse erro é exibido corretamente em testes */}
                     <p>{validationError}</p>
                 </Box>
             </Box>

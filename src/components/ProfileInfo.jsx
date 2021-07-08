@@ -36,6 +36,7 @@ const ProfileInfo = observer(() => {
         }
     }, [loggedUserProfile]);
 
+    // TODO: Esse useEffect não está coberto por testes
     useEffect(() => {
         const formattedLinkedIn = formatLinkedIn(linkedIn);
         if (formattedLinkedIn) {
@@ -72,6 +73,7 @@ const ProfileInfo = observer(() => {
         <>
             <Box display="flex" justifyContent="center">
                 <label htmlFor="photo" style={{ cursor: "pointer" }}>
+                    {/* TODO: Esse input não está coberto por testes */}
                     <input id="photo" type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} />
                     <img
                         style={{
