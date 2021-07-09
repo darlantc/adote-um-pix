@@ -149,6 +149,7 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
         );
     }
 
+    // TODO: Transformar essa função em um componente e escrever os testes pra ele
     function renderCard({ content, action }) {
         return (
             <Grid item xs={12}>
