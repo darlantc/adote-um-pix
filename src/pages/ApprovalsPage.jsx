@@ -70,36 +70,17 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     if (!userProfile.name) {
         return (
             <Grid container>
+                <Grid container item xs={12} justify="flex-end">
+                    <Typography>
+                        {index + 1} de {requestsList.length}
+                    </Typography>
+                </Grid>
                 <Grid item xs={12}>
                     <Card className={classes.root} aria-label="card">
                         <CardContent>
                             <Loader />
                         </CardContent>
-                        <CardActions>
-                            <Button variant="contained" color="primary" size="small" onClick={onApprove}>
-                                Aprovar
-                            </Button>
-                            <Button variant="contained" color="secondary" size="small" onClick={onReject}>
-                                Recusar
-                            </Button>
-                        </CardActions>
                     </Card>
-                </Grid>
-                <Grid container item xs={12}>
-                    <Grid container item xs={6} justify="flex-start">
-                        {index > 0 && (
-                            <IconButton variant="contained" color="primary" onClick={backRequest} aria-label="Voltar">
-                                <ChevronLeft />
-                            </IconButton>
-                        )}
-                    </Grid>
-                    <Grid container item xs={6} justify="flex-end">
-                        {requestsList.length > index + 1 && (
-                            <IconButton variant="contained" color="primary" onClick={nextRequest} aria-label="Avançar">
-                                <ChevronRight />
-                            </IconButton>
-                        )}
-                    </Grid>
                 </Grid>
             </Grid>
         );
