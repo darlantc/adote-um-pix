@@ -9,6 +9,7 @@ Como mentor destes dois jovens programadores decidi fazer deste projeto um labor
 * Trabalho em equipe;
 * GIT (incluindo pull requests e resolução de conflitos);
 * Injeção de dependências;
+* Gerenciamento de estado;
 * Permissões de usuários;
 
 ## Tecnologias utilizadas
@@ -16,6 +17,8 @@ Como mentor destes dois jovens programadores decidi fazer deste projeto um labor
 * CSS;
 * Javascript;
 * React JS;
+* Material UI;
+* MobX;
 * Jest;
 * Testing Library;
 * Firebase;
