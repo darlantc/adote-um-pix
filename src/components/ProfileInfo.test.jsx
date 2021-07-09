@@ -3,6 +3,7 @@ import { MainStoreContext } from "../contexts/mainStoreContext";
 import { createAuthStore } from "../utils/mocks/storeMocks";
 
 import ProfileInfo from "./ProfileInfo";
+import { formatLinkedIn } from "../utils/formatting";
 
 describe("<ProfileInfo />", () => {
     it.each(["http://example.com", "http://photo.com"])("should render user photo '%s'", (expected) => {
@@ -12,6 +13,11 @@ describe("<ProfileInfo />", () => {
 
         const { getByAltText } = getRenderer({ user });
         expect(getByAltText("user")).toHaveAttribute("src", expected);
+    });
+
+    it("should have a hidden input type file to receive user photo", () => {
+        const { getByAltText } = getRenderer({});
+        expect(getByAltText("user").closest("label").firstElementChild).toHaveStyle("display: none");
     });
 
     it.each(["Magdalena Nitzsche", "Maximilian Rempel"])("should render user name '%s'", (expected) => {
@@ -32,14 +38,20 @@ describe("<ProfileInfo />", () => {
         expect(getByPlaceholderText("Biografia")).toHaveDisplayValue(expected);
     });
 
-    it.each(["linkedIn Sample", "linkedIn Test"])("should render user linkedIn '%s'", (expected) => {
-        const user = {
-            linkedIn: expected,
-        };
+    it.each([
+        ["validexample", "linkedin.com/in/validexample"],
+        ["invalid example", "invalid example"],
+    ])(
+        "should render user linkedIn and complete valid linkedIn adress if user types it partially",
+        (expected, result) => {
+            const user = {
+                linkedIn: expected,
+            };
 
-        const { getByPlaceholderText } = getRenderer({ user });
-        expect(getByPlaceholderText("LinkedIn")).toHaveDisplayValue(expected);
-    });
+            const { getByPlaceholderText } = getRenderer({ user });
+            expect(getByPlaceholderText("LinkedIn")).toHaveDisplayValue(result);
+        }
+    );
 
     it("should have a button", () => {
         const { getByRole } = getRenderer({});

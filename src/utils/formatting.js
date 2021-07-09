@@ -37,8 +37,5 @@ export const formatLinkedIn = (input) => {
     if (sanitizedInput.includes("linkedin.com/in/")) {
         return sanitizedInput;
     }
-    if (sanitizedInput.includes("linkedin.com/in/")) {
-        return sanitizedInput.replace("linkedin.", "linkedin.");
-    }
     return null;
 };
