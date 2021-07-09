@@ -1,5 +1,6 @@
 import FirebaseService from "../../services/FirebaseService";
 import AuthStore from "../../stores/AuthStore";
+import UserStore from "../../stores/UserStore";
 
 export function createAuthStore({ user, needEmail }) {
     const firebaseService = mockFirebaseService();
@@ -14,6 +15,11 @@ export function createAuthStore({ user, needEmail }) {
     }
 
     return authStore;
+}
+
+export function createUserStore({ user }) {
+    const getUser = () => user;
+    return new UserStore(getUser);
 }
 
 function mockFirebaseService() {
