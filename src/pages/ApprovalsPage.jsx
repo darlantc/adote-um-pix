@@ -48,7 +48,7 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
             setIsRequestingUserProfile(false);
         }
 
-        const request = requestsList[index];
+        const request = requestsList && requestsList[index];
         if (request?.user) {
             getUpdatedUserProfile(request.user.id);
         }
