@@ -10,6 +10,7 @@ import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { useEffect, useState } from "react";
+import { Fragment } from "react";
 
 const useStyles = makeStyles({
     root: {
@@ -34,22 +35,24 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
 
     const [index, setIndex] = useState(0);
     const [userProfile, setUserProfile] = useState(null);
+    const [isRequestingUserProfile, setIsRequestingUserProfile] = useState(false);
 
     useEffect(() => {
+        setIsRequestingUserProfile(true);
+
         async function getUpdatedUserProfile(id) {
             const user = await userStore.getUserProfile(id);
             if (user) {
                 setUserProfile(user);
             }
+            setIsRequestingUserProfile(false);
         }
 
-        if (requestsList && requestsList[index]?.user) {
-            const { user } = requestsList[index];
-            setUserProfile(user);
-
-            getUpdatedUserProfile(user.id);
+        const request = requestsList[index];
+        if (request?.user) {
+            getUpdatedUserProfile(request.user.id);
         }
-    }, [index, userStore]);
+    }, [index, requestsList, userStore]);
 
     if (!requestsList) {
         return null;
@@ -66,36 +69,21 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     }
     const request = requestsList[index];
 
-    // TODO: mostrar um loading enquanto os dados do usuário são carregados.
-    if (!userProfile.name) {
+    if (isRequestingUserProfile) {
         return (
             <Grid container>
-                <Grid container item xs={12} justify="flex-end">
-                    <Typography>
-                        {index + 1} de {requestsList.length}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <Card className={classes.root} aria-label="card">
-                        <CardContent>
-                            <Loader />
-                        </CardContent>
-                    </Card>
-                </Grid>
+                {renderPageIndex()}
+                {renderCard({ content: <Loader /> })}
             </Grid>
         );
     }
 
     return (
         <Grid container>
-            <Grid container item xs={12} justify="flex-end">
-                <Typography>
-                    {index + 1} de {requestsList.length}
-                </Typography>
-            </Grid>
-            <Grid item xs={12}>
-                <Card className={classes.root} aria-label="card">
-                    <CardContent>
+            {renderPageIndex()}
+            {renderCard({
+                content: (
+                    <Fragment>
                         <Grid container item xs={12}>
                             <Grid container item xs={1}>
                                 <Avatar className={classes.orange}>N</Avatar>
@@ -119,17 +107,19 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                         <Typography variant="h6">Descrição:</Typography>
                         <Typography>{request.description}</Typography>
                         <Typography>Chave Pix:</Typography>
-                    </CardContent>
-                    <CardActions>
+                    </Fragment>
+                ),
+                action: (
+                    <Fragment>
                         <Button variant="contained" color="primary" size="small" onClick={onApprove}>
                             Aprovar
                         </Button>
                         <Button variant="contained" color="secondary" size="small" onClick={onReject}>
                             Recusar
                         </Button>
-                    </CardActions>
-                </Card>
-            </Grid>
+                    </Fragment>
+                ),
+            })}
             <Grid container item xs={12}>
                 <Grid container item xs={6} justify="flex-start">
                     {index > 0 && (
@@ -148,6 +138,27 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
             </Grid>
         </Grid>
     );
+
+    function renderPageIndex() {
+        return (
+            <Grid container item xs={12} justify="flex-end">
+                <Typography>
+                    {index + 1} de {requestsList.length}
+                </Typography>
+            </Grid>
+        );
+    }
+
+    function renderCard({ content, action }) {
+        return (
+            <Grid item xs={12}>
+                <Card className={classes.root} aria-label="card">
+                    <CardContent>{content}</CardContent>
+                    {action && <CardActions>{action}</CardActions>}
+                </Card>
+            </Grid>
+        );
+    }
 
     function nextRequest() {
         setIndex(index + 1);
