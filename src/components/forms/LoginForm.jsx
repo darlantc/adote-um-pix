@@ -10,12 +10,7 @@ import LoadingAnimation from "../LoadingAnimation";
 
 const LoginForm = observer(() => {
     const { authStore } = useMainStoreContext();
-    const {
-        sendSignInLinkToEmail,
-        errorMessage,
-        signInWithPhoneNumber,
-        displayEmailRedirectOptions,
-    } = authStore;
+    const { sendSignInLinkToEmail, errorMessage, signInWithPhoneNumber, displayEmailRedirectOptions } = authStore;
 
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -79,19 +74,14 @@ const LoginForm = observer(() => {
                             <Typography variant="h6">Email</Typography>
                             <TextField
                                 value={email}
-                                onChange={(event) =>
-                                    setEmail(event.target.value)
-                                }
+                                onChange={(event) => setEmail(event.target.value)}
                                 fullWidth
+                                required
                             />
                         </Box>
 
                         <Box m={2} display="flex" justifyContent="center">
-                            <Button
-                                type="submit"
-                                variant="outlined"
-                                size="medium"
-                            >
+                            <Button type="submit" variant="outlined" size="medium" aria-label="email-login">
                                 Entrar
                             </Button>
                         </Box>
@@ -104,20 +94,14 @@ const LoginForm = observer(() => {
                             <Typography variant="h6">Telefone</Typography>
                             <TextField
                                 value={phoneNumber}
-                                onChange={(event) =>
-                                    setPhoneNumber(event.target.value)
-                                }
+                                onChange={(event) => setPhoneNumber(event.target.value)}
                                 fullWidth
                                 required
                             />
                         </Box>
 
                         <Box m={2} display="flex" justifyContent="center">
-                            <Button
-                                type="submit"
-                                variant="outlined"
-                                size="medium"
-                            >
+                            <Button type="submit" variant="outlined" size="medium" aria-label="phone-login">
                                 Entrar
                             </Button>
                         </Box>
