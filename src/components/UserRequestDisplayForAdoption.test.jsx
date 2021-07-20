@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import UserRequestDisplayForAdoption from "./UserRequestDisplayForAdoption";
 import { formatDate } from "../utils/formatting";
 
-describe("UserRequestDisplayForAdoption", () => {
+describe("<UserRequestDisplayForAdoption />", () => {
     it("should have base element with following style", () => {
         const request = { name: "Sample" };
         const { getByRole } = getRenderer({ request });

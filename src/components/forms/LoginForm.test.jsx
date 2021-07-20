@@ -6,7 +6,7 @@ import { createAuthStore } from "../../utils/mocks/storeMocks";
 
 import LoginForm from "./LoginForm";
 
-describe("LoginForm", () => {
+describe("<LoginForm />", () => {
     it("should display loading animation if 'displayEmailRedirectOptions' is loading.", () => {
         const { getByAltText } = getRenderer({ displayEmailRedirectOptions: "loading" });
         expect(getByAltText("Animação de Carregamento")).toBeInTheDocument();
