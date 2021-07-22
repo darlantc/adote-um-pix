@@ -69,10 +69,10 @@ const Profile = observer(() => {
                 </Button>
 
                 <Box width="90%" margin="10px">
-                    <Typography align="center" id="potecial-de-perfil" gutterBottom>
+                    <Typography align="center" gutterBottom>
                         Engajamento: {status}
                     </Typography>
-                    <Slider value={engagement} aria-labelledby="potecial-de-perfil" />
+                    <Slider value={engagement} aria-label="Taxa do potencial do seu perfil" />
                 </Box>
 
                 <FormHelperText variant="outlined">
