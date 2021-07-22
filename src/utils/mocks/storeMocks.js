@@ -25,8 +25,12 @@ export function createAuthStore({ user, userProfile, needEmail, displayEmailRedi
     return authStore;
 }
 
-export function createUserRequestStore({ get, add, update, remove }) {
+export function createUserRequestStore({ get, add, update, remove, sampleUserRequest }) {
     const userRequestStore = new UserRequestStore(get, add, update, remove);
+
+    if (sampleUserRequest) {
+        userRequestStore.setUserRequests(sampleUserRequest);
+    }
 
     return userRequestStore;
 }
