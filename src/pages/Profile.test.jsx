@@ -14,9 +14,9 @@ describe("<Profile />", () => {
     it.each([
         [{ photoUrl: "true", name: "true", linkedIn: "true" }, 75],
         [{}, 0],
-    ])("should display user engagement accordind to number of truly properties in '%s'", (user, engagement) => {
-        const { getByDisplayValue } = getRenderer({ user });
-        expect(getByDisplayValue(engagement)).toBeInTheDocument();
+    ])("should display user engagement according to number of truly properties in '%s'", (userProfile, engagement) => {
+        const { getByLabelText } = getRenderer({ userProfile });
+        expect(getByLabelText("Taxa do potencial do seu perfil")).toHaveAttribute("aria-valuenow", `${engagement}`);
     });
 
     it.each([
@@ -24,8 +24,8 @@ describe("<Profile />", () => {
         ["Bom", { photoUrl: "true", name: "true", bio: "true" }],
         ["Moderado", { photoUrl: "true", bio: "true" }],
         ["Baixo", {}],
-    ])("should have heading with engagement level '%s'", (engagementLevel, user) => {
-        const { getByText } = getRenderer({ user });
+    ])("should have heading with engagement level '%s'", (engagementLevel, userProfile) => {
+        const { getByText } = getRenderer({ userProfile });
         expect(getByText(`Engajamento: ${engagementLevel}`)).toBeInTheDocument();
     });
 
@@ -49,9 +49,9 @@ describe("<Profile />", () => {
     });
 });
 
-function getRenderer({ user }) {
+function getRenderer({ userProfile }) {
     return render(
-        <MainStoreContext.Provider value={{ authStore: createAuthStore({ user }) }}>
+        <MainStoreContext.Provider value={{ authStore: createAuthStore({ userProfile }) }}>
             <MemoryRouter>
                 <Profile />
             </MemoryRouter>
