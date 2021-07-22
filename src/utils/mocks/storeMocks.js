@@ -2,6 +2,8 @@ import FirebaseService from "../../services/FirebaseService";
 import AuthStore from "../../stores/AuthStore";
 import UserRequestStore from "../../stores/UserRequestStore";
 
+jest.mock("../../services/FirebaseService");
+
 export function createAuthStore({ user, userProfile, needEmail, displayEmailRedirectOptions }) {
     const firebaseService = mockFirebaseService();
     const authStore = new AuthStore(firebaseService);
@@ -36,6 +38,10 @@ export function createUserRequestStore({ get, add, update, remove, sampleUserReq
 }
 
 function mockFirebaseService() {
-    // TODO: Melhorar esse teste sem necessidade de criar o FirebaseService
+    FirebaseService.prototype.auth = {
+        isSignInWithEmailLink: jest.fn(),
+        onAuthStateChanged: jest.fn(),
+    };
+
     return new FirebaseService();
 }
