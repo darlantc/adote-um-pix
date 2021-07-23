@@ -8,6 +8,7 @@ import UserRequestDisplayForAdoption from "../components/UserRequestDisplayForAd
 const Adopt = observer(() => {
     const { userRequestStore } = useMainStoreContext();
     const { userRequests, getUserRequests } = userRequestStore;
+    console.log("🚀 userRequests", userRequests);
 
     useEffect(() => {
         getUserRequests();
@@ -19,7 +20,7 @@ const Adopt = observer(() => {
                 Adote
             </Typography>
             <Box margin="5px" maxWidth="700px" border="2px solid" borderRadius="7px">
-                {userRequests ? (
+                {userRequests.length > 0 ? (
                     userRequests.map((request) => {
                         return <UserRequestDisplayForAdoption request={request} key={request.id} />;
                     })

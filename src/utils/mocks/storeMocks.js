@@ -31,7 +31,7 @@ export function createUserRequestStore({ get, add, update, remove, sampleUserReq
     const userRequestStore = new UserRequestStore(get, add, update, remove);
 
     if (sampleUserRequest) {
-        userRequestStore.setUserRequests(sampleUserRequest);
+        userRequestStore.setUserRequests([sampleUserRequest]);
     }
 
     return userRequestStore;

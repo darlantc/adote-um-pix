@@ -11,7 +11,7 @@ describe("<Adopt />", () => {
         expect(getByRole("heading", { name: "Adote" })).toBeInTheDocument();
     });
 
-    it.only.each([" Nenhuma solicitação encontrada, retorne mais tarde."])(
+    it.each(["Nenhuma solicitação encontrada, retorne mais tarde."])(
         "should render heading '%s' if userRequests.length < 1",
         (expected) => {
             const { getByRole } = getRenderer({});
@@ -19,13 +19,13 @@ describe("<Adopt />", () => {
         }
     );
 
-    it.only.each([" Nenhuma solicitação encontrada, retorne mais tarde."])(
+    it.each(["Nenhuma solicitação encontrada, retorne mais tarde."])(
         "should not render heading '%s' if userRequests.length >= 1",
         (expected) => {
-            const sampleUserRequest = { name: "Sample" };
-            const { getByRole } = getRenderer({ sampleUserRequest });
+            const sampleUserRequest = { id: "sample", name: "Sample" };
+            const { queryByText } = getRenderer({ sampleUserRequest });
 
-            expect(getByRole("heading", { name: expected })).not.toBeInTheDocument();
+            expect(queryByText(expected)).not.toBeInTheDocument();
         }
     );
 });
