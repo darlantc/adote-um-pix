@@ -12,6 +12,13 @@ describe("<EmailRedirectOptions />", () => {
         }
     );
 
+    it("should have a heading with email previously saved in LocalStorage", () => {
+        localStorage.setItem("emailForSignIn", "email@test.com");
+        const { getByRole } = getRenderer();
+
+        expect(getByRole("heading", { name: "email@test.com" })).toBeInTheDocument();
+    });
+
     it("should have a button 'voltar'", () => {
         const { getByRole } = getRenderer();
         expect(getByRole("button", { name: "Voltar" })).toBeInTheDocument();
