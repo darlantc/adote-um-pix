@@ -8,7 +8,6 @@ import UserRequestDisplayForAdoption from "../components/UserRequestDisplayForAd
 const Adopt = observer(() => {
     const { userRequestStore } = useMainStoreContext();
     const { userRequests, getUserRequests } = userRequestStore;
-    console.log("🚀 userRequests", userRequests);
 
     useEffect(() => {
         getUserRequests();
@@ -32,7 +31,7 @@ const Adopt = observer(() => {
                         padding="20px"
                         flexDirection="column"
                     >
-                        <Typography variant="h5" align="center" gutterbottom>
+                        <Typography variant="h5" align="center" gutterBottom>
                             Nenhuma solicitação encontrada, retorne mais tarde.
                         </Typography>
                     </Box>

@@ -36,7 +36,7 @@ const MyRequests = observer(() => {
                         padding="20px"
                         flexDirection="column"
                     >
-                        <Typography variant="h5" align="center" gutterbottom>
+                        <Typography variant="h5" align="center" gutterBottom>
                             Nenhuma solicitação encontrada.
                         </Typography>
                         <Box m={1} display="flex" justifyContent="center">
