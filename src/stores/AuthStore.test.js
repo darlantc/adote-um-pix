@@ -40,11 +40,32 @@ describe("AuthStore", () => {
             await flushPromises();
             expect(onAuthStateChanged).not.toBeCalled();
         });
+
+        it("should call signInAnonymously if onAuthStateChanged does not return user", async () => {
+            const isSignInWithEmailLink = jest.fn(() => {
+                return false;
+            });
+            const onAuthStateChanged = jest.fn(() => {
+                return false;
+            });
+            const signInAnonymously = jest.fn();
+
+            createSUT({ isSignInWithEmailLink, onAuthStateChanged, signInAnonymously });
+            expect(isSignInWithEmailLink).toBeCalledTimes(1);
+
+            await flushPromises();
+            expect(signInAnonymously).toBeCalledTimes(1);
+        });
     });
 });
 
-function createSUT({ isSignInWithEmailLink, onAuthStateChanged, signInWithEmailLink }) {
-    const firebaseService = mockFirebaseService({ isSignInWithEmailLink, onAuthStateChanged, signInWithEmailLink });
+function createSUT({ isSignInWithEmailLink, onAuthStateChanged, signInWithEmailLink, signInAnonymously }) {
+    const firebaseService = mockFirebaseService({
+        isSignInWithEmailLink,
+        onAuthStateChanged,
+        signInWithEmailLink,
+        signInAnonymously,
+    });
     return new AuthStore(firebaseService);
 }
 
@@ -52,11 +73,13 @@ function mockFirebaseService({
     isSignInWithEmailLink = jest.fn(),
     onAuthStateChanged = jest.fn(),
     signInWithEmailLink = jest.fn(),
+    signInAnonymously = jest.fn(),
 }) {
     FirebaseService.prototype.auth = {
         isSignInWithEmailLink,
         onAuthStateChanged,
         signInWithEmailLink,
+        signInAnonymously,
     };
     return new FirebaseService();
 }

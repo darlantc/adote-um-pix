@@ -15,7 +15,6 @@ const ModalEmailRequest = observer(() => {
     const didConfirmEmail = (event) => {
         event.preventDefault();
         if (emailValidation(email)) {
-            /* TODO: Testar esse metodo */
             confirmEmailSignIn(email);
             setEmail("");
         } else {
