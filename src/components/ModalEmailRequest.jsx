@@ -19,7 +19,7 @@ const ModalEmailRequest = observer(() => {
             confirmEmailSignIn(email);
             setEmail("");
         } else {
-            setValidationError("O email digitado parece não ser válido");
+            setValidationError("O email digitado não é válido.");
         }
     };
 
