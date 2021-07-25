@@ -13,21 +13,16 @@ const EmailRedirectOptions = observer(() => {
 
     const didGoBack = (event) => {
         event.preventDefault();
+        // TODO: escrever um testes para cobrir essa funcionalidade
         setDisplayEmailRedirectOptions(false);
     };
 
     return (
         <div>
             <Typography variant="h6" align="center">
-                Obrigado! Agora por favor abra o link que enviamos para seu
-                e-mail.
+                Obrigado! Agora por favor abra o link que enviamos para seu e-mail.
             </Typography>
-            <Typography
-                variant="h6"
-                color="primary"
-                align="center"
-                gutterBottom
-            >
+            <Typography variant="h6" color="primary" align="center" gutterBottom>
                 {window.localStorage.getItem("emailForSignIn")}
             </Typography>
 
@@ -38,23 +33,14 @@ const EmailRedirectOptions = observer(() => {
                     justifyContent: "center",
                 }}
             >
-                <EmailRedirectButton
-                    href="https://mail.google.com/mail/"
-                    src={Google}
-                    alt="Google"
-                />
-                <EmailRedirectButton
-                    href="https://outlook.live.com/"
-                    src={Outlook}
-                    alt="Outlook"
-                />
-                <EmailRedirectButton
-                    href="https://mail.yahoo.com/"
-                    src={Yahoo}
-                    alt="Yahoo"
-                />
+                {/* TODO: Corrigir e cobrir esses caras com testes unitário */}
+                {/* Altera-lo para usar um array com map() */}
+                <EmailRedirectButton href="https://mail.google.com/mail/" src={Google} alt="Google" />
+                <EmailRedirectButton href="https://outlook.live.com/" src={Outlook} alt="Outlook" />
+                <EmailRedirectButton href="https://mail.yahoo.com/" src={Yahoo} alt="Yahoo" />
             </div>
 
+            {/* TODO: cobrir com teste unitário */}
             <Typography variant="h6" align="center">
                 Não é esse email?
             </Typography>

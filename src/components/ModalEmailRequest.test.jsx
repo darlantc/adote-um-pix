@@ -47,6 +47,7 @@ describe("<ModalEmailRequest />", () => {
         expect(signInWithEmailLink).toBeCalledTimes(1);
     });
 
+    // TODO: usar it.each() pra testar com e-mail inválido também
     it("should display an error if user clicks on 'Confirmar' button with invalid email.", () => {
         const { getByRole, queryByText } = getRenderer({});
         const errorMessage = "O email digitado não é válido.";

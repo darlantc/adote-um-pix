@@ -3,6 +3,10 @@ import { MainStoreContext } from "../contexts/mainStoreContext";
 import { createAuthStore } from "../utils/mocks/storeMocks";
 import EmailRedirectOptions from "./EmailRedirectOptions";
 
+beforeEach(() => {
+    localStorage.clear();
+});
+
 describe("<EmailRedirectOptions />", () => {
     it.each(["Obrigado! Agora por favor abra o link que enviamos para seu e-mail.", "Não é esse email?"])(
         "should have heading '%s'",
