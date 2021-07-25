@@ -2,12 +2,13 @@ import { render } from "@testing-library/react";
 import { MainStoreContext } from "../contexts/mainStoreContext";
 import useEvent from "@testing-library/user-event";
 
-import FirebaseService from "../services/FirebaseService";
+import { mockFirebaseService } from "../utils/mocks/storeMocks";
+
 import AuthStore from "../stores/AuthStore";
 
-jest.mock("../services/FirebaseService");
-
 import ModalEmailRequest from "./ModalEmailRequest";
+
+jest.mock("../services/FirebaseService");
 
 describe("<ModalEmailRequest />", () => {
     it("should have a heading 'Confirme o seu email:'.", () => {
@@ -80,12 +81,4 @@ function createMockAuthStore({ user, needEmail, isSignInWithEmailLink, signInWit
         authStore.setNeedEmailForSignIn(true);
     }
     return authStore;
-}
-
-function mockFirebaseService({ isSignInWithEmailLink, signInWithEmailLink }) {
-    FirebaseService.prototype.auth = {
-        isSignInWithEmailLink,
-        signInWithEmailLink,
-    };
-    return new FirebaseService();
 }

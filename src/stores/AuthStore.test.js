@@ -1,5 +1,6 @@
 import FirebaseService from "../services/FirebaseService";
 import AuthStore from "./AuthStore";
+import { mockFirebaseService } from "../utils/mocks/storeMocks";
 
 jest.mock("../services/FirebaseService");
 
@@ -67,21 +68,6 @@ function createSUT({ isSignInWithEmailLink, onAuthStateChanged, signInWithEmailL
         signInAnonymously,
     });
     return new AuthStore(firebaseService);
-}
-
-function mockFirebaseService({
-    isSignInWithEmailLink = jest.fn(),
-    onAuthStateChanged = jest.fn(),
-    signInWithEmailLink = jest.fn(),
-    signInAnonymously = jest.fn(),
-}) {
-    FirebaseService.prototype.auth = {
-        isSignInWithEmailLink,
-        onAuthStateChanged,
-        signInWithEmailLink,
-        signInAnonymously,
-    };
-    return new FirebaseService();
 }
 
 // hack to flush immediately all promises to test the result
