@@ -37,11 +37,12 @@ export function createUserRequestStore({ get, add, update, remove, sampleUserReq
     return userRequestStore;
 }
 
-function mockFirebaseService() {
+export function mockFirebaseService(props) {
     FirebaseService.prototype.auth = {
-        isSignInWithEmailLink: jest.fn(),
-        onAuthStateChanged: jest.fn(),
+        isSignInWithEmailLink: props?.isSignInWithEmailLink || jest.fn(),
+        onAuthStateChanged: props?.onAuthStateChanged || jest.fn(),
+        signInWithEmailLink: props?.signInWithEmailLink || jest.fn(),
+        signInAnonymously: props?.signInAnonymously || jest.fn(),
     };
-
     return new FirebaseService();
 }

@@ -19,6 +19,7 @@ const EmailRedirectOptions = observer(() => {
 
     const didGoBack = (event) => {
         event.preventDefault();
+        // TODO: escrever um testes para cobrir essa funcionalidade
         setDisplayEmailRedirectOptions(false);
     };
 
@@ -45,6 +46,7 @@ const EmailRedirectOptions = observer(() => {
                 })}
             </div>
 
+            {/* TODO: cobrir com teste unitário */}
             <Typography variant="h6" align="center">
                 Não é esse email?
             </Typography>

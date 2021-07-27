@@ -5,6 +5,10 @@ import useEvent from "@testing-library/user-event";
 
 import EmailRedirectOptions from "./EmailRedirectOptions";
 
+beforeEach(() => {
+    localStorage.clear();
+});
+
 describe("<EmailRedirectOptions />", () => {
     it.each(["Obrigado! Agora por favor abra o link que enviamos para seu e-mail.", "Não é esse email?"])(
         "should have heading '%s'.",
