@@ -3,16 +3,17 @@ import useEvent from "@testing-library/user-event";
 
 import { MainStoreContext } from "../../contexts/mainStoreContext";
 import { createAuthStore } from "../../utils/mocks/storeMocks";
+import { emailValidation, phoneValidation } from "../../utils/validation";
 
 import LoginForm from "./LoginForm";
 
 describe("<LoginForm />", () => {
-    it("should display loading animation if 'displayEmailRedirectOptions' is loading.", () => {
+    it("should display loading animation if displayEmailRedirectOptions === 'loading.'", () => {
         const { getByAltText } = getRenderer({ displayEmailRedirectOptions: "loading" });
         expect(getByAltText("Animação de Carregamento")).toBeInTheDocument();
     });
 
-    it("should display EmailRedirectOptions if 'displayEmailRedirectOptions' is true.", () => {
+    it("should display EmailRedirectOptions if 'displayEmailRedirectOptions' is truly.", () => {
         const { getByText } = getRenderer({ displayEmailRedirectOptions: true });
         expect(getByText("Obrigado! Agora por favor abra o link que enviamos para seu e-mail.")).toBeInTheDocument();
     });
@@ -20,6 +21,15 @@ describe("<LoginForm />", () => {
     it.each(["Email", "Telefone"])("should render a '%s' heading.", (expected) => {
         const { getByRole } = getRenderer({});
         expect(getByRole("heading", { name: expected })).toBeInTheDocument();
+    });
+
+    it.each(["Email", "Telefone"])("should render a input and allow users to type '%s'.", (expected) => {
+        const { getByRole } = getRenderer({ expected });
+        const input = getByRole("heading", { name: expected }).nextSibling;
+        expect(input).toHaveDisplayValue("");
+
+        useEvent.type(input, expected);
+        expect(input).toHaveDisplayValue(expected);
     });
 
     it.each(["email-login", "phone-login"])("should have a button for '%s'.", (expected) => {

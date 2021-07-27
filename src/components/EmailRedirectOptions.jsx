@@ -11,6 +11,12 @@ const EmailRedirectOptions = observer(() => {
     const { authStore } = useMainStoreContext();
     const { setDisplayEmailRedirectOptions } = authStore;
 
+    const buttonList = [
+        { href: "https://mail.google.com/mail/", title: "Google", image: Google },
+        { href: "https://outlook.live.com/", title: "Outlook", image: Outlook },
+        { href: "https://mail.yahoo.com/", title: "Yahoo", image: Yahoo },
+    ];
+
     const didGoBack = (event) => {
         event.preventDefault();
         setDisplayEmailRedirectOptions(false);
@@ -19,15 +25,9 @@ const EmailRedirectOptions = observer(() => {
     return (
         <div>
             <Typography variant="h6" align="center">
-                Obrigado! Agora por favor abra o link que enviamos para seu
-                e-mail.
+                Obrigado! Agora por favor abra o link que enviamos para seu e-mail.
             </Typography>
-            <Typography
-                variant="h6"
-                color="primary"
-                align="center"
-                gutterBottom
-            >
+            <Typography variant="h6" color="primary" align="center" gutterBottom>
                 {window.localStorage.getItem("emailForSignIn")}
             </Typography>
 
@@ -38,21 +38,11 @@ const EmailRedirectOptions = observer(() => {
                     justifyContent: "center",
                 }}
             >
-                <EmailRedirectButton
-                    href="https://mail.google.com/mail/"
-                    src={Google}
-                    alt="Google"
-                />
-                <EmailRedirectButton
-                    href="https://outlook.live.com/"
-                    src={Outlook}
-                    alt="Outlook"
-                />
-                <EmailRedirectButton
-                    href="https://mail.yahoo.com/"
-                    src={Yahoo}
-                    alt="Yahoo"
-                />
+                {buttonList.map((button, index) => {
+                    const { href, image, title } = button;
+
+                    return <EmailRedirectButton href={href} image={image} title={title} key={index} />;
+                })}
             </div>
 
             <Typography variant="h6" align="center">
