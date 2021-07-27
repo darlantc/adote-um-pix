@@ -47,15 +47,18 @@ describe("<ModalEmailRequest />", () => {
         expect(signInWithEmailLink).toBeCalledTimes(1);
     });
 
-    // TODO: usar it.each() pra testar com e-mail inválido também
-    it("should display an error if user clicks on 'Confirmar' button with invalid email.", () => {
-        const { getByRole, queryByText } = getRenderer({});
-        const errorMessage = "O email digitado não é válido.";
-        expect(queryByText(errorMessage)).not.toBeInTheDocument();
+    it.each(["invalid@email", "", null, false, undefined])(
+        "should display an error if user clicks on 'Confirmar' button with '%s' as email.",
+        (expected) => {
+            const { getByRole, queryByText } = getRenderer({});
+            const errorMessage = "O email digitado não é válido.";
+            expect(queryByText(errorMessage)).not.toBeInTheDocument();
 
-        useEvent.click(getByRole("button", { name: "Confirmar" }));
-        expect(queryByText(errorMessage)).toBeInTheDocument();
-    });
+            useEvent.type(getByRole("textbox"), expected);
+            useEvent.click(getByRole("button", { name: "Confirmar" }));
+            expect(queryByText(errorMessage)).toBeInTheDocument();
+        }
+    );
 });
 
 function getRenderer({ user, isSignInWithEmailLink, signInWithEmailLink }) {
