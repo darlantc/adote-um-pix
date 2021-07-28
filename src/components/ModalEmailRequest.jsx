@@ -16,15 +16,12 @@ const ModalEmailRequest = observer(() => {
         event.preventDefault();
         if (emailValidation(email)) {
             confirmEmailSignIn(email);
-
-            // TODO: cobrir com teste unitário
             setEmail("");
         } else {
             setValidationError("O email digitado não é válido.");
         }
     };
 
-    // TODO: cobrir com teste a possibilidade do needEmailForSignIn=false
     return (
         <Modal open={needEmailForSignIn}>
             <Box display="flex" justifyContent="center">
