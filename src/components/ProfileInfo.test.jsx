@@ -21,7 +21,7 @@ describe("<ProfileInfo />", () => {
 
     it.each(["Magdalena Nitzsche", "Maximilian Rempel"])("should render user name '%s'", (expected) => {
         const userProfile = {
-            name: expected,
+            fullName: expected,
         };
 
         const { getByPlaceholderText } = getRenderer({ userProfile });

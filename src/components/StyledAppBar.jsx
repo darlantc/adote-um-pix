@@ -1,4 +1,4 @@
-import { Typography, AppBar, Toolbar, Box, Button, ButtonBase, Modal } from "@material-ui/core";
+import { Typography, AppBar, Toolbar, Box, ButtonBase, Modal } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
 import { Link } from "react-router-dom";
