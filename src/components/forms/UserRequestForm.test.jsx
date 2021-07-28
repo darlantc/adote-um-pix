@@ -12,6 +12,15 @@ describe("<UserRequestForm />", () => {
         expect(getByRole("heading", { name: expected })).toBeInTheDocument();
     });
 
+    it.each(["description", "pixKey"])("should have a an input '%s' and allow users to fill.", (expected) => {
+        const { getByLabelText } = getRenderer({});
+        const input = getByLabelText(expected);
+        expect(input).toContainHTML("");
+
+        useEvent.type(input, expected);
+        expect(input).toContainHTML(expected);
+    });
+
     it("should have a formHelperText", () => {
         const { getByText } = getRenderer({});
         expect(
