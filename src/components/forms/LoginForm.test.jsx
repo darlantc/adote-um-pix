@@ -13,9 +13,20 @@ describe("<LoginForm />", () => {
         expect(getByAltText("Animação de Carregamento")).toBeInTheDocument();
     });
 
-    it("should display EmailRedirectOptions if 'displayEmailRedirectOptions' is truly.", () => {
+    it("should render EmailRedirectOptions if 'displayEmailRedirectOptions' is truly.", () => {
         const { getByText } = getRenderer({ displayEmailRedirectOptions: true });
         expect(getByText("Obrigado! Agora por favor abra o link que enviamos para seu e-mail.")).toBeInTheDocument();
+    });
+
+    it("should flip to render form if 'Voltar' button on EmailRedirectOptions is clicked.", () => {
+        const { getByText, getByRole, queryByText } = getRenderer({ displayEmailRedirectOptions: true });
+
+        expect(getByText("Obrigado! Agora por favor abra o link que enviamos para seu e-mail.")).toBeInTheDocument();
+
+        useEvent.click(getByRole("button", { name: "Voltar" }));
+        expect(
+            queryByText("Obrigado! Agora por favor abra o link que enviamos para seu e-mail.")
+        ).not.toBeInTheDocument();
     });
 
     it.each(["Email", "Telefone"])("should render a '%s' heading.", (expected) => {
@@ -23,13 +34,13 @@ describe("<LoginForm />", () => {
         expect(getByRole("heading", { name: expected })).toBeInTheDocument();
     });
 
-    it.each(["Email", "Telefone"])("should render a input and allow users to type '%s'.", (expected) => {
-        const { getByRole } = getRenderer({ expected });
-        const input = getByRole("heading", { name: expected }).nextSibling;
-        expect(input).toHaveDisplayValue("");
+    it.each(["email", "phone"])("should render a input and allow users to type '%s'.", (expected) => {
+        const { getByLabelText } = getRenderer({ expected });
+        const input = getByLabelText(expected);
+        expect(input).toContainHTML("");
 
         useEvent.type(input, expected);
-        expect(input).toHaveDisplayValue(expected);
+        expect(input).toContainHTML(expected);
     });
 
     it.each(["email-login", "phone-login"])("should have a button for '%s'.", (expected) => {

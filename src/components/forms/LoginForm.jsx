@@ -75,6 +75,7 @@ const LoginForm = observer(() => {
                             <TextField
                                 value={email}
                                 onChange={(event) => setEmail(event.target.value)}
+                                aria-label="email"
                                 fullWidth
                                 required
                             />
@@ -95,6 +96,7 @@ const LoginForm = observer(() => {
                             <TextField
                                 value={phoneNumber}
                                 onChange={(event) => setPhoneNumber(event.target.value)}
+                                aria-label="phone"
                                 fullWidth
                                 required
                             />
