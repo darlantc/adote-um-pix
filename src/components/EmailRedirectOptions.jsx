@@ -19,7 +19,6 @@ const EmailRedirectOptions = observer(() => {
 
     const didGoBack = (event) => {
         event.preventDefault();
-        // TODO: escrever um testes para cobrir essa funcionalidade
         setDisplayEmailRedirectOptions(false);
     };
 
@@ -45,11 +44,10 @@ const EmailRedirectOptions = observer(() => {
                     return <EmailRedirectButton href={href} image={image} title={title} key={index} />;
                 })}
             </div>
-
-            {/* TODO: cobrir com teste unitário */}
             <Typography variant="h6" align="center">
                 Não é esse email?
             </Typography>
+
             <Box m={1} display="flex" justifyContent="center">
                 <Button variant="outlined" size="medium" onClick={didGoBack}>
                     Voltar
