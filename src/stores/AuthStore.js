@@ -97,12 +97,12 @@ class AuthStore {
         const isNotSigningByEmail = !(await this.confirmEmailSignIn());
 
         if (isNotSigningByEmail) {
-            const user = this.firebaseService.auth.onAuthStateChanged();
-
-            this.setLoggedUser(user);
-            if (!user) {
-                this.signInAnonymously();
-            }
+            await this.firebaseService.auth.onAuthStateChanged((user) => {
+                this.setLoggedUser(user);
+                if (!user) {
+                    this.signInAnonymously();
+                }
+            });
         }
     };
 

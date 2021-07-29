@@ -46,12 +46,12 @@ describe("AuthStore", () => {
             const isSignInWithEmailLink = jest.fn(() => {
                 return false;
             });
-            const onAuthStateChanged = jest.fn(() => {
-                return false;
-            });
             const signInAnonymously = jest.fn();
+            const onAuthStateChanged = jest.fn(() => {
+                signInAnonymously();
+            });
 
-            createSUT({ isSignInWithEmailLink, onAuthStateChanged, signInAnonymously });
+            createSUT({ isSignInWithEmailLink, onAuthStateChanged });
             expect(isSignInWithEmailLink).toBeCalledTimes(1);
 
             await flushPromises();
@@ -60,12 +60,11 @@ describe("AuthStore", () => {
     });
 });
 
-function createSUT({ isSignInWithEmailLink, onAuthStateChanged, signInWithEmailLink, signInAnonymously }) {
+function createSUT({ isSignInWithEmailLink, onAuthStateChanged, signInWithEmailLink }) {
     const firebaseService = mockFirebaseService({
         isSignInWithEmailLink,
         onAuthStateChanged,
         signInWithEmailLink,
-        signInAnonymously,
     });
     return new AuthStore(firebaseService);
 }
