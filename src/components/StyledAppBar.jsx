@@ -1,12 +1,4 @@
-import {
-    Typography,
-    AppBar,
-    Toolbar,
-    Box,
-    Button,
-    ButtonBase,
-    Modal,
-} from "@material-ui/core";
+import { Typography, AppBar, Toolbar, Box, ButtonBase, Modal } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -26,6 +18,7 @@ const PixAppBar = styled(AppBar)({
 });
 
 const RegistrationButton = styled(ButtonBase)({
+    textDecoration: "none",
     border: "1px solid white",
     borderRadius: "3px",
     color: "#FFFFFF",
@@ -63,56 +56,30 @@ const StyledAppBar = observer(() => {
         <>
             <PixAppBar position="relative">
                 <Toolbar>
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        width="100%"
-                    >
-                        <ButtonBase
-                            style={{ textDecoration: "none" }}
-                            component={Link}
-                            to={APP_ROUTES.home}
-                        >
+                    <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                        <ButtonBase style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.home}>
                             <Box display="flex" alignItems="center">
                                 <Logo />
-                                <Typography variant="h4">
-                                    Adote um PIX
-                                </Typography>
+                                <Typography variant="h4">Adote um PIX</Typography>
                             </Box>
                         </ButtonBase>
 
                         {isAuthenticated && !isAnonymous ? (
                             <Box>
-                                <Button
-                                    style={{ textDecoration: "none" }}
-                                    component={Link}
-                                    to={APP_ROUTES.profile}
-                                >
-                                    <RegistrationButton>
-                                        Perfil
-                                    </RegistrationButton>
-                                </Button>
-                                <RegistrationButton onClick={didLogOut}>
-                                    Sair
-                                </RegistrationButton>
+                                <Link to={APP_ROUTES.profile}>
+                                    <RegistrationButton>Perfil</RegistrationButton>
+                                </Link>
+                                <RegistrationButton onClick={didLogOut}>Sair</RegistrationButton>
                             </Box>
                         ) : (
-                            <RegistrationButton onClick={openModal}>
-                                Entre
-                            </RegistrationButton>
+                            <RegistrationButton onClick={openModal}>Entre</RegistrationButton>
                         )}
                     </Box>
                 </Toolbar>
             </PixAppBar>
             <Modal open={displayModal} onClose={closeModal}>
                 <Box display="flex" justifyContent="center">
-                    <Box
-                        borderRadius={7}
-                        position="absolute"
-                        top="15vh"
-                        bgcolor="background.paper"
-                    >
+                    <Box borderRadius={7} position="absolute" top="15vh" bgcolor="background.paper">
                         <LoginForm />
                     </Box>
                 </Box>

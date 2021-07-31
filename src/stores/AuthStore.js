@@ -94,13 +94,12 @@ class AuthStore {
     };
 
     verifyLoginStatus = async () => {
-        const isSigningByEmail = await this.confirmEmailSignIn();
+        const isNotSigningByEmail = !(await this.confirmEmailSignIn());
 
-        if (!isSigningByEmail) {
+        if (isNotSigningByEmail) {
             this.firebaseService.auth.onAuthStateChanged((user) => {
-                if (user) {
-                    this.setLoggedUser(user);
-                } else {
+                this.setLoggedUser(user);
+                if (!user) {
                     this.signInAnonymously();
                 }
             });
@@ -168,7 +167,6 @@ class AuthStore {
         } catch (error) {
             this.setErrorMessage(error.message);
         } finally {
-            this.verifyLoginStatus();
             this.setNeedEmailForSignIn(false);
             return true;
         }
