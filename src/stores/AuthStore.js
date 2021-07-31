@@ -102,9 +102,9 @@ class AuthStore {
     };
 
     verifyLoginStatus = async () => {
-        const isSigningByEmail = await this.confirmEmailSignIn();
+        const isNotSigningByEmail = !(await this.confirmEmailSignIn());
 
-        if (!isSigningByEmail) {
+        if (isNotSigningByEmail) {
             this.firebaseService.auth.onAuthStateChanged((user) => {
                 this.setLoggedUser(user);
 
@@ -176,7 +176,6 @@ class AuthStore {
         } catch (error) {
             this.setErrorMessage(error.message);
         } finally {
-            this.verifyLoginStatus();
             this.setNeedEmailForSignIn(false);
             return true;
         }

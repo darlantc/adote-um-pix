@@ -57,7 +57,9 @@ const UserRequestCardForCarousel = observer(({ request }) => {
                     <p>{description}</p>
                     <Typography variant="h6">{formatDate(createdAt)}</Typography>
                 </Box>
-                <Typography variant="h6">Chave{`: ${pixKey}`}</Typography>
+                <Typography variant="h6" gutterBottom>
+                    {`Chave: ${pixKey}`}
+                </Typography>
 
                 <Box display="flex" justifyContent="space-around">
                     <Button variant="outlined" onClick={openModal}>

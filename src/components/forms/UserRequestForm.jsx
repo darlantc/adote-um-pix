@@ -106,6 +106,7 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
                 value={description}
                 variant="outlined"
                 multiline
+                aria-label="description"
                 rows="7"
                 fullWidth
                 required
@@ -122,6 +123,7 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
                 value={pixKey}
                 label="CPF, Celular, e-mail ou chave aleatória"
                 variant="outlined"
+                aria-label="pixKey"
                 fullWidth
                 required
             />

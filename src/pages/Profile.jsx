@@ -26,7 +26,7 @@ const Profile = observer(() => {
             if (loggedUserProfile.photoUrl) {
                 result += 25;
             }
-            if (loggedUserProfile.fullName) {
+            if (loggedUserProfile.name) {
                 result += 25;
             }
             if (loggedUserProfile.bio) {
@@ -43,11 +43,11 @@ const Profile = observer(() => {
     const engagement = getEngagement();
 
     const getStatus = () => {
-        if (engagement <= 24) {
+        if (engagement <= 25) {
             return "Baixo";
-        } else if (24 < engagement < 49) {
+        } else if (engagement <= 50) {
             return "Moderado";
-        } else if (50 < engagement < 74) {
+        } else if (engagement <= 75) {
             return "Bom";
         }
         return "Alto";
@@ -69,10 +69,10 @@ const Profile = observer(() => {
                 </Button>
 
                 <Box width="90%" margin="10px">
-                    <Typography align="center" id="profile-potential" gutterBottom>
+                    <Typography align="center" gutterBottom>
                         Engajamento: {status}
                     </Typography>
-                    <Slider value={engagement} aria-labelledby="profile-potential" />
+                    <Slider value={engagement} aria-label="Taxa do potencial do seu perfil" />
                 </Box>
 
                 <FormHelperText variant="outlined">
@@ -81,7 +81,7 @@ const Profile = observer(() => {
                 </FormHelperText>
             </Box>
 
-            <Box width="65%">
+            <Box width="65%" data-testid="ProfileInfo">
                 <ProfileInfo />
             </Box>
         </Box>
