@@ -27,7 +27,13 @@ export function createAuthStore({ user, userProfile, needEmail, displayEmailRedi
     return authStore;
 }
 
-export function createUserRequestStore({ get, add, update, remove, sampleUserRequest }) {
+export function createUserRequestStore({
+    get = jest.fn(),
+    add = jest.fn(),
+    update = jest.fn(),
+    remove = jest.fn(),
+    sampleUserRequest,
+}) {
     const userRequestStore = new UserRequestStore(get, add, update, remove);
 
     if (sampleUserRequest) {
