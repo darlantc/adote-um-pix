@@ -97,7 +97,7 @@ class AuthStore {
         const isNotSigningByEmail = !(await this.confirmEmailSignIn());
 
         if (isNotSigningByEmail) {
-            await this.firebaseService.auth.onAuthStateChanged((user) => {
+            this.firebaseService.auth.onAuthStateChanged((user) => {
                 this.setLoggedUser(user);
                 if (!user) {
                     this.signInAnonymously();

@@ -42,7 +42,7 @@ describe("AuthStore", () => {
             expect(onAuthStateChanged).not.toBeCalled();
         });
 
-        it("should call signInAnonymously if onAuthStateChanged does not return user", async () => {
+        it.skip("should call signInAnonymously if onAuthStateChanged does not return user", async () => {
             const isSignInWithEmailLink = jest.fn(() => {
                 return false;
             });
