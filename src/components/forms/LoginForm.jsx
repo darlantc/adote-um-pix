@@ -3,18 +3,35 @@ import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../../contexts/mainStoreContext";
+import { InternalEvents } from "../../stores/InternalEventsStore";
+import { customNotification } from "../CustomToast";
 import { emailValidation, phoneValidation } from "../../utils/validation";
 import { formatPhoneNumber } from "../../utils/formatting";
 import EmailRedirectOptions from "../EmailRedirectOptions";
 import LoadingAnimation from "../LoadingAnimation";
 
 const LoginForm = observer(() => {
-    const { authStore } = useMainStoreContext();
+    const { authStore, internalEventsStore } = useMainStoreContext();
+    const { subscribeTo, unsubscribe } = internalEventsStore;
     const { sendSignInLinkToEmail, errorMessage, signInWithPhoneNumber, displayEmailRedirectOptions } = authStore;
 
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [validationError, setValidationError] = useState("");
+
+    useEffect(() => {
+        subscribeTo({
+            event: InternalEvents.notification,
+            observer: "LoginForm",
+            callback: (params) => {
+                customNotification(params);
+            },
+        });
+
+        return () => {
+            unsubscribe("LoginForm", InternalEvents.notification);
+        };
+    }, [subscribeTo, unsubscribe]);
 
     useEffect(() => {
         const formattedNumber = formatPhoneNumber(phoneNumber);

@@ -7,6 +7,8 @@ import { observer } from "mobx-react";
 
 import DefaultUserPhoto from "../assets/images/defaultUserPhoto.png";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
+import { InternalEvents } from "../stores/InternalEventsStore";
+import { customNotification } from "./CustomToast";
 import { formatLinkedIn } from "../utils/formatting";
 
 const useStyles = makeStyles(() => ({
@@ -18,7 +20,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ProfileInfo = observer(() => {
-    const { authStore } = useMainStoreContext();
+    const { authStore, internalEventsStore } = useMainStoreContext();
+    const { subscribeTo, unsubscribe } = internalEventsStore;
     const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } = authStore;
 
     const classes = useStyles();
@@ -27,6 +30,20 @@ const ProfileInfo = observer(() => {
     const [fullName, setFullName] = useState("");
     const [bio, setBio] = useState("");
     const [linkedIn, setLinkedIn] = useState("");
+
+    useEffect(() => {
+        subscribeTo({
+            event: InternalEvents.notification,
+            observer: "ProfileInfo",
+            callback: (params) => {
+                customNotification(params);
+            },
+        });
+
+        return () => {
+            unsubscribe("ProfileInfo", InternalEvents.notification);
+        };
+    }, [subscribeTo, unsubscribe]);
 
     useEffect(() => {
         if (loggedUserProfile) {

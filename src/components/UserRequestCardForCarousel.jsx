@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
-import { userRequestNotification } from "./CustomToast";
+import { customNotification } from "./CustomToast";
 import { formatDate } from "../utils/formatting";
 import UserRequestForm from "./forms/UserRequestForm";
 import { InternalEvents } from "../stores/InternalEventsStore";
@@ -22,7 +22,7 @@ const UserRequestCardForCarousel = observer(({ request }) => {
             event: InternalEvents.notification,
             observer: "UserRequestCardForCarousel",
             callback: (params) => {
-                userRequestNotification(params);
+                customNotification(params);
             },
         });
 

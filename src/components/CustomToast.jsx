@@ -27,7 +27,7 @@ const CustomToast = ({ message }) => {
 
 export default CustomToast;
 
-export const userRequestNotification = ({ type, message }) => {
+export const customNotification = ({ type, message }) => {
     toast[type](<CustomToast message={message} />);
 };
 
