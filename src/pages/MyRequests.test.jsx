@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { MainStoreContext } from "../contexts/mainStoreContext";
-import { createUserRequestStore } from "../utils/mocks/storeMocks";
+import { createUserRequestStore, createInternalEventsStore } from "../utils/mocks/storeMocks";
 
 import MyRequests from "./MyRequests";
 
@@ -43,7 +43,10 @@ describe("<MyRequests />", () => {
 function getRenderer({ get, add, update, remove, sampleUserRequest }) {
     return render(
         <MainStoreContext.Provider
-            value={{ userRequestStore: createUserRequestStore({ get, add, update, remove, sampleUserRequest }) }}
+            value={{
+                userRequestStore: createUserRequestStore({ get, add, update, remove, sampleUserRequest }),
+                internalEventsStore: createInternalEventsStore(),
+            }}
         >
             <MemoryRouter>
                 <MyRequests />

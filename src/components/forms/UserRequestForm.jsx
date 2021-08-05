@@ -9,7 +9,7 @@ import { cpfValidation, phoneValidation, pixRandomKeyValidation, emailValidation
 import { formatCpf, formatPhoneNumber } from "../../utils/formatting";
 import { APP_ROUTES } from "../../routes/Routes";
 import { InternalEvents } from "../../stores/InternalEventsStore";
-import { userRequestNotification } from "../CustomToast";
+import { customNotification } from "../CustomToast";
 
 const useStyles = makeStyles(() => ({
     soliciteButton: {
@@ -33,7 +33,7 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
             event: InternalEvents.notification,
             observer: "UserRequestForm",
             callback: (params) => {
-                userRequestNotification(params);
+                customNotification(params);
             },
         });
 
