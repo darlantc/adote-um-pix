@@ -12,7 +12,7 @@ beforeEach(() => {
 
 describe("AuthStore", () => {
     describe("verifyLoginStatus", () => {
-        it("should call isSignInWithEmailLink and onAuthStateChanged from firebase auth", async () => {
+        it.only("should call isSignInWithEmailLink and onAuthStateChanged from firebase auth", async () => {
             const isSignInWithEmailLink = jest.fn(() => {
                 return false;
             });

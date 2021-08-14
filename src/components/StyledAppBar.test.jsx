@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { MainStoreContext } from "../contexts/mainStoreContext";
-import { createAuthStore } from "../utils/mocks/storeMocks";
+import { createAuthStore, createInternalEventsStore } from "../utils/mocks/storeMocks";
 import useEvent from "@testing-library/user-event";
 
 import StyledAppBar from "./StyledAppBar";
@@ -35,7 +35,9 @@ describe("<StyledAppBar />", () => {
 
 function getRenderer({ user }) {
     return render(
-        <MainStoreContext.Provider value={{ authStore: createAuthStore({ user }) }}>
+        <MainStoreContext.Provider
+            value={{ authStore: createAuthStore({ user }), internalEventsStore: createInternalEventsStore() }}
+        >
             <MemoryRouter>
                 <StyledAppBar />
             </MemoryRouter>

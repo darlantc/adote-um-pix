@@ -2,9 +2,7 @@ import { render } from "@testing-library/react";
 import { MainStoreContext } from "../contexts/mainStoreContext";
 import useEvent from "@testing-library/user-event";
 
-import { mockFirebaseService } from "../utils/mocks/storeMocks";
-
-import AuthStore from "../stores/AuthStore";
+import { createAuthStore } from "../utils/mocks/storeMocks";
 
 import ModalEmailRequest from "./ModalEmailRequest";
 
@@ -35,7 +33,7 @@ describe("<ModalEmailRequest />", () => {
         expect(input).toHaveDisplayValue(expected);
     });
 
-    it("should call signInWithEmailLink and clean input if user clicks on 'Confirmar' button with valid email.", async () => {
+    it.only("should call signInWithEmailLink and clean input if user clicks on 'Confirmar' button with valid email.", async () => {
         const isSignInWithEmailLink = jest.fn(() => {
             return true;
         });
@@ -46,6 +44,7 @@ describe("<ModalEmailRequest />", () => {
         useEvent.type(getByRole("textbox"), "valid@email.com");
         useEvent.click(getByRole("button", { name: "Confirmar" }));
 
+        await flushPromises();
         expect(signInWithEmailLink).toBeCalledTimes(1);
         expect(getByRole("textbox")).toContainHTML("");
     });
@@ -68,7 +67,7 @@ function getRenderer({ user, needEmail, isSignInWithEmailLink, signInWithEmailLi
     return render(
         <MainStoreContext.Provider
             value={{
-                authStore: createMockAuthStore({ user, needEmail, isSignInWithEmailLink, signInWithEmailLink }),
+                authStore: createAuthStore({ user, needEmail, isSignInWithEmailLink, signInWithEmailLink }),
             }}
         >
             <ModalEmailRequest />
@@ -76,16 +75,4 @@ function getRenderer({ user, needEmail, isSignInWithEmailLink, signInWithEmailLi
     );
 }
 
-function createMockAuthStore({ user, needEmail, isSignInWithEmailLink, signInWithEmailLink }) {
-    const firebaseService = mockFirebaseService({ isSignInWithEmailLink, signInWithEmailLink });
-    const authStore = new AuthStore(firebaseService);
-
-    if (user) {
-        authStore.setLoggedUser(user);
-    }
-
-    if (needEmail) {
-        authStore.setNeedEmailForSignIn(true);
-    }
-    return authStore;
-}
+const flushPromises = () => new Promise(setImmediate);
