@@ -12,10 +12,11 @@ export function createAuthStore({
     displayEmailRedirectOptions,
     isSignInWithEmailLink,
     signInWithEmailLink,
+    internalEventsStore,
 }) {
     const firebaseService = mockFirebaseService({ isSignInWithEmailLink, signInWithEmailLink });
-    const internalEventsStore = createInternalEventsStore();
-    const authStore = new AuthStore(internalEventsStore, firebaseService);
+    const internalEvents = internalEventsStore || createInternalEventsStore();
+    const authStore = new AuthStore(internalEvents, firebaseService);
 
     if (user) {
         authStore.setLoggedUser(user);
