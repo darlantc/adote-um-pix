@@ -102,17 +102,14 @@ class AuthStore {
     };
 
     verifyLoginStatus = async () => {
-        const isNotSigningByEmail = !(await this.confirmEmailSignIn());
+        this.firebaseService.auth.onAuthStateChanged((user) => {
+            this.setLoggedUser(user);
+            if (!user) {
+                this.signInAnonymously();
+            }
+        });
 
-        if (isNotSigningByEmail) {
-            this.firebaseService.auth.onAuthStateChanged((user) => {
-                this.setLoggedUser(user);
-                console.log("🚀 ~ user", user);
-                if (!user) {
-                    this.signInAnonymously();
-                }
-            });
-        }
+        this.confirmEmailSignIn();
     };
 
     signInAnonymously = () => this.firebaseService.auth.signInAnonymously();
@@ -164,30 +161,26 @@ class AuthStore {
     };
 
     confirmEmailSignIn = async (emailFromUser) => {
-        console.log("🚀 ~ firebaseService", this.firebaseService);
         const href = window.location.href;
         if (!this.firebaseService.auth.isSignInWithEmailLink(href)) {
-            return false;
+            return;
         }
 
         const emailFromStorage = window.localStorage.getItem(LOCAL_STORAGE_KEY);
         const email = emailFromStorage || emailFromUser;
-        console.log("🚀 email", email);
 
         if (!email) {
             this.setNeedEmailForSignIn(true);
-            return false;
+            return;
         }
 
         try {
             await this.firebaseService.auth.signInWithEmailLink(email, href);
             window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-        } catch (error) {
-            this.setErrorMessage(error.message);
-        } finally {
-            this.firebaseService.auth.onAuthStateChanged((user) => this.setLoggedUser(user));
             this.setNeedEmailForSignIn(false);
-            return true;
+        } catch (error) {
+            console.error("confirmEmailSignIn", error);
+            this.setErrorMessage(error.message);
         }
     };
 
