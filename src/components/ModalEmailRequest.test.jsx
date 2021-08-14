@@ -33,20 +33,18 @@ describe("<ModalEmailRequest />", () => {
         expect(input).toHaveDisplayValue(expected);
     });
 
-    it.only("should call signInWithEmailLink and clean input if user clicks on 'Confirmar' button with valid email.", async () => {
-        const isSignInWithEmailLink = jest.fn(() => {
-            return true;
-        });
+    it("should call signInWithEmailLink and clean input if user clicks on 'Confirmar' button with valid email.", async () => {
+        const isSignInWithEmailLink = jest.fn(() => true);
         const signInWithEmailLink = jest.fn();
 
-        const { getByRole } = getRenderer({ needEmail: true, isSignInWithEmailLink, signInWithEmailLink });
+        const { getByRole, queryByRole } = getRenderer({ needEmail: true, isSignInWithEmailLink, signInWithEmailLink });
 
         useEvent.type(getByRole("textbox"), "valid@email.com");
         useEvent.click(getByRole("button", { name: "Confirmar" }));
 
         await flushPromises();
         expect(signInWithEmailLink).toBeCalledTimes(1);
-        expect(getByRole("textbox")).toContainHTML("");
+        expect(queryByRole("textbox")).not.toBeInTheDocument();
     });
 
     it.each(["invalid@email", "", null, false, undefined])(

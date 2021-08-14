@@ -14,7 +14,8 @@ export function createAuthStore({
     signInWithEmailLink,
 }) {
     const firebaseService = mockFirebaseService({ isSignInWithEmailLink, signInWithEmailLink });
-    const authStore = new AuthStore(firebaseService);
+    const internalEventsStore = createInternalEventsStore();
+    const authStore = new AuthStore(internalEventsStore, firebaseService);
 
     if (user) {
         authStore.setLoggedUser(user);

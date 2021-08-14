@@ -34,7 +34,13 @@ const ModalEmailRequest = observer(() => {
                     width="50%"
                 >
                     <Typography variant="h6">Confirme o seu email:</Typography>
-                    <TextField value={email} onChange={(event) => setEmail(event.target.value)} fullWidth required />
+                    <TextField
+                        value={email}
+                        type="email"
+                        onChange={(event) => setEmail(event.target.value)}
+                        fullWidth
+                        required
+                    />
                     <Box m={2} display="flex" justifyContent="center">
                         <Button variant="outlined" size="medium" onClick={didConfirmEmail}>
                             Confirmar

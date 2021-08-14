@@ -56,7 +56,7 @@ describe("InternalEventsStore", () => {
             expect(callback2).toBeCalledTimes(2);
         });
 
-        it.only("should receive and send correct params", () => {
+        it("should receive and send correct params", () => {
             const sut = makeSUT();
 
             const callbackTest = jest.fn();
