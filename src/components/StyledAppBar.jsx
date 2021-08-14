@@ -50,7 +50,7 @@ const StyledAppBar = observer(() => {
         });
 
         return () => {
-            unsubscribe("StyledAppBar", InternalEvents.login);
+            unsubscribe({ observerToRemove: "StyledAppBar", event: InternalEvents.login });
         };
     }, [subscribeTo, unsubscribe]);
 

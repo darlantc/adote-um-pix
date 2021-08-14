@@ -22,11 +22,11 @@ describe("InternalEventsStore", () => {
         sut.subscribeTo({
             event: InternalEvents.login,
             observer: expected,
-            callback: () => {},
+            callback: jest.fn(),
         });
         expect(sut.subscribers[InternalEvents.login].find(({ observer }) => observer === expected)).toBeTruthy();
 
-        sut.unsubscribe(InternalEvents.login, expected);
+        sut.unsubscribe({ event: InternalEvents.login, observerToRemove: expected });
         expect(sut.subscribers[InternalEvents.login].find(({ observer }) => observer === expected)).toBeFalsy();
     });
 

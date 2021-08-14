@@ -13,13 +13,16 @@ class InternalEventsStore {
     }
 
     subscribeTo = ({ event, observer, callback }) => {
+        if (!callback) {
+            return;
+        }
         this.subscribers[event].push({
             observer,
             callback,
         });
     };
 
-    unsubscribe = (observerToRemove, event) => {
+    unsubscribe = ({ event, observerToRemove }) => {
         if (this.subscribers[event]) {
             this.subscribers[event] = this.subscribers[event].filter(({ observer }) => observer !== observerToRemove);
         }

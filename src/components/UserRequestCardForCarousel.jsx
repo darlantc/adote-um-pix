@@ -27,7 +27,7 @@ const UserRequestCardForCarousel = observer(({ request }) => {
         });
 
         return () => {
-            unsubscribe("UserRequestCardForCarousel", InternalEvents.notification);
+            unsubscribe({ observerToRemove: "UserRequestCardForCarousel", event: InternalEvents.notification });
         };
     });
 

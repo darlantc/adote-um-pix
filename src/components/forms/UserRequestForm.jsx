@@ -38,7 +38,7 @@ const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close
         });
 
         return () => {
-            unsubscribe("UserRequestForm", InternalEvents.notification);
+            unsubscribe({ observerToRemove: "UserRequestForm", event: InternalEvents.notification });
         };
     });
 

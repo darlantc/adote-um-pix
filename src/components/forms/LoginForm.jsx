@@ -29,7 +29,7 @@ const LoginForm = observer(() => {
         });
 
         return () => {
-            unsubscribe("LoginForm", InternalEvents.notification);
+            unsubscribe({ observerToRemove: "LoginForm", event: InternalEvents.notification });
         };
     }, [subscribeTo, unsubscribe]);
 

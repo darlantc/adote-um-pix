@@ -41,7 +41,7 @@ const ProfileInfo = observer(() => {
         });
 
         return () => {
-            unsubscribe("ProfileInfo", InternalEvents.notification);
+            unsubscribe({ observerToRemove: "ProfileInfo", event: InternalEvents.notification });
         };
     }, [subscribeTo, unsubscribe]);
 
