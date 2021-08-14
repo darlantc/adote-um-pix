@@ -1,35 +1,18 @@
 import { Typography, Button, Box, Paper, Modal } from "@material-ui/core";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
-import { customNotification } from "./CustomToast";
 import { formatDate } from "../utils/formatting";
 import UserRequestForm from "./forms/UserRequestForm";
-import { InternalEvents } from "../stores/InternalEventsStore";
 
 const UserRequestCardForCarousel = observer(({ request }) => {
-    const { userRequestStore, internalEventsStore } = useMainStoreContext();
+    const { userRequestStore } = useMainStoreContext();
     const { removeUserRequest } = userRequestStore;
-    const { subscribeTo, unsubscribe } = internalEventsStore;
 
     const { description, pixKey, createdAt, id } = request;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    useEffect(() => {
-        subscribeTo({
-            event: InternalEvents.notification,
-            observer: "UserRequestCardForCarousel",
-            callback: (params) => {
-                customNotification(params);
-            },
-        });
-
-        return () => {
-            unsubscribe({ observerToRemove: "UserRequestCardForCarousel", event: InternalEvents.notification });
-        };
-    });
 
     const openModal = (event) => {
         event.preventDefault();

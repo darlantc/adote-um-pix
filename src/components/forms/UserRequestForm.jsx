@@ -1,5 +1,5 @@
 import { TextField, FormHelperText, Typography, Button, Box } from "@material-ui/core";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
 import { useHistory } from "react-router-dom";
@@ -8,8 +8,6 @@ import { useMainStoreContext } from "../../contexts/mainStoreContext";
 import { cpfValidation, phoneValidation, pixRandomKeyValidation, emailValidation } from "../../utils/validation";
 import { formatCpf, formatPhoneNumber } from "../../utils/formatting";
 import { APP_ROUTES } from "../../routes/Routes";
-import { InternalEvents } from "../../stores/InternalEventsStore";
-import { customNotification } from "../CustomToast";
 
 const useStyles = makeStyles(() => ({
     soliciteButton: {
@@ -24,23 +22,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 const UserRequestForm = observer(({ id, currentPixKey, currentDescription, close }) => {
-    const { userRequestStore, internalEventsStore } = useMainStoreContext();
+    const { userRequestStore } = useMainStoreContext();
     const { addUserRequest, updateUserRequest } = userRequestStore;
-    const { subscribeTo, unsubscribe } = internalEventsStore;
-
-    useEffect(() => {
-        subscribeTo({
-            event: InternalEvents.notification,
-            observer: "UserRequestForm",
-            callback: (params) => {
-                customNotification(params);
-            },
-        });
-
-        return () => {
-            unsubscribe({ observerToRemove: "UserRequestForm", event: InternalEvents.notification });
-        };
-    });
 
     const history = useHistory();
 
