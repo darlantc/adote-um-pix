@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { formatDate } from "../utils/formatting";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     adoteButton: {
         backgroundColor: "#0088AA",
         color: "#FFFFFF",
@@ -21,10 +21,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const UserRequestsDisplayForAdoption = ({ item }) => {
+const UserRequestDisplayForAdoption = ({ request }) => {
     const classes = useStyles();
 
-    const { name, timestamp, description } = item;
+    const { name, timestamp, description } = request;
 
     return (
         <Box className={classes.adoteBox}>
@@ -35,4 +35,4 @@ const UserRequestsDisplayForAdoption = ({ item }) => {
     );
 };
 
-export default UserRequestsDisplayForAdoption;
+export default UserRequestDisplayForAdoption;

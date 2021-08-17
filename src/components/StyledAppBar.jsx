@@ -18,6 +18,7 @@ const PixAppBar = styled(AppBar)({
 });
 
 const RegistrationButton = styled(ButtonBase)({
+    textDecoration: "none",
     border: "1px solid white",
     borderRadius: "3px",
     color: "#FFFFFF",
@@ -68,9 +69,9 @@ const StyledAppBar = observer(() => {
 
                         {isAuthenticated && !isAnonymous ? (
                             <Box>
-                                <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.profile}>
+                                <Link to={APP_ROUTES.profile}>
                                     <RegistrationButton>Perfil</RegistrationButton>
-                                </Button>
+                                </Link>
                                 <RegistrationButton onClick={didLogOut}>Sair</RegistrationButton>
                             </Box>
                         ) : (

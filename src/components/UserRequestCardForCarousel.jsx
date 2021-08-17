@@ -36,7 +36,7 @@ const UserRequestCardForCarousel = observer(({ request }) => {
                     <Typography variant="h6">{formatDate(createdAt)}</Typography>
                 </Box>
                 <Typography variant="h6" gutterBottom>
-                    Chave{`: ${pixKey}`}
+                    {`Chave: ${pixKey}`}
                 </Typography>
 
                 <Box display="flex" justifyContent="space-around">

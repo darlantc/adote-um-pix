@@ -45,7 +45,6 @@ class UserRequestStore {
 
     getUserRequests = async () => {
         const result = await this.get();
-        console.log("🚀 result", result);
         if (result) {
             this.setUserRequests(result);
         }
