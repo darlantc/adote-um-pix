@@ -27,16 +27,20 @@ describe("<App />", () => {
         }
     );
 
-    // TODO: Testar o restante do componente (status do login)
+    it("should display loading animation if user is falsy", async () => {
+        const { getByAltText } = getRenderer({ user: false });
+
+        expect(getByAltText("Animação de Carregamento")).toBeInTheDocument();
+    });
 });
 
-function getRenderer() {
+function getRenderer({ user }) {
     const internalEventsStore = createInternalEventsStore();
     return {
         ...render(
             <MainStoreContext.Provider
                 value={{
-                    authStore: createAuthStore({ internalEventsStore }),
+                    authStore: createAuthStore({ user, internalEventsStore }),
                     internalEventsStore: internalEventsStore,
                 }}
             >
