@@ -32,7 +32,7 @@ const RegistrationButton = styled(ButtonBase)({
     },
 });
 
-const StyledAppBar = observer(() => {
+const StyledAppBar = observer(({ isAdmin }) => {
     const { authStore } = useMainStoreContext();
     const { isAuthenticated, isAnonymous, logout } = authStore;
 
@@ -63,9 +63,11 @@ const StyledAppBar = observer(() => {
                                 <Typography variant="h4">Adote um PIX</Typography>
                             </Box>
                         </ButtonBase>
-                        <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.approvals}>
-                            <RegistrationButton>Aprovações</RegistrationButton>
-                        </Button>
+                        {isAdmin && (
+                            <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.approvals}>
+                                <RegistrationButton>Aprovações</RegistrationButton>
+                            </Button>
+                        )}
 
                         {isAuthenticated && !isAnonymous ? (
                             <Box>

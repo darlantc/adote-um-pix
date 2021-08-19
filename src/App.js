@@ -51,7 +51,7 @@ const App = observer(() => {
     return (
         <BrowserRouter>
             <ThemeProvider theme={theme}>
-                <StyledAppBar />
+                <StyledAppBar isAdmin={true} />
                 <Container className={classes.container}>
                     <Routes />
                 </Container>
