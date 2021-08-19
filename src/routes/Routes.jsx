@@ -19,7 +19,7 @@ export const APP_ROUTES = Object.freeze({
     myContributions: "/minhas-contribuicoes",
 });
 
-export default function Routes() {
+export default function Routes({ isAdmin }) {
     return (
         <Switch>
             <Route exact path={APP_ROUTES.home} component={Homepage} />
@@ -27,7 +27,7 @@ export default function Routes() {
             <Route exact path={APP_ROUTES.myRequests} component={MyRequests} isPrivate />
             <Route exact path={APP_ROUTES.adopt} component={Adopt} isPrivate />
             <Route exact path={APP_ROUTES.profile} component={Profile} isPrivate />
-            <Route exact path={APP_ROUTES.approvals} component={ApprovalsPage}>
+            <Route exact path={APP_ROUTES.approvals} component={ApprovalsPage} isAdmin={isAdmin} isAdminRoute>
                 {/* TODO: Remover esse código temporário  */}
                 <ApprovalsPage
                     requestsList={[

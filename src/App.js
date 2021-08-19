@@ -30,6 +30,8 @@ const App = observer(() => {
     const { authStore } = useMainStoreContext();
     const { loginStatus } = authStore;
 
+    const isAdmin = true;
+
     const classes = useStyles();
 
     if (loginStatus === LoginStatus.loading) {
@@ -51,9 +53,9 @@ const App = observer(() => {
     return (
         <BrowserRouter>
             <ThemeProvider theme={theme}>
-                <StyledAppBar isAdmin={true} />
+                <StyledAppBar isAdmin={isAdmin} />
                 <Container className={classes.container}>
-                    <Routes />
+                    <Routes isAdmin={isAdmin} />
                 </Container>
             </ThemeProvider>
         </BrowserRouter>
