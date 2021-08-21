@@ -9,11 +9,6 @@ import Default from "../assets/images/defaultUserPhoto.png";
 import UserRequestFullInfoDisplay from "./UserRequestFullInfoDisplay";
 
 const useStyles = makeStyles(() => ({
-    adoteButton: {
-        backgroundColor: "#0088AA",
-        color: "#FFFFFF",
-        marginTop: "10px",
-    },
     adoteBox: {
         backgroundColor: "#00CCFF",
         color: "#FFFFFF",
@@ -38,9 +33,9 @@ const UserRequestDisplayForAdoption = ({ request }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const { user, createdAt, description } = request;
+    const { user, createdAt, description, id } = request;
 
-    const userImage = user.photoUrl ? user.photoUrl : Default;
+    const userImage = user?.photoUrl || Default;
 
     const openModal = (event) => {
         event.preventDefault();
@@ -56,10 +51,7 @@ const UserRequestDisplayForAdoption = ({ request }) => {
     return (
         <Box>
             <Box className={classes.adoteBox} onClick={openModal}>
-                <Link
-                    to={`/adote/${request.description.slice(0, 14)}${request.id}`}
-                    style={{ color: "inherit", textDecoration: "inherit" }}
-                >
+                <Link to={`/adote/${description}${id}`} style={{ color: "inherit", textDecoration: "inherit" }}>
                     <Box display="flex" justifyContent="center">
                         <img
                             src={userImage}
@@ -67,7 +59,7 @@ const UserRequestDisplayForAdoption = ({ request }) => {
                             style={{ width: "70px", marginRight: "10px", borderRadius: "50%" }}
                         />
                         <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                            <Typography variant="h5">{user.name}</Typography>
+                            <Typography variant="h5">{user?.fullName}</Typography>
                             <Typography variant="h6">{formatDate(createdAt)}</Typography>
                         </div>
                     </Box>

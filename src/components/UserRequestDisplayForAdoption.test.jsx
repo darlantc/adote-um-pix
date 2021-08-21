@@ -5,11 +5,10 @@ import { formatDate } from "../utils/formatting";
 import { MemoryRouter } from "react-router";
 
 describe("<UserRequestDisplayForAdoption />", () => {
-    it("should have base element with following style", () => {
-        const request = { name: "Sample" };
-        const { getByRole } = getRenderer({ request });
+    it("should have a div element with following style", () => {
+        const { getByAltText } = getRenderer({ request: {} });
 
-        expect(getByRole("heading", { name: "Sample" }).parentElement).toHaveStyle({
+        expect(getByAltText("Imagem de usuário").parentElement.parentElement.parentElement).toHaveStyle({
             backgroundColor: "#00CCFF",
             color: "#FFFFFF",
             borderRadius: "7px",
@@ -24,12 +23,12 @@ describe("<UserRequestDisplayForAdoption />", () => {
     it.each([
         ["Name Sample", 1626798494],
         ["Second Sample", 1226798494],
-    ])("should render both headings '%s'", (name, timestamp) => {
-        const request = { name, timestamp };
-        const { getByRole } = getRenderer({ request });
+    ])("should render both headings '%s' & '%s'", (fullName, createdAt) => {
+        const user = { fullName };
+        const { getByRole } = getRenderer({ request: { user, createdAt } });
 
-        expect(getByRole("heading", { name: name })).toBeInTheDocument();
-        expect(getByRole("heading", { name: formatDate(timestamp) })).toBeInTheDocument();
+        expect(getByRole("heading", { name: fullName })).toBeInTheDocument();
+        expect(getByRole("heading", { name: formatDate(createdAt) })).toBeInTheDocument();
     });
 
     it.each(["Sample description", "Second sample description"])(
