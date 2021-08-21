@@ -6,9 +6,9 @@ import { APP_ROUTES } from "../routes/Routes";
 
 const RouterWrapper = observer(({ component: Component, isPrivate, ...rest }) => {
     const { authStore } = useMainStoreContext();
-    const { loggedUser } = authStore;
+    const { isAuthenticated, isAnonymous } = authStore;
 
-    if (isPrivate && (!loggedUser || loggedUser.isAnonymous)) {
+    if (isPrivate && (!isAuthenticated || isAnonymous)) {
         return <Redirect to={APP_ROUTES.home} />;
     }
 
