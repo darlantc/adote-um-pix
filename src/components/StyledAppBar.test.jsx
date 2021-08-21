@@ -8,24 +8,24 @@ import StyledAppBar from "./StyledAppBar";
 
 describe("<StyledAppBar />", () => {
     it("should render heading 'Adote um PIX'", () => {
-        const { getByRole } = getRenderer({});
+        const { getByRole } = getRenderer();
         expect(getByRole("heading", { name: "Adote um PIX" })).toBeInTheDocument();
     });
 
     it.each(["Perfil", "Sair"])("should render button '%s' if user is Authenticated and not Anonymous", (expected) => {
-        const user = { name: "Example" };
+        const loggedUser = { name: "Example" };
 
-        const { getByRole } = getRenderer({ user });
+        const { getByRole } = getRenderer({ loggedUser });
         expect(getByRole("button", { name: expected })).toBeInTheDocument();
     });
 
     it("should render button 'Entre' if user is not Authenticated or Anonymous", () => {
-        const { getByRole } = getRenderer({});
+        const { getByRole } = getRenderer();
         expect(getByRole("button", { name: "Entre" })).toBeInTheDocument();
     });
 
     it("should render LoginForm if clicked button 'Entre'", () => {
-        const { getByRole, queryByRole } = getRenderer({});
+        const { getByRole, queryByRole } = getRenderer();
         expect(queryByRole("heading", { name: "Email" })).not.toBeInTheDocument();
 
         useEvent.click(getByRole("button", { name: "Entre" }));
@@ -33,10 +33,10 @@ describe("<StyledAppBar />", () => {
     });
 });
 
-function getRenderer({ user }) {
+function getRenderer({ loggedUser } = {}) {
     return render(
         <MainStoreContext.Provider
-            value={{ authStore: createAuthStore({ user }), internalEventsStore: createInternalEventsStore() }}
+            value={{ authStore: createAuthStore({ loggedUser }), internalEventsStore: createInternalEventsStore() }}
         >
             <MemoryRouter>
                 <StyledAppBar />

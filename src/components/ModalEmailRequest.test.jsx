@@ -61,11 +61,11 @@ describe("<ModalEmailRequest />", () => {
     );
 });
 
-function getRenderer({ user, needEmail, isSignInWithEmailLink, signInWithEmailLink }) {
+function getRenderer({ needEmail, isSignInWithEmailLink, signInWithEmailLink }) {
     return render(
         <MainStoreContext.Provider
             value={{
-                authStore: createAuthStore({ user, needEmail, isSignInWithEmailLink, signInWithEmailLink }),
+                authStore: createAuthStore({ needEmail, isSignInWithEmailLink, signInWithEmailLink }),
             }}
         >
             <ModalEmailRequest />
