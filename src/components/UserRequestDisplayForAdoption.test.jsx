@@ -2,6 +2,7 @@ import { render } from "@testing-library/react";
 
 import UserRequestDisplayForAdoption from "./UserRequestDisplayForAdoption";
 import { formatDate } from "../utils/formatting";
+import { MemoryRouter } from "react-router";
 
 describe("<UserRequestDisplayForAdoption />", () => {
     it("should have base element with following style", () => {
@@ -42,5 +43,9 @@ describe("<UserRequestDisplayForAdoption />", () => {
 });
 
 function getRenderer({ request }) {
-    return render(<UserRequestDisplayForAdoption request={request} />);
+    return render(
+        <MemoryRouter>
+            <UserRequestDisplayForAdoption request={request} />
+        </MemoryRouter>
+    );
 }
