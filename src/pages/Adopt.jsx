@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
-import UserRequestsDisplayForAdoption from "../components/UserRequestsDisplayForAdoption";
+import UserRequestDisplayForAdoption from "../components/UserRequestDisplayForAdoption";
 
 const Adopt = observer(() => {
     const { userRequestStore } = useMainStoreContext();
@@ -21,7 +21,7 @@ const Adopt = observer(() => {
             <Box margin="5px" maxWidth="700px" border="2px solid" borderRadius="7px">
                 {userRequests.length > 0 ? (
                     userRequests.map((request) => {
-                        return <UserRequestsDisplayForAdoption request={request} key={request.id} />;
+                        return <UserRequestDisplayForAdoption request={request} key={request.id} />;
                     })
                 ) : (
                     <Box

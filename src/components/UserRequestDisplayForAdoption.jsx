@@ -8,7 +8,7 @@ import { APP_ROUTES } from "../routes/Routes";
 import Default from "../assets/images/defaultUserPhoto.png";
 import UserRequestFullInfoDisplay from "./UserRequestFullInfoDisplay";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     adoteButton: {
         backgroundColor: "#0088AA",
         color: "#FFFFFF",
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const UserRequestsDisplayForAdoption = ({ request }) => {
+const UserRequestDisplayForAdoption = ({ request }) => {
     const classes = useStyles();
 
     const history = useHistory();
@@ -86,4 +86,4 @@ const UserRequestsDisplayForAdoption = ({ request }) => {
     );
 };
 
-export default UserRequestsDisplayForAdoption;
+export default UserRequestDisplayForAdoption;

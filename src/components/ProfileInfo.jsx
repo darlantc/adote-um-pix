@@ -23,18 +23,18 @@ const ProfileInfo = observer(() => {
 
     const classes = useStyles();
 
-    const [currentImage, setCurrentImage] = useState(
-        (loggedUserProfile && loggedUserProfile.photoUrl) || DefaultUserPhoto
-    );
-    const [name, setName] = useState("");
+    const [currentImage, setCurrentImage] = useState(loggedUserProfile?.photoUrl || DefaultUserPhoto);
+    const [fullName, setFullName] = useState("");
     const [bio, setBio] = useState("");
     const [linkedIn, setLinkedIn] = useState("");
 
     useEffect(() => {
         if (loggedUserProfile) {
-            setName(loggedUserProfile.name);
-            setBio(loggedUserProfile.bio);
-            setLinkedIn(loggedUserProfile.linkedIn);
+            setFullName(loggedUserProfile?.fullName || "");
+            setBio(loggedUserProfile?.bio || "");
+            setLinkedIn(loggedUserProfile?.linkedIn || "");
+            setBio(loggedUserProfile?.bio || "");
+            setLinkedIn(loggedUserProfile?.linkedIn || "");
         }
     }, [loggedUserProfile]);
 
@@ -62,7 +62,7 @@ const ProfileInfo = observer(() => {
     const didUpdateProfile = (event) => {
         event.preventDefault();
         if (loggedUserProfile) {
-            handleUserDataUpdate(name, bio, linkedIn);
+            handleUserDataUpdate(fullName, bio, linkedIn);
         }
     };
 
@@ -95,9 +95,9 @@ const ProfileInfo = observer(() => {
             >
                 <TextField
                     className={classes.textField}
-                    value={name}
+                    value={fullName}
                     onChange={(event) => {
-                        setName(event.target.value);
+                        setFullName(event.target.value);
                     }}
                     justify="center"
                     placeholder="Seu nome completo"
