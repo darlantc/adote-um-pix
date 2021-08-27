@@ -51,7 +51,7 @@ const UserRequestDisplayForAdoption = ({ request }) => {
     return (
         <Box>
             <Box className={classes.adoteBox} onClick={openModal}>
-                <Link to={`/adote/${description}${id}`} style={{ color: "inherit", textDecoration: "inherit" }}>
+                <Link to={`${APP_ROUTES.adopt}/${"TODO"}`} style={{ color: "inherit", textDecoration: "inherit" }}>
                     <Box display="flex" justifyContent="center">
                         <img
                             src={userImage}
