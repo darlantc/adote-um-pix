@@ -1,6 +1,6 @@
 import { Typography, AppBar, Toolbar, Box, ButtonBase, Modal } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 
@@ -9,9 +9,7 @@ import ModalEmailRequest from "./ModalEmailRequest";
 import LoginForm from "./forms/LoginForm";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
-import { InternalEvents } from "../stores/InternalEventsStore";
 import { APP_ROUTES } from "../routes/Routes";
-import { userLoginNotification } from "./CustomToast";
 
 const PixAppBar = styled(AppBar)({
     background: "linear-gradient(45deg, #FFF 30%, #000000 90%)",
@@ -36,23 +34,8 @@ const RegistrationButton = styled(ButtonBase)({
 });
 
 const StyledAppBar = observer(() => {
-    const { authStore, internalEventsStore } = useMainStoreContext();
-    const { subscribeTo, unsubscribe } = internalEventsStore;
+    const { authStore } = useMainStoreContext();
     const { isAuthenticated, isAnonymous, logout } = authStore;
-
-    useEffect(() => {
-        subscribeTo({
-            event: InternalEvents.login,
-            observer: "StyledAppBar",
-            callback: (params) => {
-                userLoginNotification(params);
-            },
-        });
-
-        return () => {
-            unsubscribe({ observerToRemove: "StyledAppBar", event: InternalEvents.login });
-        };
-    }, [subscribeTo, unsubscribe]);
 
     const [displayModal, setDisplayModal] = useState(false);
 

@@ -82,7 +82,7 @@ class UserRequestStore {
 
         this.internalEventsStore.notify({
             event: InternalEvents.notification,
-            params: { type: "error", message: "Solicitação excluída!" },
+            params: { type: "success", message: "Solicitação excluída!" },
         });
     };
 

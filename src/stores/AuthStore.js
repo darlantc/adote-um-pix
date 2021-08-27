@@ -87,10 +87,12 @@ class AuthStore {
     setLoggedUser = (newValue) => {
         this.loggedUser = newValue;
 
-        this.internalEventsStore.notify({
-            event: InternalEvents.login,
-            params: newValue,
-        });
+        if (newValue && this.isAuthenticated) {
+            this.internalEventsStore.notify({
+                event: InternalEvents.login,
+                params: newValue,
+            });
+        }
     };
 
     setErrorMessage = (value) => {
@@ -136,15 +138,13 @@ class AuthStore {
 
             localStorage.setItem(LOCAL_STORAGE_KEY, email);
             this.setDisplayEmailRedirectOptions(true);
+
+            this.internalEventsStore.notify({
+                event: InternalEvents.notification,
+                params: { type: "success", message: "Link Enviado!" },
+            });
         } catch (error) {
             this.setErrorMessage(error.message);
-        } finally {
-            if (!this.errorMessage) {
-                this.internalEventsStore.notify({
-                    event: InternalEvents.notification,
-                    params: { type: "success", message: "Link Enviado!" },
-                });
-            }
         }
     };
 

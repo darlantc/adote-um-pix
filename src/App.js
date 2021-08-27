@@ -11,7 +11,7 @@ import StyledAppBar from "./components/StyledAppBar";
 import Routes from "./routes/Routes";
 import LoginStatus from "./models/LoginStatus";
 import LoadingAnimation from "./components/LoadingAnimation";
-import { displayToastNotification } from "./components/CustomToast";
+import { displayToastNotification, userLoginNotification } from "./services/ToastifyService";
 
 import { theme } from "./assets/jss/styles.js";
 
@@ -42,8 +42,15 @@ const App = observer(() => {
             callback: displayToastNotification,
         });
 
+        subscribeTo({
+            event: InternalEvents.login,
+            observer: "App",
+            callback: userLoginNotification,
+        });
+
         return () => {
             unsubscribe({ observerToRemove: "App", event: InternalEvents.notification });
+            unsubscribe({ observerToRemove: "App", event: InternalEvents.login });
         };
     }, [subscribeTo, unsubscribe]);
 
