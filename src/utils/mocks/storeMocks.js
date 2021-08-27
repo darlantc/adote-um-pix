@@ -6,20 +6,20 @@ import UserRequestStore from "../../stores/UserRequestStore";
 jest.mock("../../services/FirebaseService");
 
 export function createAuthStore({
-    user,
+    loggedUser,
     userProfile,
     needEmail,
     displayEmailRedirectOptions,
     isSignInWithEmailLink,
     signInWithEmailLink,
     internalEventsStore,
-}) {
+} = {}) {
     const firebaseService = mockFirebaseService({ isSignInWithEmailLink, signInWithEmailLink });
     const internalEvents = internalEventsStore || createInternalEventsStore();
     const authStore = new AuthStore(internalEvents, firebaseService);
 
-    if (user) {
-        authStore.setLoggedUser(user);
+    if (loggedUser) {
+        authStore.setLoggedUser(loggedUser);
     }
 
     if (displayEmailRedirectOptions) {

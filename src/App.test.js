@@ -28,7 +28,7 @@ describe("<App />", () => {
     );
 
     it("should display loading animation if user is falsy", async () => {
-        const { getByAltText } = getRenderer({ user: false });
+        const { getByAltText } = getRenderer({ user: null });
 
         expect(getByAltText("Animação de Carregamento")).toBeInTheDocument();
     });

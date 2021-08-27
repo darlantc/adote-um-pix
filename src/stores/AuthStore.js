@@ -41,9 +41,9 @@ class AuthStore {
             (hasProfile) => {
                 this.clearLoggedUserProfile();
                 if (hasProfile) {
-                    this.#loggedUserRef = this.firebaseService.usersRef.child(this.uid);
+                    this.#loggedUserRef = this.firebaseService.usersRef?.child(this.uid);
 
-                    this.#loggedUserRef.on("value", (snapshot) => {
+                    this.#loggedUserRef?.on("value", (snapshot) => {
                         this.setLoggedUserProfile(snapshot.val());
                     });
                 }
