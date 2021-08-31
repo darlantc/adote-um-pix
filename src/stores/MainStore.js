@@ -44,6 +44,7 @@ class MainStore {
         return {
             id: "abc",
             name: "Test",
+            admin: true,
         };
     };
 
