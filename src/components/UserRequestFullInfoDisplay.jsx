@@ -1,5 +1,6 @@
 import { Box, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import { observer } from "mobx-react";
 
 import { formatDate } from "../utils/formatting";
@@ -62,9 +63,7 @@ const UserRequestFullInfoDisplay = observer(({ request, close }) => {
                 <img src={userImage} alt="userImage" style={{ width: "150px", borderRadius: "50%" }} />
                 <Typography variant="h4">{name}</Typography>
                 <a href={linkedIn} style={{ textDecoration: "none" }} target="_blank" rel="noreferrer">
-                    <Typography variant="h6" align="center">
-                        {linkedIn}
-                    </Typography>
+                    <LinkedInIcon />
                 </a>
                 <Typography variant="body1" align="center" gutterBottom>
                     {bio}

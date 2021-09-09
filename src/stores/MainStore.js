@@ -54,7 +54,7 @@ class MainStore {
         return {
             photoUrl: null,
             name: "Mateus",
-            linkedIn: "mateuspereiras",
+            linkedIn: "https://www.linkedin.com/in/mateuspereiras/",
             bio: "Padeiro",
             pixKey: "06029908588",
         };
