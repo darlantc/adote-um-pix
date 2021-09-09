@@ -40,7 +40,7 @@ const UserRequestFullInfoDisplay = observer(({ request, close }) => {
 
     const userFullInfo = getUserProfile(user.id);
 
-    const { photoUrl, name, linkedIn, bio, pixKey } = userFullInfo;
+    const { photoUrl, fullName, linkedIn, bio, pixKey } = userFullInfo;
 
     const userImage = photoUrl ? photoUrl : Default;
 
@@ -61,7 +61,7 @@ const UserRequestFullInfoDisplay = observer(({ request, close }) => {
                 }}
             >
                 <img src={userImage} alt="userImage" style={{ width: "150px", borderRadius: "50%" }} />
-                <Typography variant="h4">{name}</Typography>
+                <Typography variant="h4">{fullName}</Typography>
                 <a href={linkedIn} style={{ textDecoration: "none" }} target="_blank" rel="noreferrer">
                     <LinkedInIcon />
                 </a>

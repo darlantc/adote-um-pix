@@ -53,7 +53,7 @@ class MainStore {
         // TODO: Criar a conexão desse callback com o banco de dados Firebase
         return {
             photoUrl: null,
-            name: "Mateus",
+            fullName: "Mateus",
             linkedIn: "https://www.linkedin.com/in/mateuspereiras/",
             bio: "Padeiro",
             pixKey: "06029908588",

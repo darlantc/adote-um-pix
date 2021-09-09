@@ -59,7 +59,7 @@ const UserRequestDisplayForAdoption = ({ request }) => {
                             style={{ width: "70px", marginRight: "10px", borderRadius: "50%" }}
                         />
                         <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                            <Typography variant="h5">{user?.fullName}</Typography>
+                            <Typography variant="h5">{user?.name}</Typography>
                             <Typography variant="h6">{formatDate(createdAt)}</Typography>
                         </div>
                     </Box>

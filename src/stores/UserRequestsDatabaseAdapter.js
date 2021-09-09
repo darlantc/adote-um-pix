@@ -69,7 +69,7 @@ class UserRequestsDatabaseAdapter {
                 this.firebaseService.userRequestsRef.push({
                     user: {
                         id: loggedUser.uid,
-                        name: loggedUserProfile.name,
+                        name: loggedUserProfile.fullName,
                         photoUrl: loggedUserProfile.photoUrl,
                     },
                     pixKey,

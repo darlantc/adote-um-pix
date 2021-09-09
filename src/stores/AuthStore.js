@@ -172,13 +172,13 @@ class AuthStore {
         }
     };
 
-    handleUserDataUpdate = async (name, bio, linkedIn) => {
+    handleUserDataUpdate = async (fullName, bio, linkedIn) => {
         if (!this.#loggedUserRef) {
             return;
         }
 
         this.#loggedUserRef.update({
-            name,
+            fullName,
             bio,
             linkedIn,
         });
