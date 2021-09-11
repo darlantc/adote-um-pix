@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { MainStoreContext } from "../contexts/mainStoreContext";
-import { createUserRequestStore, createAuthStore } from "../utils/mocks/storeMocks";
+import { createUserRequestStore, createAuthStore, createInternalEventsStore } from "../utils/mocks/storeMocks";
 
 import Request from "./Request";
 
@@ -17,6 +17,7 @@ function getRenderer({ get, add, update, remove }) {
             value={{
                 userRequestStore: createUserRequestStore({ get, add, update, remove }),
                 authStore: createAuthStore({}),
+                internalEventsStore: createInternalEventsStore(),
             }}
         >
             <Request />

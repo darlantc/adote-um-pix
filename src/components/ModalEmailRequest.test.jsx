@@ -2,9 +2,7 @@ import { render } from "@testing-library/react";
 import { MainStoreContext } from "../contexts/mainStoreContext";
 import useEvent from "@testing-library/user-event";
 
-import { mockFirebaseService } from "../utils/mocks/storeMocks";
-
-import AuthStore from "../stores/AuthStore";
+import { createAuthStore } from "../utils/mocks/storeMocks";
 
 import ModalEmailRequest from "./ModalEmailRequest";
 
@@ -36,18 +34,17 @@ describe("<ModalEmailRequest />", () => {
     });
 
     it("should call signInWithEmailLink and clean input if user clicks on 'Confirmar' button with valid email.", async () => {
-        const isSignInWithEmailLink = jest.fn(() => {
-            return true;
-        });
+        const isSignInWithEmailLink = jest.fn(() => true);
         const signInWithEmailLink = jest.fn();
 
-        const { getByRole } = getRenderer({ needEmail: true, isSignInWithEmailLink, signInWithEmailLink });
+        const { getByRole, queryByRole } = getRenderer({ needEmail: true, isSignInWithEmailLink, signInWithEmailLink });
 
         useEvent.type(getByRole("textbox"), "valid@email.com");
         useEvent.click(getByRole("button", { name: "Confirmar" }));
 
+        await flushPromises();
         expect(signInWithEmailLink).toBeCalledTimes(1);
-        expect(getByRole("textbox")).toContainHTML("");
+        expect(queryByRole("textbox")).not.toBeInTheDocument();
     });
 
     it.each(["invalid@email", "", null, false, undefined])(
@@ -64,11 +61,11 @@ describe("<ModalEmailRequest />", () => {
     );
 });
 
-function getRenderer({ user, needEmail, isSignInWithEmailLink, signInWithEmailLink }) {
+function getRenderer({ needEmail, isSignInWithEmailLink, signInWithEmailLink }) {
     return render(
         <MainStoreContext.Provider
             value={{
-                authStore: createMockAuthStore({ user, needEmail, isSignInWithEmailLink, signInWithEmailLink }),
+                authStore: createAuthStore({ needEmail, isSignInWithEmailLink, signInWithEmailLink }),
             }}
         >
             <ModalEmailRequest />
@@ -76,16 +73,4 @@ function getRenderer({ user, needEmail, isSignInWithEmailLink, signInWithEmailLi
     );
 }
 
-function createMockAuthStore({ user, needEmail, isSignInWithEmailLink, signInWithEmailLink }) {
-    const firebaseService = mockFirebaseService({ isSignInWithEmailLink, signInWithEmailLink });
-    const authStore = new AuthStore(firebaseService);
-
-    if (user) {
-        authStore.setLoggedUser(user);
-    }
-
-    if (needEmail) {
-        authStore.setNeedEmailForSignIn(true);
-    }
-    return authStore;
-}
+const flushPromises = () => new Promise(setImmediate);

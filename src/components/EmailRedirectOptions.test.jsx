@@ -12,29 +12,29 @@ describe("<EmailRedirectOptions />", () => {
     it.each(["Obrigado! Agora por favor abra o link que enviamos para seu e-mail.", "Não é esse email?"])(
         "should have heading '%s'.",
         (expected) => {
-            const { getByRole } = getRenderer({});
+            const { getByRole } = getRenderer();
             expect(getByRole("heading", { name: expected })).toBeInTheDocument();
         }
     );
 
     it("should have a heading with email previously saved in LocalStorage.", () => {
         localStorage.setItem("emailForSignIn", "email@test.com");
-        const { getByRole } = getRenderer({});
+        const { getByRole } = getRenderer();
 
         expect(getByRole("heading", { name: "email@test.com" })).toBeInTheDocument();
     });
 
     it("should have a button 'Voltar'.", () => {
-        const { getByRole } = getRenderer({});
+        const { getByRole } = getRenderer();
         expect(getByRole("button", { name: "Voltar" })).toBeInTheDocument();
     });
 });
 
-function getRenderer({ user }) {
+function getRenderer() {
     return render(
         <MainStoreContext.Provider
             value={{
-                authStore: createAuthStore({ user }),
+                authStore: createAuthStore(),
             }}
         >
             <EmailRedirectOptions />

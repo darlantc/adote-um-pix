@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { MainStoreContext } from "../contexts/mainStoreContext";
-import { createAuthStore } from "../utils/mocks/storeMocks";
+import { createAuthStore, createInternalEventsStore } from "../utils/mocks/storeMocks";
 
 import Profile from "./Profile";
 
@@ -51,7 +51,9 @@ describe("<Profile />", () => {
 
 function getRenderer({ userProfile }) {
     return render(
-        <MainStoreContext.Provider value={{ authStore: createAuthStore({ userProfile }) }}>
+        <MainStoreContext.Provider
+            value={{ authStore: createAuthStore({ userProfile }), internalEventsStore: createInternalEventsStore() }}
+        >
             <MemoryRouter>
                 <Profile />
             </MemoryRouter>
