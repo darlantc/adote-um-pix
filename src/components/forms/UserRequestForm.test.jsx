@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import useEvent from "@testing-library/user-event";
 
 import { MainStoreContext } from "../../contexts/mainStoreContext";
-import { createAuthStore, createUserRequestStore } from "../../utils/mocks/storeMocks";
+import { createAuthStore, createUserRequestStore, createInternalEventsStore } from "../../utils/mocks/storeMocks";
 
 import UserRequestForm from "./UserRequestForm";
 
@@ -39,6 +39,7 @@ function getRenderer({ user, get, add, update, remove }) {
         <MainStoreContext.Provider
             value={{
                 authStore: createAuthStore({ user }),
+                internalEventsStore: createInternalEventsStore(),
                 userRequestStore: createUserRequestStore({ get, add, update, remove }),
             }}
         >

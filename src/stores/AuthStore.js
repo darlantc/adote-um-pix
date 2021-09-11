@@ -1,6 +1,7 @@
 import { makeObservable, observable, action, computed, reaction } from "mobx";
 
 import LoginStatus from "../models/LoginStatus";
+import { InternalEvents } from "./InternalEventsStore";
 
 const LOCAL_STORAGE_KEY = "emailForSignIn";
 
@@ -13,8 +14,10 @@ class AuthStore {
 
     #loggedUserRef = null;
 
-    constructor(firebaseService) {
+    constructor(internalEventsStore, firebaseService) {
+        this.internalEventsStore = internalEventsStore;
         this.firebaseService = firebaseService;
+
         makeObservable(this, {
             loggedUserProfile: observable,
             loggedUser: observable,
@@ -38,9 +41,9 @@ class AuthStore {
             (hasProfile) => {
                 this.clearLoggedUserProfile();
                 if (hasProfile) {
-                    this.#loggedUserRef = this.firebaseService.usersRef.child(this.uid);
+                    this.#loggedUserRef = this.firebaseService.usersRef?.child(this.uid);
 
-                    this.#loggedUserRef.on("value", (snapshot) => {
+                    this.#loggedUserRef?.on("value", (snapshot) => {
                         this.setLoggedUserProfile(snapshot.val());
                     });
                 }
@@ -83,6 +86,13 @@ class AuthStore {
 
     setLoggedUser = (newValue) => {
         this.loggedUser = newValue;
+
+        if (newValue && this.isAuthenticated) {
+            this.internalEventsStore.notify({
+                event: InternalEvents.login,
+                params: newValue,
+            });
+        }
     };
 
     setErrorMessage = (value) => {
@@ -94,16 +104,14 @@ class AuthStore {
     };
 
     verifyLoginStatus = async () => {
-        const isNotSigningByEmail = !(await this.confirmEmailSignIn());
+        this.firebaseService.auth.onAuthStateChanged((user) => {
+            this.setLoggedUser(user);
+            if (!user) {
+                this.signInAnonymously();
+            }
+        });
 
-        if (isNotSigningByEmail) {
-            this.firebaseService.auth.onAuthStateChanged((user) => {
-                this.setLoggedUser(user);
-                if (!user) {
-                    this.signInAnonymously();
-                }
-            });
-        }
+        this.confirmEmailSignIn();
     };
 
     signInAnonymously = () => this.firebaseService.auth.signInAnonymously();
@@ -130,6 +138,11 @@ class AuthStore {
 
             localStorage.setItem(LOCAL_STORAGE_KEY, email);
             this.setDisplayEmailRedirectOptions(true);
+
+            this.internalEventsStore.notify({
+                event: InternalEvents.notification,
+                params: { type: "success", message: "Link Enviado!" },
+            });
         } catch (error) {
             this.setErrorMessage(error.message);
         }
@@ -150,7 +163,7 @@ class AuthStore {
     confirmEmailSignIn = async (emailFromUser) => {
         const href = window.location.href;
         if (!this.firebaseService.auth.isSignInWithEmailLink(href)) {
-            return false;
+            return;
         }
 
         const emailFromStorage = window.localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -158,17 +171,16 @@ class AuthStore {
 
         if (!email) {
             this.setNeedEmailForSignIn(true);
-            return false;
+            return;
         }
 
         try {
             await this.firebaseService.auth.signInWithEmailLink(email, href);
             window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-        } catch (error) {
-            this.setErrorMessage(error.message);
-        } finally {
             this.setNeedEmailForSignIn(false);
-            return true;
+        } catch (error) {
+            console.error("confirmEmailSignIn", error);
+            this.setErrorMessage(error.message);
         }
     };
 
@@ -181,6 +193,11 @@ class AuthStore {
             fullName,
             bio,
             linkedIn,
+        });
+
+        this.internalEventsStore.notify({
+            event: InternalEvents.notification,
+            params: { type: "success", message: "Perfil atualizado!" },
         });
     };
 
@@ -201,7 +218,10 @@ class AuthStore {
                 photoUrl: url,
             });
 
-            console.log("Successfully updated photo URL.");
+            this.internalEventsStore.notify({
+                event: InternalEvents.notification,
+                params: { type: "success", message: "Foto atualizada!" },
+            });
         } catch (error) {
             console.log("Error uploading photo.", error);
         }

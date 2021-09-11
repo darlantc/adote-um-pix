@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import useEvent from "@testing-library/user-event";
 
 import { MainStoreContext } from "../../contexts/mainStoreContext";
-import { createAuthStore } from "../../utils/mocks/storeMocks";
+import { createAuthStore, createInternalEventsStore } from "../../utils/mocks/storeMocks";
 import { emailValidation, phoneValidation } from "../../utils/validation";
 
 import LoginForm from "./LoginForm";
@@ -75,7 +75,12 @@ describe("<LoginForm />", () => {
 
 function getRenderer({ user, displayEmailRedirectOptions }) {
     return render(
-        <MainStoreContext.Provider value={{ authStore: createAuthStore({ user, displayEmailRedirectOptions }) }}>
+        <MainStoreContext.Provider
+            value={{
+                authStore: createAuthStore({ user, displayEmailRedirectOptions }),
+                internalEventsStore: createInternalEventsStore(),
+            }}
+        >
             <LoginForm />
         </MainStoreContext.Provider>
     );

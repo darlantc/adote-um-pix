@@ -27,6 +27,7 @@ const RegistrationButton = styled(ButtonBase)({
     width: "100px",
     trasition: "0.5s",
     opacity: "0.8",
+    margin: "5px",
     "&:hover": {
         opacity: "1",
     },

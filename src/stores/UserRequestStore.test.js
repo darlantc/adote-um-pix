@@ -1,5 +1,6 @@
 import UserRequestStore from "./UserRequestStore";
 import UserRequestBuilder from "../models/builders/UserRequestBuilder";
+import { createInternalEventsStore } from "../utils/mocks/storeMocks";
 
 describe("UserRequestStore", () => {
     describe("getUserRequests", () => {
@@ -33,9 +34,7 @@ describe("UserRequestStore", () => {
             expect(response).toEqual(item1);
             expect(sut.userRequests.includes(item1)).toBe(true);
 
-            const item2 = UserRequestBuilder.aUserRequest()
-                .withCustomDescription("Lorem ipsum")
-                .build();
+            const item2 = UserRequestBuilder.aUserRequest().withCustomDescription("Lorem ipsum").build();
             await sut.addUserRequest(item2);
             expect(response).toEqual(item2);
             expect(sut.userRequests.includes(item2)).toBe(true);
@@ -45,15 +44,9 @@ describe("UserRequestStore", () => {
     describe("updateUserRequest", () => {
         it("should update a specific value in user requests", async () => {
             let sampleList = [
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Vini")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Vivum")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Veritas")
-                    .build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Vini").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Vivum").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Veritas").build(),
             ];
 
             let expected = null;
@@ -68,14 +61,10 @@ describe("UserRequestStore", () => {
             );
             await sut.getUserRequests();
 
-            await sut.updateUserRequest(
-                UserRequestBuilder.aUserRequest().build()
-            );
+            await sut.updateUserRequest(UserRequestBuilder.aUserRequest().build());
             expect(expected).toBe(null);
 
-            const updatedItem = UserRequestBuilder.aExistingUserRequest(
-                sampleList[1].id
-            )
+            const updatedItem = UserRequestBuilder.aExistingUserRequest(sampleList[1].id)
                 .withCustomDescription("Beatitudinem")
                 .build();
             await sut.updateUserRequest(updatedItem);
@@ -126,18 +115,10 @@ describe("UserRequestStore", () => {
     describe("filteredUserRequests", () => {
         it("should return values that match string in user requests", async () => {
             let sampleList = [
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Beatitudinem")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Amare")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Magna")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Cognitio")
-                    .build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Beatitudinem").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Amare").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Magna").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Cognitio").build(),
             ];
 
             const sut = makeSUT(async () => sampleList);
@@ -160,9 +141,7 @@ describe("UserRequestStore", () => {
 
     describe("clearStore", () => {
         it("should empty userRequests", async () => {
-            const sut = makeSUT(() => [
-                UserRequestBuilder.aUserRequest().build(),
-            ]);
+            const sut = makeSUT(() => [UserRequestBuilder.aUserRequest().build()]);
             await sut.getUserRequests();
             expect(sut.userRequests.length).toBe(1);
 
@@ -173,11 +152,6 @@ describe("UserRequestStore", () => {
 });
 
 // Helpers
-const makeSUT = (
-    get = async () => [],
-    add = async () => {},
-    update = async () => {},
-    remove = async () => {}
-) => {
-    return new UserRequestStore(get, add, update, remove);
+const makeSUT = (get = async () => [], add = async () => {}, update = async () => {}, remove = async () => {}) => {
+    return new UserRequestStore(get, add, update, remove, createInternalEventsStore());
 };

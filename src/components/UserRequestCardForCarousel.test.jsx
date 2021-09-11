@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { MainStoreContext } from "../contexts/mainStoreContext";
-import { createUserRequestStore } from "../utils/mocks/storeMocks";
+import { createUserRequestStore, createInternalEventsStore } from "../utils/mocks/storeMocks";
 
 import UserRequestCardForCarousel from "./UserRequestCardForCarousel";
 import { formatDate } from "../utils/formatting";
@@ -47,6 +47,7 @@ function getRenderer({ request, get, add, update, remove }) {
         <MainStoreContext.Provider
             value={{
                 userRequestStore: createUserRequestStore({ get, add, update, remove }),
+                internalEventsStore: createInternalEventsStore(),
             }}
         >
             <UserRequestCardForCarousel request={request} />

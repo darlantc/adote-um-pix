@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { MainStoreContext } from "../contexts/mainStoreContext";
-import { createAuthStore } from "../utils/mocks/storeMocks";
+import { createAuthStore, createInternalEventsStore } from "../utils/mocks/storeMocks";
 
 import ProfileInfo from "./ProfileInfo";
 
@@ -60,7 +60,9 @@ describe("<ProfileInfo />", () => {
 
 function getRenderer({ userProfile }) {
     return render(
-        <MainStoreContext.Provider value={{ authStore: createAuthStore({ userProfile }) }}>
+        <MainStoreContext.Provider
+            value={{ authStore: createAuthStore({ userProfile }), internalEventsStore: createInternalEventsStore() }}
+        >
             <ProfileInfo />
         </MainStoreContext.Provider>
     );

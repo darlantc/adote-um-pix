@@ -1,6 +1,6 @@
 import FirebaseService from "../services/FirebaseService";
 import AuthStore from "./AuthStore";
-import { mockFirebaseService } from "../utils/mocks/storeMocks";
+import { mockFirebaseService, createInternalEventsStore } from "../utils/mocks/storeMocks";
 
 jest.mock("../services/FirebaseService");
 
@@ -39,9 +39,10 @@ describe("AuthStore", () => {
             expect(signInWithEmailLink).toBeCalledTimes(1);
 
             await flushPromises();
-            expect(onAuthStateChanged).not.toBeCalled();
+            expect(onAuthStateChanged).toBeCalledTimes(1);
         });
 
+        // TODO: Avaliar melhor este teste que está muito frágil
         it.skip("should call signInAnonymously if onAuthStateChanged does not return user", async () => {
             const isSignInWithEmailLink = jest.fn(() => {
                 return false;
@@ -61,12 +62,14 @@ describe("AuthStore", () => {
 });
 
 function createSUT({ isSignInWithEmailLink, onAuthStateChanged, signInWithEmailLink }) {
+    const internalEventsStore = createInternalEventsStore();
+
     const firebaseService = mockFirebaseService({
         isSignInWithEmailLink,
         onAuthStateChanged,
         signInWithEmailLink,
     });
-    return new AuthStore(firebaseService);
+    return new AuthStore(internalEventsStore, firebaseService);
 }
 
 // hack to flush immediately all promises to test the result

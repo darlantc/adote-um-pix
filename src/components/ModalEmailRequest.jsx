@@ -4,13 +4,20 @@ import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { emailValidation } from "../utils/validation";
+import { useEffect } from "react";
 
 const ModalEmailRequest = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { confirmEmailSignIn, needEmailForSignIn } = authStore;
+    const { confirmEmailSignIn, needEmailForSignIn, errorMessage } = authStore;
 
     const [email, setEmail] = useState("");
     const [validationError, setValidationError] = useState("");
+
+    useEffect(() => {
+        if (errorMessage) {
+            setValidationError(errorMessage);
+        }
+    }, [errorMessage]);
 
     const didConfirmEmail = (event) => {
         event.preventDefault();
@@ -34,7 +41,13 @@ const ModalEmailRequest = observer(() => {
                     width="50%"
                 >
                     <Typography variant="h6">Confirme o seu email:</Typography>
-                    <TextField value={email} onChange={(event) => setEmail(event.target.value)} fullWidth required />
+                    <TextField
+                        value={email}
+                        type="email"
+                        onChange={(event) => setEmail(event.target.value)}
+                        fullWidth
+                        required
+                    />
                     <Box m={2} display="flex" justifyContent="center">
                         <Button variant="outlined" size="medium" onClick={didConfirmEmail}>
                             Confirmar
