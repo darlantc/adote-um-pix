@@ -36,16 +36,16 @@ const UserRequestFullInfoDisplay = observer(({ request, close }) => {
     const { userStore } = useMainStoreContext();
     const { getUserProfile } = userStore;
 
-    const { user, createdAt, description } = request;
+    const { user, createdAt, description, pixKey } = request;
 
     const userFullInfo = getUserProfile(user.id);
 
-    const { photoUrl, fullName, linkedIn, bio, pixKey } = userFullInfo;
+    const { photoUrl, fullName, linkedIn, bio } = userFullInfo;
 
-    const userImage = photoUrl ? photoUrl : Default;
+    const userImage = photoUrl | Default;
 
     return (
-        <Box className={classes.adoteBox}>
+        <Box className={classes.adoteBox} data-testid="UserRequestFullInfo">
             <Typography variant="h6">{formatDate(createdAt)}</Typography>
             <div
                 style={{
@@ -60,7 +60,7 @@ const UserRequestFullInfoDisplay = observer(({ request, close }) => {
                     alignItems: "center",
                 }}
             >
-                <img src={userImage} alt="userImage" style={{ width: "150px", borderRadius: "50%" }} />
+                <img src={userImage} alt={fullName} style={{ width: "150px", borderRadius: "50%" }} />
                 <Typography variant="h4">{fullName}</Typography>
                 <a href={linkedIn} style={{ textDecoration: "none" }} target="_blank" rel="noreferrer">
                     <LinkedInIcon />

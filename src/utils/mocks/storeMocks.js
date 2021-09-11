@@ -2,6 +2,7 @@ import FirebaseService from "../../services/FirebaseService";
 import AuthStore from "../../stores/AuthStore";
 import InternalEventsStore from "../../stores/InternalEventsStore";
 import UserRequestStore from "../../stores/UserRequestStore";
+import UserStore from "../../stores/UserStore";
 
 jest.mock("../../services/FirebaseService");
 
@@ -41,6 +42,12 @@ export function createInternalEventsStore() {
     const internalEventsStore = new InternalEventsStore();
 
     return internalEventsStore;
+}
+
+export function createUserStore({ get }) {
+    const userStore = new UserStore(get);
+
+    return userStore;
 }
 
 export function createUserRequestStore({
