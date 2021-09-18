@@ -5,9 +5,12 @@ class UserStore {
         this.get = get;
     }
 
-    getUserProfile = (id) => {
-        const user = this.get();
-        return user;
+    getUserProfile = async (id) => {
+        try {
+            return await this.get(id);
+        } catch (error) {
+            return null;
+        }
     };
 }
 
