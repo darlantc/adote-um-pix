@@ -6,17 +6,15 @@ import { MainStoreContext } from "../contexts/mainStoreContext";
 import { createUserStore } from "../utils/mocks/storeMocks";
 import { formatDate } from "../utils/formatting";
 import { MemoryRouter } from "react-router";
+import UserRequestBuilder from "../models/builders/UserRequestBuilder";
 
 describe("<UserRequestFullInfoDisplay />", () => {
-    it.skip("should have a div element with following style", async () => {
-        const { getByTestId } = getRenderer({
-            request: { user: {} },
-            get: jest.fn(() => {
-                return {};
-            }),
+    it.only("should have a div element with following style", async () => {
+        const { findByTestId } = getRenderer({
+            userRequest: UserRequestBuilder.aUserRequest().build(),
         });
 
-        expect(getByTestId("UserRequestFullInfo")).toHaveStyle({
+        expect(await findByTestId("UserRequestFullInfo")).toHaveStyle({
             backgroundColor: "#00CCFF",
             color: "#FFFFFF",
             borderRadius: "7px",
@@ -33,29 +31,21 @@ describe("<UserRequestFullInfoDisplay />", () => {
         });
     });
 
-    it.each(["samplephotourl.com", undefined])(
-        "should render an image even if user does not have one",
-        async (expected) => {
-            const getUser = jest.fn(() => {
-                return {
+    it.only("should render an image even if user does not have one", async () => {
+        const { findByAltText } = getRenderer({
+            userRequest: UserRequestBuilder.aUserRequest().build(),
+            get: () =>
+                Promise.resolve({
                     fullName: "any",
-                    photoUrl: expected,
-                };
-            });
-
-            const { getByAltText } = getRenderer({
-                request: { user: {} },
-                get: getUser,
-            });
-
-            await flushPromises();
-            expect(getByAltText("any")).toHaveStyle({ width: "150px", borderRadius: "50%" });
-        }
-    );
+                    photoUrl: undefined,
+                }),
+        });
+        expect(await findByAltText("any")).toHaveStyle({ width: "150px", borderRadius: "50%" });
+    });
 
     it("should render a parent div for user's image with specific style.", async () => {
         const { getByAltText } = getRenderer({
-            request: { user: {} },
+            userRequest: { user: {} },
             get: jest.fn(() => {
                 return { fullName: "sample" };
             }),
@@ -84,11 +74,10 @@ describe("<UserRequestFullInfoDisplay />", () => {
             });
 
             const { getByRole } = getRenderer({
-                request: { user: {} },
+                userRequest: { user: {} },
                 get: getUser,
             });
 
-            await flushPromises();
             expect(getByRole("link")).toHaveAttribute("href", expected);
         }
     );
@@ -104,17 +93,16 @@ describe("<UserRequestFullInfoDisplay />", () => {
         });
 
         const { getByRole } = getRenderer({
-            request: { user: {}, pixKey: pixKey, createdAt: createdAt },
+            userRequest: { user: {}, pixKey: pixKey, createdAt: createdAt },
             get: getUser,
         });
 
-        await flushPromises();
         expect(getByRole("heading", { name: name })).toBeInTheDocument();
         expect(getByRole("heading", { name: pixKey })).toBeInTheDocument();
         expect(getByRole("heading", { name: formatDate(createdAt) })).toBeInTheDocument();
     });
 
-    it.only.each([
+    it.each([
         ["Sample description", "Sample bio paragraph."],
         ["Another description sample", "Random bio sample."],
     ])("should render  '%s' & '%s'", async (description, bio) => {
@@ -125,40 +113,43 @@ describe("<UserRequestFullInfoDisplay />", () => {
         });
 
         const { getByText, findByText } = getRenderer({
-            request: { user: {}, description: description },
+            userRequest: { user: {}, description: description },
             get: getUser,
         });
 
-        await flushPromises();
         expect(getByText(description)).toBeInTheDocument();
         expect(await findByText(bio)).toBeInTheDocument();
     });
 
-    it.skip.each(["Voltar", "Adotar"])("should render a '%s' button", async (expected) => {
+    it.each(["Voltar", "Adotar"])("should render a '%s' button", async (expected) => {
         const { getByRole } = getRenderer({
-            request: { user: {} },
-            get: jest.fn(() => {
-                return {};
-            }),
+            userRequest: UserRequestBuilder.aUserRequest().build(),
         });
         expect(getByRole("button", { name: expected })).toBeInTheDocument();
     });
 });
 
-function getRenderer({ request, get }) {
+function getRenderer({ userRequest, get }) {
+    const getDefaultFn = () => Promise.resolve(getDefaultUser());
+
     return render(
         <MainStoreContext.Provider
             value={{
                 userStore: createUserStore({
-                    get,
+                    get: get || getDefaultFn,
                 }),
             }}
         >
             <MemoryRouter>
-                <UserRequestFullInfoDisplay request={request} />
+                <UserRequestFullInfoDisplay request={userRequest} />
             </MemoryRouter>
         </MainStoreContext.Provider>
     );
 }
 
-const flushPromises = () => new Promise(setImmediate);
+function getDefaultUser() {
+    return {
+        id: "05f466d1-788e-460c-837b-b288f0f6a087",
+        fullName: "Tiffany Russel",
+    };
+}
