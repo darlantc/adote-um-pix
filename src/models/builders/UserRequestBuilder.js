@@ -7,7 +7,9 @@ class UserRequestBuilder {
     model = new UserRequestModel({
         id: uuid(),
         createdAt: new Date().getTime(),
-        userId: uuid(),
+        user: {
+            id: uuid(),
+        },
         pixKey: uuid(),
         status: UserRequestStatus.waitingForApproval,
     });
