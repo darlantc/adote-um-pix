@@ -20,7 +20,7 @@ class UserRequestBuilder {
 
     static aExistingUserRequest(id) {
         const builder = new UserRequestBuilder();
-        builder.model.id = id;
+        builder.model.user = { id };
         return builder;
     }
 
