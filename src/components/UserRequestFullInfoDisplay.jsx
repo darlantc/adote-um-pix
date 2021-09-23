@@ -6,6 +6,7 @@ import { observer } from "mobx-react";
 import { formatDate } from "../utils/formatting";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import Default from "../assets/images/defaultUserPhoto.png";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
     adoteButton: {
@@ -31,16 +32,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserRequestFullInfoDisplay = observer(({ request, close }) => {
+    useEffect(() => {
+        userFullInfo = getUserProfile(user.id);
+        console.log("🚀 ~ file: UserRequestFullInfoDisplay.jsx ~ line 44 ~ useEffect ~ userFullInfo", userFullInfo);
+    });
+
     const classes = useStyles();
 
     const { userStore } = useMainStoreContext();
     const { getUserProfile } = userStore;
 
+    let userFullInfo = {};
+
     const { user, createdAt, description, pixKey } = request;
 
-    const userFullInfo = getUserProfile(user.id);
-
     const { photoUrl, fullName, linkedIn, bio } = userFullInfo;
+    console.log(
+        "🚀 ~ file: UserRequestFullInfoDisplay.jsx ~ line 44 ~ UserRequestFullInfoDisplay ~ userFullInfo",
+        userFullInfo
+    );
 
     const userImage = photoUrl | Default;
 

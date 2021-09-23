@@ -7,7 +7,9 @@ class UserStore {
 
     getUserProfile = async (id) => {
         try {
-            return await this.get(id);
+            const userProfile = await this.get(id);
+            console.log("🚀 ~ file: UserStore.js ~ line 11 ~ UserStore ~ getUserProfile= ~ userProfile", userProfile);
+            return userProfile;
         } catch (error) {
             return null;
         }
