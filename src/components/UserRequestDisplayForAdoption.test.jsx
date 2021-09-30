@@ -47,15 +47,15 @@ describe("<UserRequestDisplayForAdoption />", () => {
 
     it.each(["pixKey info not available at first", "other sample text"])(
         "should display a modal if clicked on styled box area, should return to initial state if clicked 'Voltar'.",
-        (expected) => {
-            const { getByRole, queryByRole, getByTestId } = getRenderer({
+        async (expected) => {
+            const { getByRole, findByRole, queryByRole, getByTestId } = getRenderer({
                 request: { user: {}, pixKey: expected },
             });
 
             expect(queryByRole("heading", { name: expected })).not.toBeInTheDocument();
 
             userEvent.click(getByTestId("UserRequestDisplay"));
-            expect(getByRole("heading", { name: expected })).toBeInTheDocument();
+            expect(await findByRole("heading", { name: expected })).toBeInTheDocument();
 
             userEvent.click(getByRole("button", { name: "Voltar" }));
             expect(queryByRole("heading", { name: expected })).not.toBeInTheDocument();

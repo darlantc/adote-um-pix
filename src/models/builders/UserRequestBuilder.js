@@ -7,7 +7,8 @@ class UserRequestBuilder {
     model = new UserRequestModel({
         id: uuid(),
         createdAt: new Date().getTime(),
-        userId: uuid(),
+        user: { id: uuid() },
+        description: "",
         pixKey: uuid(),
         status: UserRequestStatus.waitingForApproval,
     });
@@ -29,6 +30,11 @@ class UserRequestBuilder {
 
     withCustomPixKey(pixKey) {
         this.model.pixKey = pixKey;
+        return this;
+    }
+
+    withCustomCreatedAt(createdAt) {
+        this.model.createdAt = createdAt;
         return this;
     }
 
