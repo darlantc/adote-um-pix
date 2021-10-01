@@ -41,8 +41,6 @@ const UserRequestFullInfoDisplay = observer(({ request, close }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [userProfile, setUserProfile] = useState(null);
 
-
-
     useEffect(() => {
         setIsLoading(true);
         async function loadUserProfile() {
@@ -62,8 +60,7 @@ const UserRequestFullInfoDisplay = observer(({ request, close }) => {
         return null;
     }
 
-        console.log("userProfile", userProfile)
-
+    console.log("userProfile", userProfile);
 
     const fullName = userProfile.fullName;
     const linkedIn = userProfile.linkedIn;
@@ -74,6 +71,7 @@ const UserRequestFullInfoDisplay = observer(({ request, close }) => {
         <Box className={classes.adoteBox} data-testid="UserRequestFullInfo">
             <Typography variant="h6">{formatDate(createdAt)}</Typography>
             <div
+                data-testid="UsersInfoDiv"
                 style={{
                     backgroundColor: "#0088AA",
                     borderRadius: "7px",
