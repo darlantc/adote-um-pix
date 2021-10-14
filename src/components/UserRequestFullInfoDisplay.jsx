@@ -16,11 +16,13 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: "10px",
     },
     adoteBox: {
+        padding: "10px",
         backgroundColor: "#00CCFF",
         color: "#FFFFFF",
         borderRadius: "7px",
         border: "2px",
         height: "fit-content",
+        overflow: "auto",
         width: "100%",
         padding: "10px",
         maxWidth: "655px",

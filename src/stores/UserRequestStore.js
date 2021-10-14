@@ -1,6 +1,7 @@
 import { action, computed, makeObservable, observable } from "mobx";
 
 import { InternalEvents } from "./InternalEventsStore";
+import RequestForUserRequestsStatus from "../models/RequestForUserRequestsStatus";
 
 class UserRequestStore {
     get;
@@ -8,6 +9,7 @@ class UserRequestStore {
     update;
     remove;
     userRequests = [];
+    requestForUserRequestsStatus = RequestForUserRequestsStatus.loading;
     searchString = "";
 
     constructor(get, add, update, remove, InternalEvents) {
@@ -21,9 +23,11 @@ class UserRequestStore {
         makeObservable(this, {
             userRequests: observable,
             searchString: observable,
+            requestForUserRequestsStatus: observable,
             filteredUserRequests: computed,
             setSearchString: action,
             setUserRequests: action,
+            setRequestForUserRequestsStatus: action,
         });
     }
 
@@ -47,10 +51,18 @@ class UserRequestStore {
         this.userRequests = newValue;
     };
 
+    setRequestForUserRequestsStatus = (newValue) => {
+        this.requestForUserRequestsStatus = newValue;
+    };
+
     getUserRequests = async () => {
+        this.setRequestForUserRequestsStatus(RequestForUserRequestsStatus.loading);
         const result = await this.get();
         if (result) {
             this.setUserRequests(result);
+            this.setRequestForUserRequestsStatus(RequestForUserRequestsStatus.finished);
+        } else {
+            this.setRequestForUserRequestsStatus(RequestForUserRequestsStatus.noUserRequests);
         }
     };
 
