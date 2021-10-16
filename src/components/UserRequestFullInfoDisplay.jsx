@@ -2,12 +2,14 @@ import { Box, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import { observer } from "mobx-react";
+import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { formatDate } from "../utils/formatting";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import DefaultUserFoto from "../assets/images/defaultUserPhoto.png";
 import LoadingAnimation from "./LoadingAnimation";
+import APP_ROUTES from "../routes/Routes";
 
 const useStyles = makeStyles((theme) => ({
     adoteButton: {
@@ -24,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
         height: "fit-content",
         overflow: "auto",
         width: "100%",
-        padding: "10px",
         maxWidth: "655px",
         margin: "5px",
         display: "flex",
@@ -34,24 +35,50 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const UserRequestFullInfoDisplay = observer(({ request, close }) => {
+const UserRequestFullInfoDisplay = observer((props) => {
     const classes = useStyles();
-    const { userStore } = useMainStoreContext();
+    const { userStore, userRequestStore } = useMainStoreContext();
 
-    const { user, createdAt, description, pixKey } = request;
+    let history = useHistory();
 
     const [isLoading, setIsLoading] = useState(false);
     const [userProfile, setUserProfile] = useState(null);
+    const [request, setRequest] = useState(null);
+
+    const goBackToList = (event) => {
+        event.preventDefault();
+
+        history.push(APP_ROUTES.adopt);
+    };
 
     useEffect(() => {
         setIsLoading(true);
-        async function loadUserProfile() {
-            const response = await userStore.getUserProfile(user.id);
-            setUserProfile(response);
+        async function loadRequest() {
+            const url = props.match.params.request;
+
+            const request = await userRequestStore.getSpecificUserRequest(url);
+            setRequest(request);
+        }
+
+        loadRequest();
+    }, [props, userRequestStore]);
+
+    if (!request) {
+        return null;
+    }
+
+    const { user, createdAt, description, pixKey } = request;
+
+    useEffect(() => {
+        async function loadProfile() {
+            const profile = await userStore.getUserProfile(user.id);
+            console.log("🚀 ~ file: UserRequestFullInfoDisplay.jsx ~ line 80 ~ loadProfile ~ profile", profile);
+            setUserProfile(profile);
+
             setIsLoading(false);
         }
 
-        loadUserProfile();
+        loadProfile();
     }, [userStore, user.id]);
 
     if (isLoading) {
@@ -62,58 +89,59 @@ const UserRequestFullInfoDisplay = observer(({ request, close }) => {
         return null;
     }
 
-    console.log("userProfile", userProfile);
-
-    const fullName = userProfile.fullName;
-    const linkedIn = userProfile.linkedIn;
-    const bio = userProfile.bio;
+    const { fullName, linkedIn, bio } = userProfile;
     const userImage = userProfile.photoUrl | DefaultUserFoto;
 
     return (
-        <Box className={classes.adoteBox} data-testid="UserRequestFullInfo">
-            <Typography variant="h6">{formatDate(createdAt)}</Typography>
-            <div
-                data-testid="UsersInfoDiv"
-                style={{
-                    backgroundColor: "#0088AA",
-                    borderRadius: "7px",
-                    width: "96%",
-                    padding: "10px",
-                    margin: "5px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <img src={userImage} alt={fullName} style={{ width: "150px", borderRadius: "50%" }} />
-                <Typography variant="h4">{fullName}</Typography>
-                {linkedIn && (
-                    <a href={linkedIn} style={{ textDecoration: "none" }} target="_blank" rel="noreferrer">
-                        <LinkedInIcon />
-                    </a>
-                )}
-                {bio && (
-                    <Typography variant="body1" align="center" gutterBottom>
-                        {bio}
-                    </Typography>
-                )}
-            </div>
-            <Typography variant="body1" align="center">
-                {description}
+        <>
+            <Typography variant="h3" gutterBottom>
+                Requisição para Adoção
             </Typography>
-            <Typography variant="h6" align="center" gutterBottom>
-                {pixKey}
-            </Typography>
-            <Box display="flex" alignContent="center" justifyContent="center" height="30px">
-                <Button variant="outlined" onClick={close}>
-                    Voltar
-                </Button>
-                <Button variant="outlined" className={classes.adoteButton}>
-                    Adotar
-                </Button>
+            <Box className={classes.adoteBox} data-testid="UserRequestFullInfo">
+                <Typography variant="h6">{formatDate(createdAt)}</Typography>
+                <div
+                    data-testid="UsersInfoDiv"
+                    style={{
+                        backgroundColor: "#0088AA",
+                        borderRadius: "7px",
+                        width: "96%",
+                        padding: "10px",
+                        margin: "5px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <img src={userImage} alt={fullName} style={{ width: "150px", borderRadius: "50%" }} />
+                    <Typography variant="h4">{fullName}</Typography>
+                    {linkedIn && (
+                        <a href={linkedIn} style={{ textDecoration: "none" }} target="_blank" rel="noreferrer">
+                            <LinkedInIcon />
+                        </a>
+                    )}
+                    {bio && (
+                        <Typography variant="body1" align="center" gutterBottom>
+                            {bio}
+                        </Typography>
+                    )}
+                </div>
+                <Typography variant="body1" align="center">
+                    {description}
+                </Typography>
+                <Typography variant="h6" align="center" gutterBottom>
+                    {pixKey}
+                </Typography>
+                <Box display="flex" alignContent="center" justifyContent="center" height="30px">
+                    <Button variant="outlined" onClick={goBackToList}>
+                        Voltar
+                    </Button>
+                    <Button variant="outlined" className={classes.adoteButton}>
+                        Adotar
+                    </Button>
+                </Box>
             </Box>
-        </Box>
+        </>
     );
 });
 
