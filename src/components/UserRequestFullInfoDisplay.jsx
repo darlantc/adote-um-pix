@@ -2,14 +2,14 @@ import { Box, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import { observer } from "mobx-react";
-import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 
 import { formatDate } from "../utils/formatting";
-import { useMainStoreContext } from "../contexts/mainStoreContext";
 import DefaultUserFoto from "../assets/images/defaultUserPhoto.png";
 import LoadingAnimation from "./LoadingAnimation";
 import APP_ROUTES from "../routes/Routes";
+import useUserProfile from "../hooks/useUserProfile";
+import useGetUserRequestByUrl from "../hooks/useGetUserRequestByUrl";
 
 const useStyles = makeStyles((theme) => ({
     adoteButton: {
@@ -35,59 +35,32 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const UserRequestFullInfoDisplay = observer((props) => {
+const UserRequestFullInfoDisplay = observer(() => {
     const classes = useStyles();
-    const { userStore, userRequestStore } = useMainStoreContext();
+    const history = useHistory();
+    const params = useParams();
 
-    let history = useHistory();
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [userProfile, setUserProfile] = useState(null);
-    const [request, setRequest] = useState(null);
+    const { isLoading: isLoadingRequest, request } = useGetUserRequestByUrl(params.request);
+    const { isLoading: isLoadingUserProfile, userProfile } = useUserProfile(request?.user?.id);
 
     const goBackToList = (event) => {
         event.preventDefault();
-
         history.push(APP_ROUTES.adopt);
     };
 
-    useEffect(() => {
-        setIsLoading(true);
-        async function loadRequest() {
-            const url = props.match.params.request;
-
-            const request = await userRequestStore.getSpecificUserRequest(url);
-            setRequest(request);
-        }
-
-        loadRequest();
-    }, [props, userRequestStore]);
-
-    if (!request) {
-        return null;
+    if (isLoadingRequest || isLoadingUserProfile) {
+        return <LoadingAnimation />;
     }
 
-    const { user, createdAt, description, pixKey } = request;
-
-    useEffect(() => {
-        async function loadProfile() {
-            const profile = await userStore.getUserProfile(user.id);
-            console.log("🚀 ~ file: UserRequestFullInfoDisplay.jsx ~ line 80 ~ loadProfile ~ profile", profile);
-            setUserProfile(profile);
-
-            setIsLoading(false);
-        }
-
-        loadProfile();
-    }, [userStore, user.id]);
-
-    if (isLoading) {
-        return <LoadingAnimation />;
+    if (!request) {
+        return <p>Página não encontrada</p>;
     }
 
     if (!userProfile) {
         return null;
     }
+
+    const { createdAt, description, pixKey } = request;
 
     const { fullName, linkedIn, bio } = userProfile;
     const userImage = userProfile.photoUrl | DefaultUserFoto;
