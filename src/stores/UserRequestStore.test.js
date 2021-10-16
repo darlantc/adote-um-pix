@@ -149,6 +149,8 @@ describe("UserRequestStore", () => {
             expect(sut.userRequests.length).toBe(0);
         });
     });
+
+    // TODO: Garantir que o getByUrl funciona corretamente
 });
 
 // Helpers

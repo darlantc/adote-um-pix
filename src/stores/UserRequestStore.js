@@ -4,14 +4,16 @@ import { InternalEvents } from "./InternalEventsStore";
 
 class UserRequestStore {
     get;
+    getByUrl;
     add;
     update;
     remove;
     userRequests = [];
     searchString = "";
 
-    constructor(get, add, update, remove, InternalEvents) {
+    constructor(get, getByUrl, add, update, remove, InternalEvents) {
         this.get = get;
+        this.getByUrl = getByUrl;
 
         this.add = add;
         this.update = update;
@@ -55,14 +57,11 @@ class UserRequestStore {
     };
 
     getSpecificUserRequest = async (url) => {
-        await this.getUserRequests();
-        if (this.userRequests.length < 1) {
+        try {
+            return await this.getByUrl(url);
+        } catch (error) {
             return null;
         }
-
-        return this.userRequests.filter((request) => {
-            return request.url.indexOf(url) > -1;
-        });
     };
 
     addUserRequest = async (item) => {
