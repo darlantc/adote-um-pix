@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
         },
     },
     descriptionBox: {
-        maxHeight: "250px",
+        maxHeight: "150px",
         overflow: "hidden",
     },
 }));
@@ -55,7 +55,7 @@ const UserRequestDisplayForAdoption = ({ request }) => {
                         {description}
                     </Typography>
                 </div>
-                {description.length > 1000 && (
+                {description?.length > 600 && (
                     <Typography variant="h5" align="center">
                         ...
                     </Typography>

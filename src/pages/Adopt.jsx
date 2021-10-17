@@ -4,18 +4,17 @@ import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import UserRequestDisplayForAdoption from "../components/UserRequestDisplayForAdoption";
-import RequestForUserRequestsStatus from "../models/RequestForUserRequestsStatus";
 import LoadingAnimation from "../components/LoadingAnimation";
 
 const Adopt = observer(() => {
     const { userRequestStore } = useMainStoreContext();
-    const { userRequests, getUserRequests, requestForUserRequestsStatus } = userRequestStore;
+    const { userRequests, getUserRequests, isFetching } = userRequestStore;
 
     useEffect(() => {
         getUserRequests();
     }, [getUserRequests]);
 
-    if (requestForUserRequestsStatus === RequestForUserRequestsStatus.loading) {
+    if (isFetching) {
         return <LoadingAnimation />;
     }
 
@@ -35,11 +34,11 @@ const Adopt = observer(() => {
                     alignItems: "center",
                 }}
             >
-                {requestForUserRequestsStatus === RequestForUserRequestsStatus.finished &&
+                {userRequests &&
                     userRequests.map((request) => {
                         return <UserRequestDisplayForAdoption request={request} key={request.id} />;
                     })}
-                {requestForUserRequestsStatus === RequestForUserRequestsStatus.noUserRequests && (
+                {userRequests.length === 0 && (
                     <Box
                         borderRadius={7}
                         bgcolor="background.paper"

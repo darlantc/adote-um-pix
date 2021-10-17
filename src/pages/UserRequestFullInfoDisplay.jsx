@@ -2,18 +2,20 @@ import { Box, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import { observer } from "mobx-react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import { formatDate } from "../utils/formatting";
+import Error404 from "./Error404";
 import DefaultUserFoto from "../assets/images/defaultUserPhoto.png";
-import LoadingAnimation from "./LoadingAnimation";
-import APP_ROUTES from "../routes/Routes";
+import LoadingAnimation from "../components/LoadingAnimation";
+import { APP_ROUTES } from "../routes/Routes";
 import useUserProfile from "../hooks/useUserProfile";
 import useGetUserRequestByUrl from "../hooks/useGetUserRequestByUrl";
 
 const useStyles = makeStyles((theme) => ({
     adoteButton: {
         backgroundColor: "#0088AA",
+        height: "36px",
         color: "#FFFFFF",
         marginLeft: "10px",
     },
@@ -24,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "7px",
         border: "2px",
         height: "fit-content",
-        overflow: "auto",
         width: "100%",
         maxWidth: "655px",
         margin: "5px",
@@ -37,23 +38,17 @@ const useStyles = makeStyles((theme) => ({
 
 const UserRequestFullInfoDisplay = observer(() => {
     const classes = useStyles();
-    const history = useHistory();
     const params = useParams();
 
     const { isLoading: isLoadingRequest, request } = useGetUserRequestByUrl(params.request);
     const { isLoading: isLoadingUserProfile, userProfile } = useUserProfile(request?.user?.id);
-
-    const goBackToList = (event) => {
-        event.preventDefault();
-        history.push(APP_ROUTES.adopt);
-    };
 
     if (isLoadingRequest || isLoadingUserProfile) {
         return <LoadingAnimation />;
     }
 
     if (!request) {
-        return <p>Página não encontrada</p>;
+        return <Error404 />;
     }
 
     if (!userProfile) {
@@ -106,9 +101,9 @@ const UserRequestFullInfoDisplay = observer(() => {
                     {pixKey}
                 </Typography>
                 <Box display="flex" alignContent="center" justifyContent="center" height="30px">
-                    <Button variant="outlined" onClick={goBackToList}>
-                        Voltar
-                    </Button>
+                    <Link to={APP_ROUTES.adopt} style={{ color: "inherit", textDecoration: "inherit" }}>
+                        <Button variant="outlined">Voltar</Button>
+                    </Link>
                     <Button variant="outlined" className={classes.adoteButton}>
                         Adotar
                     </Button>
