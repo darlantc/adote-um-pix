@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 function useGetUserRequestByUrl(url) {
     const { userRequestStore } = useMainStoreContext();
+
     const [isLoading, setIsLoading] = useState(false);
     const [request, setRequest] = useState(null);
 
@@ -10,7 +11,9 @@ function useGetUserRequestByUrl(url) {
         async function loadRequest() {
             setIsLoading(true);
             const request = await userRequestStore.getSpecificUserRequest(url);
-            setRequest(request);
+            if (request) {
+                setRequest(request);
+            }
             setIsLoading(false);
         }
 

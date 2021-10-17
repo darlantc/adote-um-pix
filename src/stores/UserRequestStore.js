@@ -9,6 +9,7 @@ class UserRequestStore {
     update;
     remove;
     userRequests = [];
+    isFetching = false;
     searchString = "";
 
     constructor(get, getByUrl, add, update, remove, InternalEvents) {
@@ -22,10 +23,12 @@ class UserRequestStore {
 
         makeObservable(this, {
             userRequests: observable,
+            isFetching: observable,
             searchString: observable,
             filteredUserRequests: computed,
             setSearchString: action,
             setUserRequests: action,
+            setIsFetching: action,
         });
     }
 
@@ -49,16 +52,23 @@ class UserRequestStore {
         this.userRequests = newValue;
     };
 
+    setIsFetching = (newValue) => {
+        this.isFetching = newValue;
+    };
+
     getUserRequests = async () => {
+        this.setIsFetching(true);
         const result = await this.get();
         if (result) {
             this.setUserRequests(result);
         }
+        this.setIsFetching(false);
     };
 
     getSpecificUserRequest = async (url) => {
         try {
-            return await this.getByUrl(url);
+            const request = await this.getByUrl(url);
+            return request;
         } catch (error) {
             return null;
         }

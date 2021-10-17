@@ -18,7 +18,8 @@ describe("<UserRequestDisplayForAdoption />", () => {
             border: "2px",
             borderColor: "#0088AA",
             padding: "10px",
-            maxWidth: "655px",
+            maxWidth: "580px",
+            maxHeight: "400px",
             margin: "5px",
             transition: "0.5s",
             cursor: "pointer",
@@ -45,22 +46,13 @@ describe("<UserRequestDisplayForAdoption />", () => {
         }
     );
 
-    it.each(["pixKey info not available at first", "other sample text"])(
-        "should display a modal if clicked on styled box area, should return to initial state if clicked 'Voltar'.",
-        async (expected) => {
-            const { getByRole, findByRole, queryByRole, getByTestId } = getRenderer({
-                request: { user: {}, pixKey: expected },
-            });
-
-            expect(queryByRole("heading", { name: expected })).not.toBeInTheDocument();
-
-            userEvent.click(getByTestId("UserRequestDisplay"));
-            expect(await findByRole("heading", { name: expected })).toBeInTheDocument();
-
-            userEvent.click(getByRole("button", { name: "Voltar" }));
-            expect(queryByRole("heading", { name: expected })).not.toBeInTheDocument();
-        }
-    );
+    it.each([
+        "Sample description with more than 600 cgaracters. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed sodales leo, ut suscipit urna. Vestibulum ullamcorper massa vitae luctus sollicitudin. Aenean nisl mauris, rutrum id nibh nec, pretium mattis metus. Nunc pellentesque, mi vel molestie tincidunt, augue nisl consectetur est, id consectetur justo ante non elit. Proin ullamcorper nisl eu nisl ultricies fringilla. Cras tincidunt tortor at blandit semper. Aenean convallis ante mauris, at congue ex molestie a. Sed ac vestibulum elit. Integer faucibus nulla aliquet turpis faucibus fringilla.",
+    ])("should render an extra heading '...' if description has more than 600 characters", (expected) => {
+        const request = { description: expected };
+        const { getByRole } = getRenderer({ request });
+        expect(getByRole("heading", { name: "..." })).toBeInTheDocument();
+    });
 });
 
 function getRenderer({ request }) {

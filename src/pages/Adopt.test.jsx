@@ -6,28 +6,29 @@ import { createUserRequestStore } from "../utils/mocks/storeMocks";
 import Adopt from "./Adopt";
 
 describe("<Adopt />", () => {
-    it("should have heading with page title", () => {
-        const { getByRole } = getRenderer({});
-        expect(getByRole("heading", { name: "Adote" })).toBeInTheDocument();
+    it("should render load animation while fetching", () => {
+        const { getByAltText } = getRenderer({});
+        expect(getByAltText("Animação de Carregamento")).toBeInTheDocument();
     });
 
-    it.each(["Nenhuma solicitação encontrada, retorne mais tarde."])(
-        "should render heading '%s' if userRequests.length < 1",
-        (expected) => {
-            const { getByRole } = getRenderer({});
-            expect(getByRole("heading", { name: expected })).toBeInTheDocument();
-        }
-    );
+    it("should have heading with page title", async () => {
+        const { findByRole } = getRenderer({});
+        expect(await findByRole("heading", { name: "Adote" })).toBeInTheDocument();
+    });
 
-    it.each(["Nenhuma solicitação encontrada, retorne mais tarde."])(
-        "should not render heading '%s' if userRequests.length >= 1",
-        (expected) => {
-            const sampleUserRequest = { id: "sample", name: "Sample" };
-            const { queryByText } = getRenderer({ sampleUserRequest });
+    it("should render heading 'Nenhuma solicitação encontrada, retorne mais tarde.' if userRequests.length < 1", async () => {
+        const { findByRole } = getRenderer({});
+        expect(
+            await findByRole("heading", { name: "Nenhuma solicitação encontrada, retorne mais tarde." })
+        ).toBeInTheDocument();
+    });
 
-            expect(queryByText(expected)).not.toBeInTheDocument();
-        }
-    );
+    it("should not render heading 'Nenhuma solicitação encontrada, retorne mais tarde.' if userRequests.length >= 1", () => {
+        const sampleUserRequest = { id: "sample", name: "Sample" };
+        const { queryByText } = getRenderer({ sampleUserRequest });
+
+        expect(queryByText("Nenhuma solicitação encontrada, retorne mais tarde.")).not.toBeInTheDocument();
+    });
 });
 
 function getRenderer({ get, add, update, remove, sampleUserRequest }) {

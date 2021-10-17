@@ -18,6 +18,20 @@ describe("UserRequestStore", () => {
         });
     });
 
+    describe("getUserRequestByUrl", () => {
+        it.each(["sample-url", "another-url"])("should return a specific user request", async (expected) => {
+            const userRequest = UserRequestBuilder.aUserRequest().withCustomUrl(expected).build();
+
+            const sut = makeSUT(
+                () => [],
+                () => userRequest
+            );
+            await sut.getUserRequests();
+
+            expect(sut.getByUrl(expected)).toEqual(userRequest);
+        });
+    });
+
     describe("addUserRequest", () => {
         it("should call addCallback with correct item", async () => {
             let response;
@@ -27,7 +41,11 @@ describe("UserRequestStore", () => {
                 response = item;
                 requestList.push(item);
             };
-            const sut = makeSUT(() => requestList, addCallback);
+            const sut = makeSUT(
+                () => requestList,
+                async () => {},
+                addCallback
+            );
 
             const item1 = UserRequestBuilder.aUserRequest().build();
             await sut.addUserRequest(item1);
@@ -56,6 +74,7 @@ describe("UserRequestStore", () => {
             };
             const sut = makeSUT(
                 async () => sampleList,
+                async () => {},
                 async () => {},
                 updateCallback
             );
@@ -88,6 +107,7 @@ describe("UserRequestStore", () => {
 
             const sut = makeSUT(
                 () => sampleList,
+                () => {},
                 () => {},
                 () => {},
                 removeCallback
@@ -154,6 +174,12 @@ describe("UserRequestStore", () => {
 });
 
 // Helpers
-const makeSUT = (get = async () => [], add = async () => {}, update = async () => {}, remove = async () => {}) => {
-    return new UserRequestStore(get, add, update, remove, createInternalEventsStore());
+const makeSUT = (
+    get = async () => [],
+    getByUrl = async () => {},
+    add = async () => {},
+    update = async () => {},
+    remove = async () => {}
+) => {
+    return new UserRequestStore(get, getByUrl, add, update, remove, createInternalEventsStore());
 };

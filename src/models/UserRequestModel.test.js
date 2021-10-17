@@ -18,6 +18,19 @@ describe("UserRequestModel", () => {
         ).toThrow("Invalid data");
     });
 
+    it("Should throw error if invalid data", () => {
+        expect(
+            makeSUT({
+                id: uuid(),
+                createdAt: 1619887317208,
+                description: "lorem ipsum dolor asit amet",
+                user: { id: uuid() },
+                pixKey: uuid(),
+                status: "waitingForApproval",
+            })
+        ).toThrow("Invalid data");
+    });
+
     it("Should create with valid data", () => {
         expect(
             makeSUT({
@@ -27,6 +40,7 @@ describe("UserRequestModel", () => {
                 user: { id: uuid() },
                 pixKey: uuid(),
                 status: "waitingForApproval",
+                url: uuid(),
             })
         ).toBeTruthy();
     });

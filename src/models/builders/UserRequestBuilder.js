@@ -10,6 +10,7 @@ class UserRequestBuilder {
         user: { id: uuid() },
         description: "",
         pixKey: uuid(),
+        url: uuid(),
         status: UserRequestStatus.waitingForApproval,
     });
 
@@ -38,14 +39,21 @@ class UserRequestBuilder {
         return this;
     }
 
+    withCustomUrl(url) {
+        this.model.url = url;
+        return this;
+    }
+
     withCanceledStatus() {
         this.model.status = UserRequestStatus.canceled;
         return this;
     }
+
     withAvailableStatus() {
         this.model.status = UserRequestStatus.available;
         return this;
     }
+
     withPaidStatus() {
         this.model.status = UserRequestStatus.paid;
         return this;

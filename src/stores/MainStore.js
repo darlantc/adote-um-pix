@@ -17,11 +17,12 @@ class MainStore {
         this.authStore = new AuthStore(this.internalEventsStore, firebaseService);
 
         this.getUserRequestsDatabase(this.authStore, firebaseService);
-        const { getUserRequests, addUserRequest, updateUserRequest, removeUserRequest } = this.userRequestsDatabase;
+        const { getUserRequests, getUserRequestByUrl, addUserRequest, updateUserRequest, removeUserRequest } =
+            this.userRequestsDatabase;
 
-        // TODO: implementar getByUrl do userRequestStore no Adapter
         this.userRequestStore = new UserRequestStore(
             getUserRequests,
+            getUserRequestByUrl,
             addUserRequest,
             updateUserRequest,
             removeUserRequest,
