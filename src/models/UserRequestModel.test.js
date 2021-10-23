@@ -16,10 +16,8 @@ describe("UserRequestModel", () => {
                 pixKey: "f7de57ab-ee77-4493-aabc-f819f6b1d0b4",
             })
         ).toThrow("Invalid data");
-    });
 
-    it("Should throw error if invalid data", () => {
-        expect(
+        expect(() =>
             makeSUT({
                 id: uuid(),
                 createdAt: 1619887317208,
