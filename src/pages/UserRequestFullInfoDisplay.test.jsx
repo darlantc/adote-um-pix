@@ -6,11 +6,16 @@ import { createUserStore, createUserRequestStore } from "../utils/mocks/storeMoc
 import { formatDate } from "../utils/formatting";
 import { MemoryRouter } from "react-router";
 import UserRequestBuilder from "../models/builders/UserRequestBuilder";
+import { useParamsMock } from "../utils/mocks/useParamsMock";
 
 describe("<UserRequestFullInfoDisplay />", () => {
+    beforeEach(() => {
+        useParamsMock({ request: "a-url" });
+    });
+
     it("should have a div element with following style", async () => {
         const { findByTestId } = getRenderer({
-            userRequest: UserRequestBuilder.aUserRequest().build(),
+            getByUrl: () => UserRequestBuilder.aUserRequest().build(),
         });
 
         expect(await findByTestId("UserRequestFullInfo")).toHaveStyle({
@@ -34,7 +39,6 @@ describe("<UserRequestFullInfoDisplay />", () => {
         "should render an image either with or without user upload.",
         async (expected) => {
             const { findByAltText } = getRenderer({
-                userRequest: UserRequestBuilder.aUserRequest().build(),
                 get: () => Promise.resolve({ fullName: "Kehinde Igbo", photoUrl: expected }),
             });
 
@@ -44,7 +48,7 @@ describe("<UserRequestFullInfoDisplay />", () => {
 
     it("should render a parent div for user's image with specific style.", async () => {
         const { findByTestId } = getRenderer({
-            userRequest: UserRequestBuilder.aUserRequest().build(),
+            getByUrl: () => UserRequestBuilder.aUserRequest().build(),
         });
 
         expect(await findByTestId("UsersInfoDiv")).toHaveStyle({
@@ -64,11 +68,13 @@ describe("<UserRequestFullInfoDisplay />", () => {
         "should render an link '%s' to users linkedIn profile",
         async (expected) => {
             const { findByRole } = getRenderer({
-                userRequest: UserRequestBuilder.aUserRequest().build(),
-                get: () => Promise.resolve({ linkedIn: expected }),
+                getByUrl: () => UserRequestBuilder.aUserRequest().build(),
+                get: () => Promise.resolve({ fullName: "George", linkedIn: expected }),
             });
-
-            expect(await findByRole("link")).toHaveAttribute("href", expected);
+            expect(await findByRole("link", { name: "Perfil no LinkedIn de George" })).toHaveAttribute(
+                "href",
+                expected
+            );
         }
     );
 
@@ -77,10 +83,8 @@ describe("<UserRequestFullInfoDisplay />", () => {
         ["Second Sample", "AnotherRandomPixkey", 1226798494],
     ])("should render headings '%s', '%s' & '%s'", async (name, pixKey, createdAt) => {
         const { findByRole } = getRenderer({
-            userRequest: UserRequestBuilder.aUserRequest()
-                .withCustomPixKey(pixKey)
-                .withCustomCreatedAt(createdAt)
-                .build(),
+            getByUrl: () =>
+                UserRequestBuilder.aUserRequest().withCustomPixKey(pixKey).withCustomCreatedAt(createdAt).build(),
             get: () => Promise.resolve({ fullName: name }),
         });
 
@@ -94,7 +98,7 @@ describe("<UserRequestFullInfoDisplay />", () => {
         ["Another description sample", "Random bio sample."],
     ])("should render  '%s' & '%s'", async (description, bio) => {
         const { findByText } = getRenderer({
-            userRequest: UserRequestBuilder.aUserRequest().withCustomDescription(description).build(),
+            getByUrl: () => UserRequestBuilder.aUserRequest().withCustomDescription(description).build(),
             get: () => Promise.resolve({ bio: bio }),
         });
 
@@ -102,14 +106,13 @@ describe("<UserRequestFullInfoDisplay />", () => {
         expect(await findByText(bio)).toBeInTheDocument();
     });
 
-    it.only.each(["Voltar", "Adotar"])("should render a '%s' button", async (expected) => {
-        const { findByRole } = getRenderer({});
-
+    it.each(["Adotar", "Voltar"])("should render a '%s' button", async (expected) => {
+        const { findByRole } = getRenderer();
         expect(await findByRole("button", { name: expected })).toBeInTheDocument();
     });
 });
 
-function getRenderer({ get, getByUrl }) {
+function getRenderer({ get, getByUrl } = {}) {
     const getDefaultFnUser = () => Promise.resolve(getDefaultUser());
     const getDefaultFnUserRequest = () => Promise.resolve(getDefaultUserRequest());
     return render(
@@ -133,7 +136,7 @@ function getRenderer({ get, getByUrl }) {
 function getDefaultUser() {
     return {
         id: "24537623767237-7623236253",
-        fullname: "Orokin Mumu",
+        fullName: "Orokin Mumu",
     };
 }
 

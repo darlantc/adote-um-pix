@@ -12,7 +12,7 @@ import { APP_ROUTES } from "../routes/Routes";
 import useUserProfile from "../hooks/useUserProfile";
 import useGetUserRequestByUrl from "../hooks/useGetUserRequestByUrl";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
     adoteButton: {
         backgroundColor: "#0088AA",
         height: "36px",
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
         alignItems: "center",
     },
-}));
+});
 
 const UserRequestFullInfoDisplay = observer(() => {
     const classes = useStyles();
@@ -84,7 +84,13 @@ const UserRequestFullInfoDisplay = observer(() => {
                     <img src={userImage} alt={fullName} style={{ width: "150px", borderRadius: "50%" }} />
                     <Typography variant="h4">{fullName}</Typography>
                     {linkedIn && (
-                        <a href={linkedIn} style={{ textDecoration: "none" }} target="_blank" rel="noreferrer">
+                        <a
+                            aria-label={`Perfil no LinkedIn de ${fullName}`}
+                            href={linkedIn}
+                            style={{ textDecoration: "none" }}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
                             <LinkedInIcon />
                         </a>
                     )}
