@@ -6,7 +6,7 @@ import { theme } from "../assets/jss/styles";
 import Error404 from "./Error404";
 
 describe("<Error404 />", () => {
-    it.each(["Error 404", "A página que vocês está procurando não existe.", "Precisa de ajuda?", "Quer ajudar?"])(
+    it.each(["A página que você está procurando não existe.", "Precisa de ajuda?", "Quer ajudar?"])(
         "should render a '%s' heading.",
         (expected) => {
             const { getByRole } = getRenderer();
@@ -35,26 +35,9 @@ describe("<Error404 />", () => {
         });
     });
 
-    it.each([
-        [
-            "Adote",
-            {
-                backgroundColor: "#0088AA",
-                color: "#FFFFFF",
-                marginTop: "10px",
-            },
-        ],
-        [
-            "Solicite",
-            {
-                backgroundColor: "#2CA089",
-                marginTop: "10px",
-            },
-        ],
-    ])("should render a '%s' button with '%s' style.", (name, style) => {
+    it.each(["Adote", "Solicite"])("should render '%s' button", (expected) => {
         const { getByRole } = getRenderer();
-
-        expect(getByRole("button", { name: name })).toHaveStyle(style);
+        expect(getByRole("button", { name: expected })).toBeInTheDocument();
     });
 });
 

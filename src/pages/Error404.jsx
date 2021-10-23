@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     adoteButton: {
         backgroundColor: "#0088AA",
         color: "#FFFFFF",
-        marginTop: "10px",
+        marginTop: 10,
     },
     adoteBox: {
         backgroundColor: "#00CCFF",
@@ -18,22 +18,22 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "7px",
         border: "2px",
         borderColor: "#0088AA",
-        padding: "10px",
+        padding: 10,
     },
     soliciteButton: {
         backgroundColor: "#2CA089",
         color: "#FFFFFF",
-        marginTop: "10px",
+        marginTop: 10,
     },
     soliciteBox: {
         backgroundColor: "#00D4AA",
         color: "#FFFFFF",
         borderRadius: "7px",
         borderColor: "#2CA089",
-        padding: "10px",
+        padding: 10,
     },
     gridContainer: {
-        marginTop: "10px",
+        marginTop: 10,
         display: "flex",
         justifyContent: "center",
     },
@@ -50,9 +50,8 @@ const Error404 = observer(() => {
 
     return (
         <>
-            <Typography variant="h3">Error 404</Typography>
             <Typography variant="h5" gutterBottom>
-                A página que vocês está procurando não existe.
+                A página que você está procurando não existe.
             </Typography>
             <div
                 style={{
