@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 
 import UserRequestFullInfoDisplay from "./UserRequestFullInfoDisplay";
 import { MainStoreContext } from "../contexts/mainStoreContext";
-import { createUserStore } from "../utils/mocks/storeMocks";
+import { createUserStore, createUserRequestStore } from "../utils/mocks/storeMocks";
 import { formatDate } from "../utils/formatting";
 import { MemoryRouter } from "react-router";
 import UserRequestBuilder from "../models/builders/UserRequestBuilder";
@@ -102,27 +102,29 @@ describe("<UserRequestFullInfoDisplay />", () => {
         expect(await findByText(bio)).toBeInTheDocument();
     });
 
-    it.each(["Voltar", "Adotar"])("should render a '%s' button", async (expected) => {
-        const { findByRole } = getRenderer({
-            userRequest: UserRequestBuilder.aUserRequest().build(),
-        });
+    it.only.each(["Voltar", "Adotar"])("should render a '%s' button", async (expected) => {
+        const { findByRole } = getRenderer({});
 
         expect(await findByRole("button", { name: expected })).toBeInTheDocument();
     });
 });
 
-function getRenderer({ userRequest, get }) {
-    const getDefaultFn = () => Promise.resolve(getDefaultUser());
+function getRenderer({ get, getByUrl }) {
+    const getDefaultFnUser = () => Promise.resolve(getDefaultUser());
+    const getDefaultFnUserRequest = () => Promise.resolve(getDefaultUserRequest());
     return render(
         <MainStoreContext.Provider
             value={{
                 userStore: createUserStore({
-                    get: get || getDefaultFn,
+                    get: get || getDefaultFnUser,
+                }),
+                userRequestStore: createUserRequestStore({
+                    getByUrl: getByUrl || getDefaultFnUserRequest,
                 }),
             }}
         >
             <MemoryRouter>
-                <UserRequestFullInfoDisplay request={userRequest} />
+                <UserRequestFullInfoDisplay />
             </MemoryRouter>
         </MainStoreContext.Provider>
     );
@@ -133,4 +135,8 @@ function getDefaultUser() {
         id: "24537623767237-7623236253",
         fullname: "Orokin Mumu",
     };
+}
+
+function getDefaultUserRequest() {
+    return UserRequestBuilder.aUserRequest().withCustomUserId("24537623767237-7623236253").build();
 }

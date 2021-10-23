@@ -34,10 +34,9 @@ const Adopt = observer(() => {
                     alignItems: "center",
                 }}
             >
-                {userRequests &&
-                    userRequests.map((request) => {
-                        return <UserRequestDisplayForAdoption request={request} key={request.id} />;
-                    })}
+                {userRequests?.map((request) => {
+                    return <UserRequestDisplayForAdoption request={request} key={request.id} />;
+                })}
                 {userRequests.length === 0 && (
                     <Box
                         borderRadius={7}

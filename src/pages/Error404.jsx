@@ -32,19 +32,6 @@ const useStyles = makeStyles((theme) => ({
         borderColor: "#2CA089",
         padding: "10px",
     },
-    infoDisplay: {
-        margin: "10px",
-        backgroundColor: "#FFFFFF",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-evenly",
-    },
-    infoItem: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-    },
     gridContainer: {
         marginTop: "10px",
         display: "flex",

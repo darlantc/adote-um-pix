@@ -24,6 +24,11 @@ class UserRequestBuilder {
         return builder;
     }
 
+    withCustomUserId(id) {
+        this.model.user.id = id;
+        return this;
+    }
+
     withCustomDescription(description) {
         this.model.description = description;
         return this;

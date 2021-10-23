@@ -52,12 +52,13 @@ export function createUserStore({ get }) {
 
 export function createUserRequestStore({
     get = jest.fn(),
+    getByUrl = jest.fn(),
     add = jest.fn(),
     update = jest.fn(),
     remove = jest.fn(),
     sampleUserRequest,
 }) {
-    const userRequestStore = new UserRequestStore(get, add, update, remove);
+    const userRequestStore = new UserRequestStore(get, getByUrl, add, update, remove);
 
     if (sampleUserRequest) {
         userRequestStore.setUserRequests([sampleUserRequest]);
