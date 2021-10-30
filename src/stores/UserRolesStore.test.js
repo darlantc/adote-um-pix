@@ -3,10 +3,8 @@ import UserRolesStore from "./UserRolesStore";
 
 describe("UserRolesStore", () => {
     describe("hasAccessTo", () => {
-        it("should return false with invalid user", () => {
+        it.each([undefined, null])("should return false with user='%p'", (user) => {
             const sut = makeSut();
-            const user = null;
-
             expect(sut.hasAccessTo(APP_ROUTES.admin, user)).toBe(false);
         });
 
