@@ -4,8 +4,7 @@ import UserRolesStore from "./UserRolesStore";
 describe("UserRolesStore", () => {
     describe("hasAccessTo", () => {
         it.each([undefined, null])("should return false with user='%p'", (user) => {
-            const sut = makeSut();
-            expect(sut.hasAccessTo(APP_ROUTES.admin, user)).toBe(false);
+            expect(UserRolesStore.hasAccessTo(APP_ROUTES.admin, user)).toBe(false);
         });
 
         it.each([
@@ -13,10 +12,9 @@ describe("UserRolesStore", () => {
             ["admin", APP_ROUTES.approvals],
             ["editor", APP_ROUTES.approvals],
         ])("with role='%s' should allow to access route '%s'", (role, route) => {
-            const sut = makeSut();
             const user = { role };
 
-            expect(sut.hasAccessTo(route, user)).toBe(true);
+            expect(UserRolesStore.hasAccessTo(route, user)).toBe(true);
         });
 
         it.each([
@@ -24,10 +22,9 @@ describe("UserRolesStore", () => {
             ["default", APP_ROUTES.admin],
             ["default", APP_ROUTES.approvals],
         ])("with role='%s' should NOT allow to access route '%s'", (role, route) => {
-            const sut = makeSut();
             const user = { role };
 
-            expect(sut.hasAccessTo(route, user)).toBe(false);
+            expect(UserRolesStore.hasAccessTo(route, user)).toBe(false);
         });
     });
 });

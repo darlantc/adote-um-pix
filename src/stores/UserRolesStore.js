@@ -6,13 +6,13 @@ class UserRolesStore {
     approve;
     deny;
 
-    constructor(getRequests, approve, deny, loggedUser) {
+    constructor(getRequests, approve, deny) {
         this.getRequests = getRequests;
         this.approve = approve;
         this.deny = deny;
     }
 
-    hasAccessTo = (route, user) => {
+    static hasAccessTo = (route, user) => {
         if (user?.role === "admin") {
             return true;
         }
