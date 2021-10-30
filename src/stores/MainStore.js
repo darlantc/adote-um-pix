@@ -1,22 +1,74 @@
+import { reaction } from "mobx";
 import UserRequestStore from "./UserRequestStore";
+import UserRequestsDatabaseAdapter from "./UserRequestsDatabaseAdapter";
 import AuthStore from "./AuthStore";
-import FirebaseService from "../services/FirebaseService";
 import UserStore from "./UserStore";
+import InternalEventsStore, { InternalEvents } from "./InternalEventsStore";
 
 class MainStore {
-    constructor() {
-        const firebaseService = new FirebaseService();
-        this.authStore = new AuthStore(firebaseService);
-        this.userRequestStore = new UserRequestStore();
+    storesToBeClearedOnLogout = [];
+    userRequestsDatabase;
+    internalEventsStore;
+    firebaseService;
+
+    constructor(firebaseService) {
+        this.firebaseService = firebaseService;
+        this.internalEventsStore = new InternalEventsStore();
+        this.authStore = new AuthStore(this.internalEventsStore, firebaseService);
+
+        this.getUserRequestsDatabase(this.authStore, firebaseService);
+        const { getUserRequests, getUserRequestByUrl, addUserRequest, updateUserRequest, removeUserRequest } =
+            this.userRequestsDatabase;
+
+        this.userRequestStore = new UserRequestStore(
+            getUserRequests,
+            getUserRequestByUrl,
+            addUserRequest,
+            updateUserRequest,
+            removeUserRequest,
+            this.internalEventsStore
+        );
+        this.storesToBeClearedOnLogout.push(this.userRequestStore);
 
         this.userStore = new UserStore(this.getUser);
+
+        this.clearStores();
     }
+
+    getUserRequestsDatabase = (authStore, firebaseService) => {
+        this.userRequestsDatabase = new UserRequestsDatabaseAdapter(authStore, firebaseService);
+        this.internalEventsStore.subscribeTo({
+            event: InternalEvents.login,
+            observer: this.userRequestsDatabase,
+            callback: (isAuthenticated) => {
+                if (isAuthenticated) {
+                    this.userRequestsDatabase.syncLoggedUserRequests();
+                } else {
+                    this.userRequestsDatabase.clear();
+                }
+            },
+        });
+    };
+
+    clearStores = () => {
+        reaction(
+            () => this.authStore.loggedUser,
+            (isAuthenticated) => {
+                if (!isAuthenticated) {
+                    this.storesToBeClearedOnLogout.forEach((store) => store.clearStore());
+                }
+            }
+        );
+    };
 
     getUser = () => {
         // TODO: Criar a conexão desse callback com o banco de dados Firebase
         return {
-            id: "abc",
-            name: "Test",
+            photoUrl: null,
+            fullName: "Mateus",
+            linkedIn: "https://www.linkedin.com/in/mateuspereiras/",
+            bio: "Padeiro",
+            pixKey: "06029908588",
         };
     };
 }

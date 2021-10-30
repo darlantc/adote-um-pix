@@ -6,7 +6,12 @@ import Homepage from "./Homepage";
 import { APP_ROUTES } from "../routes/Routes";
 
 describe("<Homepage />", () => {
-    it.each(["Adote um PIX", "Como ajudar?"])("should have heading '%s'", (expected) => {
+    it.each([
+        "Adote um PIX",
+        "Aproximando grandes corações e boas oportunidades.",
+        "Como obter ajuda?",
+        "Como ajudar?",
+    ])("should have heading '%s'", (expected) => {
         const { getByRole } = getRenderer();
         expect(getByRole("heading", { name: expected })).toBeInTheDocument();
     });
@@ -22,6 +27,14 @@ describe("<Homepage />", () => {
     ])("button '%s' should have href ='%s'", (label, link) => {
         const { getByRole } = getRenderer();
         expect(getByRole("button", { name: label })).toHaveAttribute("href", link);
+    });
+
+    it.each([
+        "Está precisando daquele empurrãozinho para voltar ao mercado de trabalho? Compartilhe a sua necessidade conosco. Nós da Adote um PIX acolhemos e conectamos a sua história com alguém que pode te ajudar.",
+        "Está com disponibilidade financeira e o coração aberto para contribuir com aquele salve que pode mudar a trajetória de alguém? Faça parte do nosso time de padrinhos PIX. Com certeza tem alguém aqui acreditando em você.",
+    ])("should have a paragraph '%s'", (expected) => {
+        const { getByText } = getRenderer();
+        expect(getByText(expected)).toBeInTheDocument();
     });
 });
 

@@ -1,50 +1,121 @@
+import { action, computed, makeObservable, observable } from "mobx";
+
+import { InternalEvents } from "./InternalEventsStore";
+
 class UserRequestStore {
-  get;
-  add;
-  update;
-  remove;
-  userRequests = [];
+    get;
+    getByUrl;
+    add;
+    update;
+    remove;
+    userRequests = [];
+    isFetching = false;
+    searchString = "";
 
-  constructor(get, add, update, remove) {
-    this.get = get;
-    this.add = add;
-    this.update = update;
-    this.remove = remove;
-  }
+    constructor(get, getByUrl, add, update, remove, InternalEvents) {
+        this.get = get;
+        this.getByUrl = getByUrl;
 
-  getUserRequests = async () => {
-    const result = await this.get();
-    this.userRequests = result;
-  };
+        this.add = add;
+        this.update = update;
+        this.remove = remove;
+        this.internalEventsStore = InternalEvents;
 
-  addUserRequest = async (item) => {
-    await this.add(item);
-    await this.getUserRequests();
-  };
+        makeObservable(this, {
+            userRequests: observable,
+            isFetching: observable,
+            searchString: observable,
+            filteredUserRequests: computed,
+            setSearchString: action,
+            setUserRequests: action,
+            setIsFetching: action,
+        });
+    }
 
-  updateUserRequest = async (item, key) => {
-    await this.update(item, key);
-    await this.getUserRequests();
-  };
+    get filteredUserRequests() {
+        if (this.userRequests.length < 1) {
+            return [];
+        }
 
-  removeUserRequest = async (key) => {
-    await this.remove(key);
-    await this.getUserRequests();
-  };
+        return this.userRequests.filter((request) => {
+            const lowerDescription = request.description.toLowerCase();
+            const lowerString = this.searchString.toLowerCase();
+            return lowerDescription.indexOf(lowerString) >= 0;
+        });
+    }
 
-  filterUserRequest = (string) => {
-    const filteredValues = this.userRequests.filter((request) => {
-      const lowerRequest = request.toLowerCase();
-      const lowerString = string.toLowerCase();
-      return lowerRequest.indexOf(lowerString) >= 0;
-    });
+    setSearchString = (newValue) => {
+        this.searchString = newValue;
+    };
 
-    return filteredValues;
-  };
+    setUserRequests = (newValue) => {
+        this.userRequests = newValue;
+    };
 
-  clearStore = () => {
-    this.userRequests = [];
-  };
+    setIsFetching = (newValue) => {
+        this.isFetching = newValue;
+    };
+
+    getUserRequests = async () => {
+        this.setIsFetching(true);
+        const result = await this.get();
+        if (result) {
+            this.setUserRequests(result);
+        }
+        this.setIsFetching(false);
+    };
+
+    getSpecificUserRequest = async (url) => {
+        try {
+            const request = await this.getByUrl(url);
+            return request;
+        } catch (error) {
+            return null;
+        }
+    };
+
+    addUserRequest = async (item) => {
+        await this.add(item);
+        await this.getUserRequests();
+
+        this.internalEventsStore.notify({
+            event: InternalEvents.notification,
+            params: { type: "success", message: "Solicitação adicionada!" },
+        });
+    };
+
+    updateUserRequest = async (item) => {
+        if (this.itemExists(item.id)) {
+            await this.update(item);
+            await this.getUserRequests();
+
+            this.internalEventsStore.notify({
+                event: InternalEvents.notification,
+                params: { type: "success", message: "Solicitação atualizada!" },
+            });
+        }
+    };
+
+    removeUserRequest = async (id) => {
+        await this.remove(id);
+        await this.getUserRequests();
+
+        this.internalEventsStore.notify({
+            event: InternalEvents.notification,
+            params: { type: "success", message: "Solicitação excluída!" },
+        });
+    };
+
+    itemExists = (idToVerify) => {
+        if (this.userRequests) {
+            return this.userRequests.find(({ id }) => id === idToVerify);
+        }
+        return false;
+    };
+
+    clearStore = () => {
+        this.setUserRequests([]);
+    };
 }
 
 export default UserRequestStore;

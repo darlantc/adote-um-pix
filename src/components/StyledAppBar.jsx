@@ -1,4 +1,4 @@
-import { Typography, AppBar, Toolbar, Box, Button, ButtonBase, Modal } from "@material-ui/core";
+import { Typography, AppBar, Toolbar, Box, ButtonBase, Modal } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -18,6 +18,7 @@ const PixAppBar = styled(AppBar)({
 });
 
 const RegistrationButton = styled(ButtonBase)({
+    textDecoration: "none",
     border: "1px solid white",
     borderRadius: "3px",
     color: "#FFFFFF",
@@ -26,6 +27,7 @@ const RegistrationButton = styled(ButtonBase)({
     width: "100px",
     trasition: "0.5s",
     opacity: "0.8",
+    margin: "5px",
     "&:hover": {
         opacity: "1",
     },
@@ -68,9 +70,9 @@ const StyledAppBar = observer(() => {
 
                         {isAuthenticated && !isAnonymous ? (
                             <Box>
-                                <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.profile}>
+                                <Link to={APP_ROUTES.profile}>
                                     <RegistrationButton>Perfil</RegistrationButton>
-                                </Button>
+                                </Link>
                                 <RegistrationButton onClick={didLogOut}>Sair</RegistrationButton>
                             </Box>
                         ) : (

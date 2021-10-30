@@ -19,23 +19,24 @@ const useStyles = makeStyles(() => ({
 
 const ProfileInfo = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } =
-        authStore;
+    const { loggedUserProfile, handleUserDataUpdate, handlePhotoUpload } = authStore;
 
     const classes = useStyles();
 
-    const [currentImage, setCurrentImage] = useState(
-        (loggedUserProfile && loggedUserProfile.photoUrl) || DefaultUserPhoto
-    );
-    const [fullName, setFullName] = useState(
-        (loggedUserProfile && loggedUserProfile.fullName) || ""
-    );
-    const [bio, setBio] = useState(
-        (loggedUserProfile && loggedUserProfile.bio) || ""
-    );
-    const [linkedIn, setLinkedIn] = useState(
-        (loggedUserProfile && loggedUserProfile.linkedIn) || ""
-    );
+    const [currentImage, setCurrentImage] = useState(loggedUserProfile?.photoUrl || DefaultUserPhoto);
+    const [fullName, setFullName] = useState("");
+    const [bio, setBio] = useState("");
+    const [linkedIn, setLinkedIn] = useState("");
+
+    useEffect(() => {
+        if (loggedUserProfile) {
+            setFullName(loggedUserProfile?.fullName || "");
+            setBio(loggedUserProfile?.bio || "");
+            setLinkedIn(loggedUserProfile?.linkedIn || "");
+            setBio(loggedUserProfile?.bio || "");
+            setLinkedIn(loggedUserProfile?.linkedIn || "");
+        }
+    }, [loggedUserProfile]);
 
     useEffect(() => {
         const formattedLinkedIn = formatLinkedIn(linkedIn);
@@ -62,24 +63,14 @@ const ProfileInfo = observer(() => {
         event.preventDefault();
         if (loggedUserProfile) {
             handleUserDataUpdate(fullName, bio, linkedIn);
-
-            setFullName("");
-            setBio("");
-            setLinkedIn("");
         }
     };
 
     return (
-        <div>
+        <>
             <Box display="flex" justifyContent="center">
                 <label htmlFor="photo" style={{ cursor: "pointer" }}>
-                    <input
-                        id="photo"
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        onChange={handleFile}
-                    />
+                    <input id="photo" type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} />
                     <img
                         style={{
                             width: "200px",
@@ -151,7 +142,7 @@ const ProfileInfo = observer(() => {
                     </Button>
                 </Box>
             </form>
-        </div>
+        </>
     );
 });
 

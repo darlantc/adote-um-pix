@@ -4,13 +4,20 @@ import { observer } from "mobx-react";
 
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { emailValidation } from "../utils/validation";
+import { useEffect } from "react";
 
 const ModalEmailRequest = observer(() => {
     const { authStore } = useMainStoreContext();
-    const { confirmEmailSignIn, needEmailForSignIn } = authStore;
+    const { confirmEmailSignIn, needEmailForSignIn, errorMessage } = authStore;
 
     const [email, setEmail] = useState("");
     const [validationError, setValidationError] = useState("");
+
+    useEffect(() => {
+        if (errorMessage) {
+            setValidationError(errorMessage);
+        }
+    }, [errorMessage]);
 
     const didConfirmEmail = (event) => {
         event.preventDefault();
@@ -18,10 +25,7 @@ const ModalEmailRequest = observer(() => {
             confirmEmailSignIn(email);
             setEmail("");
         } else {
-            setValidationError("O email digitado parece não ser válido");
-            setTimeout(() => {
-                setValidationError("");
-            }, 5000);
+            setValidationError("O email digitado não é válido.");
         }
     };
 
@@ -39,16 +43,13 @@ const ModalEmailRequest = observer(() => {
                     <Typography variant="h6">Confirme o seu email:</Typography>
                     <TextField
                         value={email}
+                        type="email"
                         onChange={(event) => setEmail(event.target.value)}
                         fullWidth
                         required
                     />
                     <Box m={2} display="flex" justifyContent="center">
-                        <Button
-                            variant="outlined"
-                            size="medium"
-                            onClick={didConfirmEmail}
-                        >
+                        <Button variant="outlined" size="medium" onClick={didConfirmEmail}>
                             Confirmar
                         </Button>
                     </Box>

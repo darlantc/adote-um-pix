@@ -7,15 +7,26 @@ class UserRequestBuilder {
     model = new UserRequestModel({
         id: uuid(),
         createdAt: new Date().getTime(),
-        user: {
-            id: uuid(),
-        },
+        user: { id: uuid() },
+        description: "",
         pixKey: uuid(),
+        url: uuid(),
         status: UserRequestStatus.waitingForApproval,
     });
 
     static aUserRequest() {
         return new UserRequestBuilder();
+    }
+
+    static aExistingUserRequest(id) {
+        const builder = new UserRequestBuilder();
+        builder.model.id = id;
+        return builder;
+    }
+
+    withCustomUserId(id) {
+        this.model.user.id = id;
+        return this;
     }
 
     withCustomDescription(description) {
@@ -28,8 +39,13 @@ class UserRequestBuilder {
         return this;
     }
 
-    withCustomId(id) {
-        this.model.id = id;
+    withCustomCreatedAt(createdAt) {
+        this.model.createdAt = createdAt;
+        return this;
+    }
+
+    withCustomUrl(url) {
+        this.model.url = url;
         return this;
     }
 
@@ -37,10 +53,12 @@ class UserRequestBuilder {
         this.model.status = UserRequestStatus.canceled;
         return this;
     }
+
     withAvailableStatus() {
         this.model.status = UserRequestStatus.available;
         return this;
     }
+
     withPaidStatus() {
         this.model.status = UserRequestStatus.paid;
         return this;

@@ -4,13 +4,14 @@ import "./assets/styles/css/index.css";
 import App from "./App";
 import MainStore from "./stores/MainStore";
 import { MainStoreContext } from "./contexts/mainStoreContext";
-const store = new MainStore();
+import FirebaseService from "./services/FirebaseService";
+
+const firebaseService = new FirebaseService();
+const { authStore, userRequestStore, internalEventsStore, userStore } = new MainStore(firebaseService);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <MainStoreContext.Provider value={{ ...store }}>
-      <App />
-    </MainStoreContext.Provider>
-  </React.StrictMode>,
-  document.getElementById("root")
+    <MainStoreContext.Provider value={{ authStore, userRequestStore, internalEventsStore, userStore }}>
+        <App />
+    </MainStoreContext.Provider>,
+    document.getElementById("root")
 );
