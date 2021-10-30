@@ -6,6 +6,8 @@ import { useEffect } from "react";
 
 import { useMainStoreContext } from "./contexts/mainStoreContext";
 import { InternalEvents } from "./stores/InternalEventsStore";
+import { useState, useEffect } from "react";
+
 import PixBackground from "./assets/images/pix-background.png";
 import StyledAppBar from "./components/StyledAppBar";
 import Routes from "./routes/Routes";
@@ -29,11 +31,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const App = observer(() => {
-    const { authStore, internalEventsStore } = useMainStoreContext();
-    const { loginStatus } = authStore;
+    const classes = useStyles();
+
+    const { authStore, internalEventsStore, userStore } = useMainStoreContext();
+    const { loginStatus, uid } = authStore;
     const { subscribeTo, unsubscribe } = internalEventsStore;
 
-    const classes = useStyles();
+    const [userProfile, setUserProfile] = useState(null);
+    const [isRequesting, setIsRequesting] = useState(false);
+
+    useEffect(() => {
+        setIsRequesting(true);
+
+        async function getLoggedUserProfile() {
+            const user = await userStore.getUserProfile(uid);
+            if (user) {
+                setUserProfile(user);
+            }
+
+            setIsRequesting(false);
+        }
+
+        getLoggedUserProfile();
+    }, [setUserProfile, uid, userStore]);
 
     useEffect(() => {
         subscribeTo({
@@ -54,16 +74,30 @@ const App = observer(() => {
         };
     }, [subscribeTo, unsubscribe]);
 
-    if (loginStatus === LoginStatus.loading) {
-        return <LoadingAnimation />;
+    const isAdmin = userProfile?.role === "admin";
+
+    if (loginStatus === LoginStatus.loading || isRequesting) {
+        return (
+            <div
+                style={{
+                    width: "100%",
+                    height: "300px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <LoadingAnimation />
+            </div>
+        );
     }
 
     return (
         <BrowserRouter>
             <ThemeProvider theme={theme}>
-                <StyledAppBar />
+                <StyledAppBar isAdmin={isAdmin} />
                 <Container className={classes.container}>
-                    <Routes />
+                    <Routes isAdmin={isAdmin} />
                 </Container>
             </ThemeProvider>
         </BrowserRouter>

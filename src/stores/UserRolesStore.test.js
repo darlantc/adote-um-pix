@@ -14,9 +14,9 @@ describe("UserRolesStore", () => {
             ["admin", APP_ROUTES.admin],
             ["admin", APP_ROUTES.approvals],
             ["editor", APP_ROUTES.approvals],
-        ])("with level='%s' should allow to access route '%s'", (level, route) => {
+        ])("with role='%s' should allow to access route '%s'", (role, route) => {
             const sut = makeSut();
-            const user = { level };
+            const user = { role };
 
             expect(sut.hasAccessTo(route, user)).toBe(true);
         });
@@ -25,9 +25,9 @@ describe("UserRolesStore", () => {
             ["editor", APP_ROUTES.admin],
             ["default", APP_ROUTES.admin],
             ["default", APP_ROUTES.approvals],
-        ])("with level='%s' should NOT allow to access route '%s'", (level, route) => {
+        ])("with role='%s' should NOT allow to access route '%s'", (role, route) => {
             const sut = makeSut();
-            const user = { level };
+            const user = { role };
 
             expect(sut.hasAccessTo(route, user)).toBe(false);
         });

@@ -12,17 +12,15 @@ class UserRolesStore {
         this.deny = deny;
     }
 
-    /*
     hasAccessTo = (route, user) => {
-        if (user?.level === "admin") {
+        if (user?.role === "admin") {
             return true;
         }
-        if (user?.level === "editor") {
+        if (user?.role === "editor") {
             return [APP_ROUTES.approvals].includes(route);
         }
         return false;
     };
-    */
 
     getRequestsToEvaluate = async () => {
         const userRequests = await this.getRequests();

@@ -8,11 +8,13 @@ describe("UserRequestModel", () => {
         expect(() => makeSUT({ id: uuid() })).toThrow("Invalid data");
         expect(() => makeSUT({ id: uuid(), createdAt: 1619887317208 })).toThrow("Invalid data");
         expect(() => makeSUT({ id: uuid(), createdAt: 1619887317208, user: { id: "48914" } })).toThrow("Invalid data");
+        expect(() => makeSUT({ createdAt: 1619887317208 })).toThrow("Invalid data");
+        expect(() => makeSUT({ createdAt: 1619887317208, user: { id: uuid() } })).toThrow("Invalid data");
         expect(() =>
             makeSUT({
                 id: uuid(),
                 createdAt: 1619887317208,
-                user: { id: "48914" },
+                user: { id: uuid() },
                 pixKey: "f7de57ab-ee77-4493-aabc-f819f6b1d0b4",
             })
         ).toThrow("Invalid data");

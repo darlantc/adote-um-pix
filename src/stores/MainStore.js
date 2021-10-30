@@ -17,8 +17,14 @@ class MainStore {
         this.authStore = new AuthStore(this.internalEventsStore, firebaseService);
 
         this.getUserRequestsDatabase(this.authStore, firebaseService);
+
+        this.userRequestsDatabase = this.getUserRequestsDatabase(this.authStore, firebaseService);
+        this.storesToBeClearedOnLogout.push(this.userRequestsDatabase);
+
         const { getUserRequests, getUserRequestByUrl, addUserRequest, updateUserRequest, removeUserRequest } =
             this.userRequestsDatabase;
+
+        this.userStore = new UserStore(this.getUser);
 
         this.userRequestStore = new UserRequestStore(
             getUserRequests,
@@ -50,6 +56,21 @@ class MainStore {
         });
     };
 
+    getUser = async () => {
+        // TODO: Criar a conexão desse callback com o banco de dados Firebase
+
+        // Código temporário para simular uma resposta assíncrona após 3 segundos
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        return {
+            photoUrl: null,
+            fullName: "Mateus",
+            linkedIn: "https://www.linkedin.com/in/mateuspereiras/",
+            bio: "Padeiro",
+            pixKey: "06029908588",
+            role: "default",
+        };
+    };
+
     clearStores = () => {
         reaction(
             () => this.authStore.loggedUser,
@@ -59,17 +80,6 @@ class MainStore {
                 }
             }
         );
-    };
-
-    getUser = () => {
-        // TODO: Criar a conexão desse callback com o banco de dados Firebase
-        return {
-            photoUrl: null,
-            fullName: "Mateus",
-            linkedIn: "https://www.linkedin.com/in/mateuspereiras/",
-            bio: "Padeiro",
-            pixKey: "06029908588",
-        };
     };
 }
 

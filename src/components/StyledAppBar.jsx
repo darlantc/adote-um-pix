@@ -1,4 +1,4 @@
-import { Typography, AppBar, Toolbar, Box, ButtonBase, Modal } from "@material-ui/core";
+import { Typography, AppBar, Toolbar, Box, Button, ButtonBase, Modal } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -33,7 +33,7 @@ const RegistrationButton = styled(ButtonBase)({
     },
 });
 
-const StyledAppBar = observer(() => {
+const StyledAppBar = observer(({ isAdmin }) => {
     const { authStore } = useMainStoreContext();
     const { isAuthenticated, isAnonymous, logout } = authStore;
 
@@ -58,15 +58,17 @@ const StyledAppBar = observer(() => {
             <PixAppBar position="relative">
                 <Toolbar>
                     <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
-                        <ButtonBase style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.home}>
+                        <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.home}>
                             <Box display="flex" alignItems="center">
                                 <Logo />
                                 <Typography variant="h4">Adote um PIX</Typography>
                             </Box>
-                        </ButtonBase>
-                        <ButtonBase style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.approvals}>
-                            <RegistrationButton>Aprovações</RegistrationButton>
-                        </ButtonBase>
+                        </Button>
+                        {isAdmin && (
+                            <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.approvals}>
+                                <RegistrationButton>Aprovações</RegistrationButton>
+                            </Button>
+                        )}
 
                         {isAuthenticated && !isAnonymous ? (
                             <Box>

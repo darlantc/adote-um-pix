@@ -46,6 +46,10 @@ class UserRequestBuilder {
 
     withCustomUrl(url) {
         this.model.url = url;
+    }
+
+    withCustomId(id) {
+        this.model.id = id;
         return this;
     }
 
@@ -61,6 +65,11 @@ class UserRequestBuilder {
 
     withPaidStatus() {
         this.model.status = UserRequestStatus.paid;
+        return this;
+    }
+
+    withCustomUser(user) {
+        this.model.user = user;
         return this;
     }
 

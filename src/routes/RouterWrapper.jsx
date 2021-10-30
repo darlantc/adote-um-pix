@@ -4,11 +4,15 @@ import { observer } from "mobx-react";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import { APP_ROUTES } from "../routes/Routes";
 
-const RouterWrapper = observer(({ component: Component, isPrivate, ...rest }) => {
+const RouterWrapper = observer(({ component: Component, isPrivate, isAdminRoute, isAdmin, ...rest }) => {
     const { authStore } = useMainStoreContext();
     const { isAuthenticated, isAnonymous } = authStore;
 
     if (isPrivate && (!isAuthenticated || isAnonymous)) {
+        return <Redirect to={APP_ROUTES.home} />;
+    }
+
+    if (isAdminRoute && !isAdmin) {
         return <Redirect to={APP_ROUTES.home} />;
     }
 

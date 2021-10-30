@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import Loader from "react-content-loader";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -7,7 +8,9 @@ import IconButton from "@material-ui/core/IconButton";
 import { Typography, Grid, Avatar } from "@material-ui/core";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
-import { useState } from "react";
+import { useMainStoreContext } from "../contexts/mainStoreContext";
+import { useEffect, useState } from "react";
+import { Fragment } from "react";
 
 const useStyles = makeStyles({
     root: {
@@ -28,9 +31,28 @@ const useStyles = makeStyles({
 
 export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
     const classes = useStyles();
-    const [index, setIndex] = useState(0);
+    const { userStore } = useMainStoreContext();
 
-    // TODO: Descobrir como receber aqui o UserStore
+    const [index, setIndex] = useState(0);
+    const [userProfile, setUserProfile] = useState(null);
+    const [isRequestingUserProfile, setIsRequestingUserProfile] = useState(false);
+
+    useEffect(() => {
+        setIsRequestingUserProfile(true);
+
+        async function getUpdatedUserProfile(id) {
+            const user = await userStore.getUserProfile(id);
+            if (user) {
+                setUserProfile(user);
+            }
+            setIsRequestingUserProfile(false);
+        }
+
+        const request = requestsList && requestsList[index];
+        if (request?.user) {
+            getUpdatedUserProfile(request.user.id);
+        }
+    }, [index, requestsList, userStore]);
 
     if (!requestsList) {
         return null;
@@ -45,36 +67,36 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
             </Grid>
         );
     }
-
     const request = requestsList[index];
 
-    // TODO: Nós temos o id do usuário em request.user.id
-    // Em posse desse id eu preciso descobrir os dados do usuário
-    // name, bio, email / phone
+    if (isRequestingUserProfile) {
+        return (
+            <Grid container>
+                {renderPageIndex()}
+                {renderCard({ content: <Loader /> })}
+            </Grid>
+        );
+    }
 
     return (
         <Grid container>
-            <Grid container item xs={12} justify="flex-end">
-                <Typography>
-                    {index + 1} de {requestsList.length}
-                </Typography>
-            </Grid>
-            <Grid item xs={12}>
-                <Card className={classes.root} aria-label="card">
-                    <CardContent>
+            {renderPageIndex()}
+            {renderCard({
+                content: (
+                    <Fragment>
                         <Grid container item xs={12}>
                             <Grid container item xs={1}>
                                 <Avatar className={classes.orange}>N</Avatar>
                             </Grid>
 
-                            {request.user.name && (
+                            {userProfile?.name && (
                                 <Typography variant="h5" component="h2" gutterBottom>
-                                    {request.user.name}
+                                    {userProfile.name}
                                 </Typography>
                             )}
                         </Grid>
-                        {(request.user.email || request.user.phone) && (
-                            <Typography variant="h6">{request.user.email || request.user.phone}</Typography>
+                        {(userProfile?.email || userProfile?.phone) && (
+                            <Typography variant="h6">{userProfile.email || userProfile.phone}</Typography>
                         )}
                         <Typography variant="h6">Bio:</Typography>
                         <Typography>
@@ -85,17 +107,19 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
                         <Typography variant="h6">Descrição:</Typography>
                         <Typography>{request.description}</Typography>
                         <Typography>Chave Pix:</Typography>
-                    </CardContent>
-                    <CardActions>
+                    </Fragment>
+                ),
+                action: (
+                    <Fragment>
                         <Button variant="contained" color="primary" size="small" onClick={onApprove}>
                             Aprovar
                         </Button>
                         <Button variant="contained" color="secondary" size="small" onClick={onReject}>
                             Recusar
                         </Button>
-                    </CardActions>
-                </Card>
-            </Grid>
+                    </Fragment>
+                ),
+            })}
             <Grid container item xs={12}>
                 <Grid container item xs={6} justify="flex-start">
                     {index > 0 && (
@@ -114,6 +138,28 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
             </Grid>
         </Grid>
     );
+
+    function renderPageIndex() {
+        return (
+            <Grid container item xs={12} justify="flex-end">
+                <Typography>
+                    {index + 1} de {requestsList.length}
+                </Typography>
+            </Grid>
+        );
+    }
+
+    // TODO: Transformar essa função em um componente e escrever os testes pra ele
+    function renderCard({ content, action }) {
+        return (
+            <Grid item xs={12}>
+                <Card className={classes.root} aria-label="card">
+                    <CardContent>{content}</CardContent>
+                    {action && <CardActions>{action}</CardActions>}
+                </Card>
+            </Grid>
+        );
+    }
 
     function nextRequest() {
         setIndex(index + 1);
