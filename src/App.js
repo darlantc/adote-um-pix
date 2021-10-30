@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const App = observer((admin) => {
+const App = observer(() => {
     const { authStore, userStore } = useMainStoreContext();
     const { loginStatus, uid } = authStore;
 
@@ -49,7 +49,7 @@ const App = observer((admin) => {
         getLoggedUserProfile();
     }, [setUserProfile, uid, userStore]);
 
-    const isAdmin = userProfile?.admin || false;
+    const isAdmin = userProfile?.role === "admin";
 
     const classes = useStyles();
 
