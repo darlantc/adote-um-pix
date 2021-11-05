@@ -100,7 +100,7 @@ describe("<ApprovalsPage />", () => {
         });
     });
 
-    xit("should allow user navigate to next and back to previous request based on index", async () => {
+    it("should allow user navigate to next and back to previous request based on index", async () => {
         const { getByText, findByRole, getByLabelText, queryByLabelText } = getRenderer({
             requestsList: [createRequest(), createRequest(), createRequest(), createRequest()],
         });

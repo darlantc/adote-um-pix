@@ -58,12 +58,13 @@ const StyledAppBar = observer(({ isAdmin }) => {
             <PixAppBar position="relative">
                 <Toolbar>
                     <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
-                        <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.home}>
-                            <Box display="flex" alignItems="center">
-                                <Logo />
-                                <Typography variant="h4">Adote um PIX</Typography>
-                            </Box>
-                        </Button>
+                        <Link
+                            to={APP_ROUTES.home}
+                            style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
+                        >
+                            <Logo />
+                            <Typography variant="h4">Adote um PIX</Typography>
+                        </Link>
                         {isAdmin && (
                             <Button style={{ textDecoration: "none" }} component={Link} to={APP_ROUTES.approvals}>
                                 <RegistrationButton>Aprovações</RegistrationButton>

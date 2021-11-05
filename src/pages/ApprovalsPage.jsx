@@ -1,64 +1,56 @@
-import { makeStyles } from "@material-ui/core/styles";
-import Loader from "react-content-loader";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import { Typography, Grid, Avatar } from "@material-ui/core";
-import ChevronLeft from "@material-ui/icons/ChevronLeft";
-import ChevronRight from "@material-ui/icons/ChevronRight";
+import { IconButton, Typography, Grid, Button } from "@material-ui/core";
+import { ChevronLeft, ChevronRight } from "@material-ui/icons/ChevronLeft";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
+import useUserProfile from "../hooks/useUserProfile";
 import { useEffect, useState } from "react";
-import { Fragment } from "react";
 
-const useStyles = makeStyles({
-    root: {
-        minWidth: 275,
-    },
-    bullet: {
-        display: "inline-block",
-        margin: "0 2px",
-        transform: "scale(0.8)",
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
+import LoadingAnimation from "../components/LoadingAnimation";
+import UserRequestDisplayForApproval from "../components/UserRequestDisplayForApproval";
 
-export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
-    const classes = useStyles();
-    const { userStore } = useMainStoreContext();
+export default function ApprovalsPage() {
+    const { userRolesStore } = useMainStoreContext();
+    const { getRequestsToEvaluate, requestsToEvaluate, approveRequest, denyRequest } = userRolesStore;
 
-    const [index, setIndex] = useState(0);
-    const [userProfile, setUserProfile] = useState(null);
-    const [isRequestingUserProfile, setIsRequestingUserProfile] = useState(false);
+    const [requestIndex, setRequestIndex] = useState(0);
+    const [request, setRequest] = useState(null);
+    console.log("🚀 ~ file: ApprovalsPage.jsx ~ line 16 ~ ApprovalsPage ~ request", request);
+
+    const { isLoading: isLoadingUserProfile, userProfile } = useUserProfile(request?.user?.id);
+    console.log("🚀 ~ file: ApprovalsPage.jsx ~ line 18 ~ ApprovalsPage ~ userProfile", userProfile);
 
     useEffect(() => {
-        setIsRequestingUserProfile(true);
-
-        async function getUpdatedUserProfile(id) {
-            const user = await userStore.getUserProfile(id);
-            if (user) {
-                setUserProfile(user);
-            }
-            setIsRequestingUserProfile(false);
+        async function updateRequests() {
+            await getRequestsToEvaluate();
+            console.log("🚀 ~ file: ApprovalsPage.jsx ~ line 24 ~ updateRequests ~ getRequestsToEvaluate");
         }
 
-        const request = requestsList && requestsList[index];
-        if (request?.user) {
-            getUpdatedUserProfile(request.user.id);
+        updateRequests();
+        if (requestsToEvaluate) {
+            setRequest(requestsToEvaluate[requestIndex]);
         }
-    }, [index, requestsList, userStore]);
+    }, [getRequestsToEvaluate, requestsToEvaluate, requestIndex]);
 
-    if (!requestsList) {
+    if (!requestsToEvaluate) {
         return null;
     }
 
-    if (requestsList.length < 1) {
+    function displayNextRequest() {
+        if (requestIndex + 1 <= requestsToEvaluate.length - 1) {
+            setRequestIndex(requestIndex + 1);
+        } else {
+            setRequestIndex(0);
+        }
+    }
+
+    function displayPreviousRequest() {
+        if (requestIndex - 1 >= 0) {
+            setRequestIndex(requestIndex - 1);
+        } else {
+            setRequestIndex(requestsToEvaluate.length - 1);
+        }
+    }
+
+    if (requestsToEvaluate.length < 1) {
         return (
             <Grid container justify="center">
                 <Grid item xs={12}>
@@ -67,104 +59,55 @@ export default function ApprovalsPage({ requestsList, onReject, onApprove }) {
             </Grid>
         );
     }
-    const request = requestsList[index];
 
-    if (isRequestingUserProfile) {
-        return (
-            <Grid container>
-                {renderPageIndex()}
-                {renderCard({ content: <Loader /> })}
-            </Grid>
-        );
+    if (isLoadingUserProfile) {
+        return <LoadingAnimation />;
     }
 
     return (
         <Grid container>
-            {renderPageIndex()}
-            {renderCard({
-                content: (
-                    <Fragment>
-                        <Grid container item xs={12}>
-                            <Grid container item xs={1}>
-                                <Avatar className={classes.orange}>N</Avatar>
-                            </Grid>
-
-                            {userProfile?.name && (
-                                <Typography variant="h5" component="h2" gutterBottom>
-                                    {userProfile.name}
-                                </Typography>
-                            )}
-                        </Grid>
-                        {(userProfile?.email || userProfile?.phone) && (
-                            <Typography variant="h6">{userProfile.email || userProfile.phone}</Typography>
-                        )}
-                        <Typography variant="h6">Bio:</Typography>
-                        <Typography>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos dolor voluptatum
-                            recusandae suscipit facere sequi tempore, nobis quae commodi vel magni natus, magnam sit
-                            dolorum, illum quibusdam aliquid. Eum, harum?
-                        </Typography>
-                        <Typography variant="h6">Descrição:</Typography>
-                        <Typography>{request.description}</Typography>
-                        <Typography>Chave Pix:</Typography>
-                    </Fragment>
-                ),
-                action: (
-                    <Fragment>
-                        <Button variant="contained" color="primary" size="small" onClick={onApprove}>
+            <Grid container item xs={12} justify="flex-end">
+                <Typography variant="h5">
+                    {requestIndex + 1} de {requestsToEvaluate.length}
+                </Typography>
+            </Grid>
+            <Grid container item xs={12} justify="flex-end">
+                <UserRequestDisplayForApproval userProfile={userProfile} request={request} />
+                <Grid container item xs={12} justify="flex">
+                    <Grid item xs={6} justify="flex">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            onClick={() => approveRequest(request)}
+                        >
                             Aprovar
                         </Button>
-                        <Button variant="contained" color="secondary" size="small" onClick={onReject}>
-                            Recusar
+                    </Grid>
+                    <Grid item xs={6} justify="flex">
+                        <Button variant="contained" color="secondary" size="small" onClick={() => denyRequest(request)}>
+                            Cancelar
                         </Button>
-                    </Fragment>
-                ),
-            })}
+                    </Grid>
+                </Grid>
+            </Grid>
             <Grid container item xs={12}>
                 <Grid container item xs={6} justify="flex-start">
-                    {index > 0 && (
-                        <IconButton variant="contained" color="primary" onClick={backRequest} aria-label="Voltar">
-                            <ChevronLeft />
-                        </IconButton>
-                    )}
+                    <IconButton
+                        variant="contained"
+                        color="primary"
+                        onClick={displayPreviousRequest}
+                        aria-label="Voltar"
+                    >
+                        <ChevronLeft />
+                    </IconButton>
                 </Grid>
                 <Grid container item xs={6} justify="flex-end">
-                    {requestsList.length > index + 1 && (
-                        <IconButton variant="contained" color="primary" onClick={nextRequest} aria-label="Avançar">
-                            <ChevronRight />
-                        </IconButton>
-                    )}
+                    <IconButton variant="contained" color="primary" onClick={displayNextRequest} aria-label="Avançar">
+                        <ChevronRight />
+                    </IconButton>
                 </Grid>
             </Grid>
         </Grid>
     );
-
-    function renderPageIndex() {
-        return (
-            <Grid container item xs={12} justify="flex-end">
-                <Typography>
-                    {index + 1} de {requestsList.length}
-                </Typography>
-            </Grid>
-        );
-    }
-
-    // TODO: Transformar essa função em um componente e escrever os testes pra ele
-    function renderCard({ content, action }) {
-        return (
-            <Grid item xs={12}>
-                <Card className={classes.root} aria-label="card">
-                    <CardContent>{content}</CardContent>
-                    {action && <CardActions>{action}</CardActions>}
-                </Card>
-            </Grid>
-        );
-    }
-
-    function nextRequest() {
-        setIndex(index + 1);
-    }
-    function backRequest() {
-        setIndex(index - 1);
-    }
 }

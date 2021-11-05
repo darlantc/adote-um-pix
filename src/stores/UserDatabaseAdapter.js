@@ -1,6 +1,4 @@
 class UserDatabaseAdapter {
-    get;
-
     constructor(authStore, firebaseService) {
         this.authStore = authStore;
         this.firebaseService = firebaseService;
@@ -10,8 +8,8 @@ class UserDatabaseAdapter {
         try {
             this.specificUserRef = this.firebaseService.usersRef.child(id);
 
-            const user = await this.specificUserRef.once("value");
-            return user;
+            const snapshot = await this.specificUserRef.once("value");
+            return snapshot.val();
         } catch (error) {
             console.error("UserDatabaseAdapter -> getUser", error);
         }
