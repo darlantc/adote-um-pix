@@ -1,8 +1,10 @@
 import { reaction } from "mobx";
 import UserRequestStore from "./UserRequestStore";
 import UserRequestsDatabaseAdapter from "./UserRequestsDatabaseAdapter";
+import UserRolesDatabaseAdapter from "./UserRolesDatabaseAdapter";
 import AuthStore from "./AuthStore";
 import UserStore from "./UserStore";
+import UserRolesStore from "./UserRolesStore";
 import InternalEventsStore, { InternalEvents } from "./InternalEventsStore";
 
 class MainStore {
@@ -24,8 +26,6 @@ class MainStore {
         const { getUserRequests, getUserRequestByUrl, addUserRequest, updateUserRequest, removeUserRequest } =
             this.userRequestsDatabase;
 
-        this.userStore = new UserStore(this.getUser);
-
         this.userRequestStore = new UserRequestStore(
             getUserRequests,
             getUserRequestByUrl,
@@ -35,6 +35,14 @@ class MainStore {
             this.internalEventsStore
         );
         this.storesToBeClearedOnLogout.push(this.userRequestStore);
+
+        this.userRolesDatabase = new UserRolesDatabaseAdapter(this.authStore, firebaseService);
+        this.storesToBeClearedOnLogout.push(this.userRolesDatabase);
+
+        const { getUserRolesRequests, approveRequest, denyRequest } = this.userRolesDatabase;
+
+        this.userRolesStore = new UserRolesStore(getUserRolesRequests, approveRequest, denyRequest);
+        this.storesToBeClearedOnLogout.push(this.userRolesStore);
 
         this.userStore = new UserStore(this.getUser);
 
