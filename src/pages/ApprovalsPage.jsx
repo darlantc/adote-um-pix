@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 
 import LoadingAnimation from "../components/LoadingAnimation";
 import UserRequestDisplayForApproval from "../components/UserRequestDisplayForApproval";
+import { observer } from "mobx-react";
 
-export default function ApprovalsPage() {
+const ApprovalsPage = observer(() => {
     const { userRolesStore } = useMainStoreContext();
     const { getRequestsToEvaluate, requestsToEvaluate, approveRequest, denyRequest } = userRolesStore;
 
@@ -21,11 +22,11 @@ export default function ApprovalsPage() {
     useEffect(() => {
         async function updateRequests() {
             await getRequestsToEvaluate();
-            console.log("🚀 ~ file: ApprovalsPage.jsx ~ line 24 ~ updateRequests ~ getRequestsToEvaluate");
         }
 
         updateRequests();
-        if (requestsToEvaluate) {
+        if (requestsToEvaluate.length > 0) {
+            console.log("🚀 ~ file: atualizou", requestsToEvaluate);
             setRequest(requestsToEvaluate[requestIndex]);
         }
     }, [getRequestsToEvaluate, requestsToEvaluate, requestIndex]);
@@ -110,4 +111,6 @@ export default function ApprovalsPage() {
             </Grid>
         </Grid>
     );
-}
+});
+
+export default ApprovalsPage;
