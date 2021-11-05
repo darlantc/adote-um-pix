@@ -42,6 +42,11 @@ class UserRolesStoreAdapter {
         status = UserRequestStatus.canceled;
         return this.firebaseService.userRequestsRef.child(id).update(status, rest);
     };
+
+    upgradeUserRole = ({ id, role, ...rest }) => {
+        role = "admin";
+        return this.firebaseService.usersRef.child(id).update(role, rest);
+    };
 }
 
 export default UserRolesStoreAdapter;

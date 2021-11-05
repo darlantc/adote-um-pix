@@ -39,9 +39,9 @@ class MainStore {
         this.userRolesDatabase = new UserRolesDatabaseAdapter(this.authStore, firebaseService);
         this.storesToBeClearedOnLogout.push(this.userRolesDatabase);
 
-        const { getUserRolesRequests, approveRequest, denyRequest } = this.userRolesDatabase;
+        const { getUserRolesRequests, approveRequest, denyRequest, upgradeUserRole } = this.userRolesDatabase;
 
-        this.userRolesStore = new UserRolesStore(getUserRolesRequests, approveRequest, denyRequest);
+        this.userRolesStore = new UserRolesStore(getUserRolesRequests, approveRequest, denyRequest, upgradeUserRole);
         this.storesToBeClearedOnLogout.push(this.userRolesStore);
 
         this.userDatabase = new UserDatabaseAdapter(this.authStore, firebaseService);
@@ -66,21 +66,6 @@ class MainStore {
                 }
             },
         });
-    };
-
-    getUser = async () => {
-        // TODO: Criar a conexão desse callback com o banco de dados Firebase
-
-        // Código temporário para simular uma resposta assíncrona após 3 segundos
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-        return {
-            photoUrl: null,
-            fullName: "Mateus",
-            linkedIn: "https://www.linkedin.com/in/mateuspereiras/",
-            bio: "Padeiro",
-            pixKey: "06029908588",
-            role: "default",
-        };
     };
 
     clearStores = () => {

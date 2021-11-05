@@ -5,11 +5,13 @@ class UserRolesStore {
     getRequests;
     approve;
     deny;
+    upgrade;
 
-    constructor(getRequests, approve, deny) {
+    constructor(getRequests, approve, deny, upgrade) {
         this.getRequests = getRequests;
         this.approve = approve;
         this.deny = deny;
+        this.upgrade = upgrade;
     }
 
     static hasAccessTo = (route, user) => {
@@ -37,7 +39,9 @@ class UserRolesStore {
         await this.getRequests();
     };
 
-    // TODO: Salvar / alterar nível de acesso de um usuário
+    upgradeUserRole = async () => {
+        await this.upgrade();
+    };
 }
 
 export default UserRolesStore;
