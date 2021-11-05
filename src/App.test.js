@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { MainStoreContext } from "./contexts/mainStoreContext";
 import { InternalEvents } from "./stores/InternalEventsStore";
-import { createAuthStore, createInternalEventsStore } from "./utils/mocks/storeMocks";
+import { createAuthStore, createInternalEventsStore, createUserStore } from "./utils/mocks/storeMocks";
 
 import App from "./App";
 
@@ -41,6 +41,7 @@ function getRenderer({ user }) {
             <MainStoreContext.Provider
                 value={{
                     authStore: createAuthStore({ user, internalEventsStore }),
+                    userStore: createUserStore(),
                     internalEventsStore: internalEventsStore,
                 }}
             >

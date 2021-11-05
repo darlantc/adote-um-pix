@@ -46,6 +46,7 @@ class UserRequestBuilder {
 
     withCustomUrl(url) {
         this.model.url = url;
+        return this;
     }
 
     withCustomId(id) {

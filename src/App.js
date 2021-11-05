@@ -2,12 +2,10 @@ import { BrowserRouter } from "react-router-dom";
 import { Container } from "@material-ui/core";
 import { ThemeProvider, makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useMainStoreContext } from "./contexts/mainStoreContext";
 import { InternalEvents } from "./stores/InternalEventsStore";
-import { useState, useEffect } from "react";
-
 import PixBackground from "./assets/images/pix-background.png";
 import StyledAppBar from "./components/StyledAppBar";
 import Routes from "./routes/Routes";

@@ -44,7 +44,7 @@ export function createInternalEventsStore() {
     return internalEventsStore;
 }
 
-export function createUserStore({ get }) {
+export function createUserStore({ get } = {}) {
     const userStore = new UserStore(get);
 
     return userStore;
