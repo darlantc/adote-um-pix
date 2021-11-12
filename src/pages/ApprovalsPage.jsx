@@ -69,7 +69,7 @@ const ApprovalsPage = observer(() => {
                     {requestIndex + 1} de {requestsToEvaluate.length}
                 </Typography>
             </Grid>
-            <Grid container item xs={12} justify="space-e">
+            <Grid container item xs={12} justify="space-evenly">
                 <UserRequestDisplayForApproval userProfile={userProfile} request={request} />
                 <Box display="flex">
                     <Box m={1}>

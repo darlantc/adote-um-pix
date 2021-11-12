@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { CardContent, Card, Typography, Grid, Avatar } from "@material-ui/core";
+import { CardContent, Card, Typography, Grid, Avatar, Box } from "@material-ui/core";
 
 const useStyles = makeStyles({
     root: {
@@ -29,17 +29,16 @@ const UserRequestDisplayForApproval = ({ userProfile, request }) => {
         <Grid item xs={12}>
             <Card className={classes.root} aria-label="card">
                 <CardContent>
-                    <Grid container item xs={12}>
-                        <Grid container item xs={1}>
-                            <Avatar className={classes.orange}>N</Avatar>
-                        </Grid>
-
-                        {userProfile && (
-                            <Typography variant="h5" component="h2" gutterBottom>
-                                {userProfile.name}
-                            </Typography>
-                        )}
-                    </Grid>
+                    <Box display="flex" alignItems="center">
+                            <Box m={1}>
+                                <Avatar src={userProfile.photoUrl} className={classes.orange}>{userProfile.fullName[0].toUpperCase()}</Avatar>
+                            </Box>
+                            <Box m={1} display="flex" alignItems="center">
+                                <Typography variant="h5" component="h2" gutterBottom>
+                                    {userProfile.fullName}
+                                </Typography>
+                            </Box>
+                    </Box>
                     {userProfile && <Typography variant="h6">{userProfile.email || userProfile.phone}</Typography>}
                     <Typography variant="h6">Bio:</Typography>
                     <Typography variant="body1">{userProfile.bio}</Typography>
