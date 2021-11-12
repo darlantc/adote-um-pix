@@ -40,18 +40,18 @@ class UserRolesStore {
         this.setrRquestsToEvaluate(userRequests);
     };
 
-    approveRequest = async () => {
-        await this.approve();
+    approveRequest = async (request) => {
+        await this.approve(request);
         await this.getRequests();
     };
 
-    denyRequest = async () => {
-        await this.deny();
+    denyRequest = async (request) => {
+        await this.deny(request);
         await this.getRequests();
     };
 
-    upgradeUserRole = async () => {
-        await this.upgrade();
+    upgradeUserRole = async (user) => {
+        await this.upgrade(user);
     };
 }
 

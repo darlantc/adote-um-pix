@@ -1,5 +1,5 @@
-import { IconButton, Typography, Grid, Button } from "@material-ui/core";
-import { ChevronLeft, ChevronRight } from "@material-ui/icons/ChevronLeft";
+import { IconButton, Typography, Grid, Button, Box } from "@material-ui/core";
+import { ChevronLeft, ChevronRight } from "@material-ui/icons";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import useUserProfile from "../hooks/useUserProfile";
 import { useEffect, useState } from "react";
@@ -14,10 +14,8 @@ const ApprovalsPage = observer(() => {
 
     const [requestIndex, setRequestIndex] = useState(0);
     const [request, setRequest] = useState(null);
-    console.log("🚀 ~ file: ApprovalsPage.jsx ~ line 16 ~ ApprovalsPage ~ request", request);
 
     const { isLoading: isLoadingUserProfile, userProfile } = useUserProfile(request?.user?.id);
-    console.log("🚀 ~ file: ApprovalsPage.jsx ~ line 18 ~ ApprovalsPage ~ userProfile", userProfile);
 
     useEffect(() => {
         async function updateRequests() {
@@ -26,7 +24,6 @@ const ApprovalsPage = observer(() => {
 
         updateRequests();
         if (requestsToEvaluate.length > 0) {
-            console.log("🚀 ~ file: atualizou", requestsToEvaluate);
             setRequest(requestsToEvaluate[requestIndex]);
         }
     }, [getRequestsToEvaluate, requestsToEvaluate, requestIndex]);
@@ -72,10 +69,10 @@ const ApprovalsPage = observer(() => {
                     {requestIndex + 1} de {requestsToEvaluate.length}
                 </Typography>
             </Grid>
-            <Grid container item xs={12} justify="flex-end">
+            <Grid container item xs={12} justify="space-e">
                 <UserRequestDisplayForApproval userProfile={userProfile} request={request} />
-                <Grid container item xs={12} justify="flex">
-                    <Grid item xs={6} justify="flex">
+                <Box display="flex">
+                    <Box m={1}>
                         <Button
                             variant="contained"
                             color="primary"
@@ -84,13 +81,13 @@ const ApprovalsPage = observer(() => {
                         >
                             Aprovar
                         </Button>
-                    </Grid>
-                    <Grid item xs={6} justify="flex">
+                    </Box>
+                    <Box m={1}>
                         <Button variant="contained" color="secondary" size="small" onClick={() => denyRequest(request)}>
                             Cancelar
                         </Button>
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
             </Grid>
             <Grid container item xs={12}>
                 <Grid container item xs={6} justify="flex-start">
