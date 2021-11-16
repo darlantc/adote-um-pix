@@ -3,6 +3,7 @@ import AuthStore from "../../stores/AuthStore";
 import InternalEventsStore from "../../stores/InternalEventsStore";
 import UserRequestStore from "../../stores/UserRequestStore";
 import UserStore from "../../stores/UserStore";
+import UserRolesStore from "../../stores/UserRolesStore";
 
 jest.mock("../../services/FirebaseService");
 
@@ -48,6 +49,12 @@ export function createUserStore({ get } = {}) {
     const userStore = new UserStore(get);
 
     return userStore;
+}
+
+export function createUserRolesStore({ getRequests = jest.fn(), approve = jest.fn(), deny = jest.fn(), upgrade = jest.fn() } = {}) {
+    const userRolesStore = new UserRolesStore(getRequests, approve, deny, upgrade);
+
+    return userRolesStore;
 }
 
 export function createUserRequestStore({

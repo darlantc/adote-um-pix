@@ -1,39 +1,40 @@
 import { v4 as uuid } from "uuid";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { render, act } from "@testing-library/react";
-import ApprovalsPage from "./ApprovalsPage";
 import { theme } from "../assets/jss/styles.js";
+
+import ApprovalsPage from "./ApprovalsPage";
+import { createUserRolesStore, createUserStore } from "../utils/mocks/storeMocks";
 import UserRequestBuilder from "../models/builders/UserRequestBuilder";
-import { createUserStore } from "../utils/mocks/storeMocks";
 import { MainStoreContext } from "../contexts/mainStoreContext";
 
 describe("<ApprovalsPage />", () => {
     it("should not present if requestsList is undefined", () => {
-        const { queryByLabelText } = getRenderer({});
+        const { queryByLabelText } = getRenderer();
         expect(queryByLabelText("card")).not.toBeInTheDocument();
     });
 
     it("should present message when the requestsList is empty", () => {
-        const { queryByText } = getRenderer({ requestsList: [] });
+        const { queryByText } = getRenderer();
         expect(queryByText("Não existe nada para avaliar no momento.")).toBeInTheDocument();
     });
 
-    it("should have a Card", () => {
-        const { getByLabelText } = getRenderer({ requestsList: [createRequest()] });
-        expect(getByLabelText("card")).toBeInTheDocument();
+    it.only("should have a Card", async () => {
+        const getRequests = () => [UserRequestBuilder.aUserRequest().build()];
+
+        const { findByLabelText } = getRenderer({ getRequests });
+
+        expect(await findByLabelText("card")).toBeInTheDocument();
     });
 
-    it.each([[[createRequest(), createRequest()]], [[createRequest(), createRequest(), createRequest()]]])(
-        "should display count correctly = '%p'",
-        (requestsList) => {
-            const { getByText } = getRenderer({ requestsList });
-            expect(getByText(`1 de ${requestsList.length}`)).toBeInTheDocument();
-        }
-    );
+    it.each([[]])("should display count correctly = '%p'", (requestsList) => {
+        const { getByText } = getRenderer({ requestsList });
+        expect(getByText(`de ${requestsList.length}`)).toBeInTheDocument();
+    });
 
     it.each(["Bio:", "Descrição:", "Chave Pix:"])("should have label '%s'", async (expected) => {
         await act(async () => {
-            const { getByText } = getRenderer({ requestsList: [createRequest()] });
+            const { getByText } = getRenderer({ requestsList: [] });
             expect(getByText(expected)).toBeInTheDocument();
         });
     });
@@ -45,7 +46,7 @@ describe("<ApprovalsPage />", () => {
                 id: uuid(),
                 fullName: expected,
             };
-            const { findByText } = getRenderer({ user, requestsList: [createRequest(user)] });
+            const { findByText } = getRenderer({ user, requestsList: [] });
             expect(await findByText(expected)).toBeInTheDocument();
         });
     });
@@ -60,14 +61,14 @@ describe("<ApprovalsPage />", () => {
                 id: uuid(),
                 [key]: expected,
             };
-            const { findByText } = getRenderer({ user, requestsList: [createRequest(user)] });
+            const { findByText } = getRenderer({ user, requestsList: [] });
             expect(await findByText(expected)).toBeInTheDocument();
         });
     });
 
     it.each(["Aprovar", "Recusar"])("should have a button with label '%s'", async (expected) => {
         await act(async () => {
-            const { getByRole } = getRenderer({ requestsList: [createRequest()] });
+            const { getByRole } = getRenderer({ requestsList: [] });
             expect(getByRole("button", { name: expected })).toBeInTheDocument();
         });
     });
@@ -75,7 +76,7 @@ describe("<ApprovalsPage />", () => {
     it("should allow user to reject", async () => {
         await act(async () => {
             const onReject = jest.fn();
-            const { getByRole } = getRenderer({ requestsList: [createRequest()], onReject });
+            const { getByRole } = getRenderer({ requestsList: [] });
 
             expect(onReject).not.toBeCalled();
 
@@ -89,7 +90,7 @@ describe("<ApprovalsPage />", () => {
     it("should allow user to approve", async () => {
         await act(async () => {
             const onApprove = jest.fn();
-            const { getByRole } = getRenderer({ requestsList: [createRequest()], onApprove });
+            const { getByRole } = getRenderer({});
 
             expect(onApprove).not.toBeCalled();
 
@@ -102,7 +103,7 @@ describe("<ApprovalsPage />", () => {
 
     it("should allow user navigate to next and back to previous request based on index", async () => {
         const { getByText, findByRole, getByLabelText, queryByLabelText } = getRenderer({
-            requestsList: [createRequest(), createRequest(), createRequest(), createRequest()],
+            requestsList: [],
         });
         expect(queryByLabelText("Voltar")).not.toBeInTheDocument();
         expect(await findByRole("button", { name: "Aprovar" })).toBeInTheDocument();
@@ -133,22 +134,37 @@ describe("<ApprovalsPage />", () => {
     });
 });
 
-// Helpers
-function getRenderer({ requestsList, onReject, onApprove, user }) {
-    const userStore = createUserStore({ user });
-
+function getRenderer({ getRequests, approve, deny, upgrade } = {}) {
+    const getDefaultFnUserRequests = () => Promise.resolve(getDefaultUserRequests());
+    const getDefaultFnUser = () => Promise.resolve(getDefaultUser());
     return render(
-        <MainStoreContext.Provider value={{ userStore }}>
+        <MainStoreContext.Provider
+            value={{
+                userRolesStore: createUserRolesStore({
+                    getRequests: getRequests || getDefaultFnUserRequests,
+                    approve,
+                    deny,
+                    upgrade,
+                }),
+                userStore: createUserStore({ get: getDefaultFnUser }),
+            }}
+        >
             <ThemeProvider theme={theme}>
-                <ApprovalsPage requestsList={requestsList} onReject={onReject} onApprove={onApprove} />
+                <ApprovalsPage />
             </ThemeProvider>
         </MainStoreContext.Provider>
     );
 }
 
-function createRequest(user) {
-    const customUser = user || {
-        id: uuid(),
+const createRequest = () => jest.fn();
+
+function getDefaultUserRequests() {
+    return [UserRequestBuilder.aUserRequest().build(), UserRequestBuilder.aUserRequest().build()];
+}
+
+function getDefaultUser() {
+    return {
+        id: "24537623767237-7623236253",
+        fullName: "Orokin Mumu",
     };
-    return UserRequestBuilder.aUserRequest().withCustomUser(customUser).build();
 }

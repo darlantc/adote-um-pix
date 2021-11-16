@@ -23,7 +23,8 @@ const ApprovalsPage = observer(() => {
         }
 
         updateRequests();
-        if (requestsToEvaluate.length > 0) {
+        if (requestsToEvaluate?.length > 0) {
+            console.log("🚀 ~ file: ApprovalsPage.jsx ~ line 27 ~ useEffect ~ requestsToEvaluate", requestsToEvaluate)
             setRequest(requestsToEvaluate[requestIndex]);
         }
     }, [getRequestsToEvaluate, requestsToEvaluate, requestIndex]);
