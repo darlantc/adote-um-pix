@@ -3,6 +3,7 @@ import LogoImage from "../assets/images/adote-um-pix-logo.svg";
 const LoadingAnimation = () => {
     return (
         <div
+            data-testid="LoadingAnimation"
             style={{
                 width: "100%",
                 height: 300,

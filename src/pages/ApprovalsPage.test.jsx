@@ -1,7 +1,8 @@
 import { v4 as uuid } from "uuid";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { render, act } from "@testing-library/react";
+import { render, act, waitFor } from "@testing-library/react";
 import { theme } from "../assets/jss/styles.js";
+import userEvent from "@testing-library/user-event";
 
 import ApprovalsPage from "./ApprovalsPage";
 import { createUserRolesStore, createUserStore } from "../utils/mocks/storeMocks";
@@ -14,12 +15,14 @@ describe("<ApprovalsPage />", () => {
         expect(queryByLabelText("card")).not.toBeInTheDocument();
     });
 
-    it("should present message when the requestsList is empty", () => {
-        const { queryByText } = getRenderer();
-        expect(queryByText("Não existe nada para avaliar no momento.")).toBeInTheDocument();
+    it("should present message when the requestsList is empty", async () => {
+        const { findByText } = getRenderer({
+            getRequests: async ()  => []
+        });
+        expect(await findByText("Não existe nada para avaliar no momento.")).toBeInTheDocument();
     });
 
-    it.only("should have a Card", async () => {
+    it.skip("should have a Card", async () => {
         const getRequests = () => [UserRequestBuilder.aUserRequest().build()];
 
         const { findByLabelText } = getRenderer({ getRequests });
@@ -32,23 +35,19 @@ describe("<ApprovalsPage />", () => {
         expect(getByText(`de ${requestsList.length}`)).toBeInTheDocument();
     });
 
-    it.each(["Bio:", "Descrição:", "Chave Pix:"])("should have label '%s'", async (expected) => {
-        await act(async () => {
-            const { getByText } = getRenderer({ requestsList: [] });
-            expect(getByText(expected)).toBeInTheDocument();
-        });
+    it.each(["Bio:", "Descrição:", "Chave Pix:"])("should have label '%s'", (expected) => {
+        const { getByText } = getRenderer({ requestsList: [] });
+        expect(getByText(expected)).toBeInTheDocument();
     });
 
     // TODO: Corrigir este teste quebrado após merge
     it.skip.each(["Maria José", "José da Silva"])("should display user name '%s'", async (expected) => {
-        await act(async () => {
-            const user = {
-                id: uuid(),
-                fullName: expected,
-            };
-            const { findByText } = getRenderer({ user, requestsList: [] });
-            expect(await findByText(expected)).toBeInTheDocument();
-        });
+        const user = {
+            id: uuid(),
+            fullName: expected,
+        };
+        const { findByText } = getRenderer({ user, requestsList: [] });
+        expect(await findByText(expected)).toBeInTheDocument();
     });
 
     // TODO: Corrigir este teste quebrado após merge
@@ -66,71 +65,88 @@ describe("<ApprovalsPage />", () => {
         });
     });
 
-    it.each(["Aprovar", "Recusar"])("should have a button with label '%s'", async (expected) => {
-        await act(async () => {
-            const { getByRole } = getRenderer({ requestsList: [] });
-            expect(getByRole("button", { name: expected })).toBeInTheDocument();
-        });
+    it.each(["Aprovar", "Recusar"])("should have a button with label '%s'", (expected) => {
+        const { getByRole } = getRenderer({ requestsList: [] });
+        expect(getByRole("button", { name: expected })).toBeInTheDocument();
     });
 
-    it("should allow user to reject", async () => {
-        await act(async () => {
-            const onReject = jest.fn();
-            const { getByRole } = getRenderer({ requestsList: [] });
+    it("should allow user to reject", () => {
+        const onReject = jest.fn();
+        const { getByRole } = getRenderer({ requestsList: [] });
 
-            expect(onReject).not.toBeCalled();
+        expect(onReject).not.toBeCalled();
 
-            getByRole("button", { name: "Recusar" }).click();
-            getByRole("button", { name: "Recusar" }).click();
-            getByRole("button", { name: "Recusar" }).click();
-            expect(onReject).toBeCalledTimes(3);
-        });
+        getByRole("button", { name: "Recusar" }).click();
+        getByRole("button", { name: "Recusar" }).click();
+        getByRole("button", { name: "Recusar" }).click();
+        expect(onReject).toBeCalledTimes(3);
     });
 
-    it("should allow user to approve", async () => {
-        await act(async () => {
-            const onApprove = jest.fn();
-            const { getByRole } = getRenderer({});
+    it("should allow user to approve", () => {
+        const onApprove = jest.fn();
+        const { getByRole } = getRenderer({});
 
-            expect(onApprove).not.toBeCalled();
+        expect(onApprove).not.toBeCalled();
 
-            getByRole("button", { name: "Aprovar" }).click();
-            getByRole("button", { name: "Aprovar" }).click();
-            getByRole("button", { name: "Aprovar" }).click();
-            expect(onApprove).toBeCalledTimes(3);
-        });
+        getByRole("button", { name: "Aprovar" }).click();
+        getByRole("button", { name: "Aprovar" }).click();
+        getByRole("button", { name: "Aprovar" }).click();
+        expect(onApprove).toBeCalledTimes(3);
     });
 
-    it("should allow user navigate to next and back to previous request based on index", async () => {
-        const { getByText, findByRole, getByLabelText, queryByLabelText } = getRenderer({
-            requestsList: [],
+    it("should allow user navigate to the next request", async () => {
+        const { findByText, getByLabelText, queryByTestId } = getRenderer({
+            getRequests: async () => [
+                UserRequestBuilder.aUserRequest().build(),
+                UserRequestBuilder.aUserRequest().build(),
+                UserRequestBuilder.aUserRequest().build(),
+                UserRequestBuilder.aUserRequest().build(),
+            ],
         });
-        expect(queryByLabelText("Voltar")).not.toBeInTheDocument();
-        expect(await findByRole("button", { name: "Aprovar" })).toBeInTheDocument();
+        expect(queryByTestId("LoadingAnimation")).toBeInTheDocument();
 
-        getByLabelText("Avançar").click();
-        expect(getByText("2 de 4")).toBeInTheDocument();
-        expect(await findByRole("button", { name: "Aprovar" })).toBeInTheDocument();
+        await waitFor(() => {
+            expect(queryByTestId("LoadingAnimation")).not.toBeInTheDocument();
+        });
+        expect(await findByText("1 de 4")).toBeInTheDocument();
 
-        getByLabelText("Avançar").click();
-        expect(await findByRole("button", { name: "Aprovar" })).toBeInTheDocument();
+        userEvent.click(getByLabelText("Avançar"));
+        expect(queryByTestId("LoadingAnimation")).toBeInTheDocument();
+        expect(await findByText("2 de 4")).toBeInTheDocument();
 
-        getByLabelText("Avançar").click();
-        expect(getByText("4 de 4")).toBeInTheDocument();
+        userEvent.click(getByLabelText("Avançar"));
+        expect(await findByText("3 de 4")).toBeInTheDocument();
 
-        expect(await findByRole("button", { name: "Aprovar" })).toBeInTheDocument();
+        userEvent.click(getByLabelText("Avançar"));
+        expect(await findByText("4 de 4")).toBeInTheDocument();
 
-        expect(queryByLabelText("Avançar")).not.toBeInTheDocument();
+        userEvent.click(getByLabelText("Avançar"));
+        expect(await findByText("1 de 4")).toBeInTheDocument();
+    });
 
-        const previousButton = await findByLabelText("Voltar");
+    it("should allow user navigate to the previous request", async () => {
+        const { findByText, getByText, getByLabelText, queryByTestId } = getRenderer({
+            getRequests: async () => [
+                UserRequestBuilder.aUserRequest().build(),
+                UserRequestBuilder.aUserRequest().build(),
+                UserRequestBuilder.aUserRequest().build(),
+            ],
+        });
+        expect(queryByTestId("LoadingAnimation")).toBeInTheDocument();
 
-        previousButton.click();
-        expect(getByText("3 de 4")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(queryByTestId("LoadingAnimation")).not.toBeInTheDocument();
+        });
+        expect(getByText("1 de 3")).toBeInTheDocument();
 
-        previousButton.click();
-        previousButton.click();
-        expect(getByText("1 de 4")).toBeInTheDocument();
-        expect(queryByLabelText("Voltar")).not.toBeInTheDocument();
+        userEvent.click(getByLabelText("Voltar"));
+        expect(await findByText("3 de 3")).toBeInTheDocument();
+
+        userEvent.click(getByLabelText("Voltar"));
+        expect(await findByText("2 de 3")).toBeInTheDocument();
+
+        userEvent.click(getByLabelText("Voltar"));
+        expect(await findByText("1 de 3")).toBeInTheDocument();
     });
 });
 
@@ -155,8 +171,6 @@ function getRenderer({ getRequests, approve, deny, upgrade } = {}) {
         </MainStoreContext.Provider>
     );
 }
-
-const createRequest = () => jest.fn();
 
 function getDefaultUserRequests() {
     return [UserRequestBuilder.aUserRequest().build(), UserRequestBuilder.aUserRequest().build()];
