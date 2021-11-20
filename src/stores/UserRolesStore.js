@@ -17,11 +17,11 @@ class UserRolesStore {
 
         makeObservable(this, {
             requestsToEvaluate: observable,
-            setrRquestsToEvaluate: action,
+            setRequestsToEvaluate: action,
         });
     }
 
-    setrRquestsToEvaluate = (newValue) => {
+    setRequestsToEvaluate = (newValue) => {
         this.requestsToEvaluate = newValue;
     };
 
@@ -37,7 +37,7 @@ class UserRolesStore {
 
     getRequestsToEvaluate = async () => {
         const userRequests = await this.getRequests();
-        this.setrRquestsToEvaluate(userRequests);
+        this.setRequestsToEvaluate(userRequests);
     };
 
     approveRequest = async (request) => {
