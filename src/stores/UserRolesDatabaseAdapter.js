@@ -33,19 +33,16 @@ class UserRolesStoreAdapter {
         }
     };
 
-    approveRequest = ({ id, status, ...rest }) => {
-        status = UserRequestStatus.available;
-        return this.firebaseService.userRequestsRef.child(id).update(status, rest);
+    approveRequest = async ({ id }) => {
+        await this.firebaseService.userRequestsRef.child(`${id}/status`).update(UserRequestStatus.available);
     };
 
-    denyRequest = ({ id, status, ...rest }) => {
-        status = UserRequestStatus.canceled;
-        return this.firebaseService.userRequestsRef.child(id).update(status, rest);
+    denyRequest = async ({ id }) => {
+        await this.firebaseService.userRequestsRef.child(`${id}/status`).update(UserRequestStatus.canceled);
     };
 
-    upgradeUserRole = ({ id, role, ...rest }) => {
-        role = "admin";
-        return this.firebaseService.usersRef.child(id).update(role, rest);
+    upgradeUserRole = async ({ id }) => {
+        await this.firebaseService.userRequestsRef.child(`${id}/role`).update("admin");
     };
 }
 
