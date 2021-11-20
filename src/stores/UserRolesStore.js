@@ -4,6 +4,7 @@ import { APP_ROUTES } from "../routes/Routes";
 
 class UserRolesStore {
     requestsToEvaluate = [];
+    isLoading = false;
     getRequests;
     approve;
     deny;
@@ -17,12 +18,18 @@ class UserRolesStore {
 
         makeObservable(this, {
             requestsToEvaluate: observable,
+            isLoading: observable,
             setRequestsToEvaluate: action,
+            setIsLoading: action,
         });
     }
 
     setRequestsToEvaluate = (newValue) => {
         this.requestsToEvaluate = newValue;
+    };
+
+    setIsLoading = (newValue) => {
+        this.isLoading = newValue;
     };
 
     static hasAccessTo = (route, user) => {
@@ -36,18 +43,25 @@ class UserRolesStore {
     };
 
     getRequestsToEvaluate = async () => {
-        const userRequests = await this.getRequests();
-        this.setRequestsToEvaluate(userRequests);
+        this.setIsLoading(true);
+        try {
+            const userRequests = await this.getRequests();
+            this.setRequestsToEvaluate(userRequests);
+        } catch (error) {
+            console.error("getRequestsToEvaluate error", error);
+        } finally {
+            this.setIsLoading(false);
+        }
     };
 
     approveRequest = async (request) => {
         await this.approve(request);
-        await this.getRequests();
+        await this.getRequestsToEvaluate();
     };
 
     denyRequest = async (request) => {
         await this.deny(request);
-        await this.getRequests();
+        await this.getRequestsToEvaluate();
     };
 
     upgradeUserRole = async (user) => {

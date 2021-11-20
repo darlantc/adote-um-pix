@@ -10,43 +10,23 @@ import { observer } from "mobx-react";
 
 const ApprovalsPage = observer(() => {
     const { userRolesStore } = useMainStoreContext();
-    const { getRequestsToEvaluate, requestsToEvaluate, approveRequest, denyRequest } = userRolesStore;
+    const { isLoading, getRequestsToEvaluate, requestsToEvaluate, approveRequest, denyRequest } = userRolesStore;
 
     const [requestIndex, setRequestIndex] = useState(0);
-    const [request, setRequest] = useState(null);
-
-    const { isLoading: isLoadingUserProfile, userProfile } = useUserProfile(request?.user?.id);
 
     useEffect(() => {
         async function updateRequests() {
             await getRequestsToEvaluate();
         }
-
         updateRequests();
-        if (requestsToEvaluate?.length > 0) {
-            console.log("🚀 ~ file: ApprovalsPage.jsx ~ line 27 ~ useEffect ~ requestsToEvaluate", requestsToEvaluate)
-            setRequest(requestsToEvaluate[requestIndex]);
-        }
-    }, [getRequestsToEvaluate, requestsToEvaluate, requestIndex]);
+    }, [getRequestsToEvaluate]);
 
-    if (!requestsToEvaluate) {
-        return null;
-    }
+    const request = requestsToEvaluate[requestIndex];
 
-    function displayNextRequest() {
-        if (requestIndex + 1 <= requestsToEvaluate.length - 1) {
-            setRequestIndex(requestIndex + 1);
-        } else {
-            setRequestIndex(0);
-        }
-    }
+    const { isLoading: isLoadingUserProfile, userProfile } = useUserProfile(request?.user?.id);
 
-    function displayPreviousRequest() {
-        if (requestIndex - 1 >= 0) {
-            setRequestIndex(requestIndex - 1);
-        } else {
-            setRequestIndex(requestsToEvaluate.length - 1);
-        }
+    if (isLoading || isLoadingUserProfile) {
+        return <LoadingAnimation />;
     }
 
     if (requestsToEvaluate.length < 1) {
@@ -57,10 +37,6 @@ const ApprovalsPage = observer(() => {
                 </Grid>
             </Grid>
         );
-    }
-
-    if (isLoadingUserProfile) {
-        return <LoadingAnimation />;
     }
 
     return (
@@ -109,6 +85,22 @@ const ApprovalsPage = observer(() => {
             </Grid>
         </Grid>
     );
+
+    function displayNextRequest() {
+        if (requestIndex + 1 <= requestsToEvaluate.length - 1) {
+            setRequestIndex(requestIndex + 1);
+        } else {
+            setRequestIndex(0);
+        }
+    }
+
+    function displayPreviousRequest() {
+        if (requestIndex - 1 >= 0) {
+            setRequestIndex(requestIndex - 1);
+        } else {
+            setRequestIndex(requestsToEvaluate.length - 1);
+        }
+    }
 });
 
 export default ApprovalsPage;
