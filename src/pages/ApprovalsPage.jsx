@@ -1,18 +1,27 @@
 import { IconButton, Typography, Grid, Button, Box } from "@material-ui/core";
 import { ChevronLeft, ChevronRight } from "@material-ui/icons";
+import { observer } from "mobx-react";
+import { useEffect } from "react";
+
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import useUserProfile from "../hooks/useUserProfile";
-import { useEffect, useState } from "react";
-
 import LoadingAnimation from "../components/LoadingAnimation";
 import UserRequestDisplayForApproval from "../components/UserRequestDisplayForApproval";
-import { observer } from "mobx-react";
+import UserPromotionSection from "../components/UserPromotionSection";
 
 const ApprovalsPage = observer(() => {
     const { userRolesStore } = useMainStoreContext();
-    const { isLoading, getRequestsToEvaluate, requestsToEvaluate, approveRequest, denyRequest } = userRolesStore;
-
-    const [requestIndex, setRequestIndex] = useState(0);
+    const {
+        isLoadingRequests,
+        getRequestsToEvaluate,
+        requestsToEvaluate,
+        approveRequest,
+        denyRequest,
+        selectedRequest,
+        requestIndex,
+        increaseRequestIndex,
+        decreaseRequestIndex,
+    } = userRolesStore;
 
     useEffect(() => {
         async function updateRequests() {
@@ -21,11 +30,17 @@ const ApprovalsPage = observer(() => {
         updateRequests();
     }, [getRequestsToEvaluate]);
 
-    const request = requestsToEvaluate[requestIndex];
+    const { isLoading: isLoadingUserProfile, userProfile } = useUserProfile(selectedRequest?.user?.id);
 
-    const { isLoading: isLoadingUserProfile, userProfile } = useUserProfile(request?.user?.id);
+    const displayNextRequest = () => {
+        increaseRequestIndex();
+    };
 
-    if (isLoading || isLoadingUserProfile) {
+    const displayPreviousRequest = () => {
+        decreaseRequestIndex();
+    };
+
+    if (isLoadingRequests || isLoadingUserProfile) {
         return <LoadingAnimation />;
     }
 
@@ -41,26 +56,22 @@ const ApprovalsPage = observer(() => {
 
     return (
         <Grid container>
+            <UserPromotionSection />
             <Grid container item xs={12} justify="flex-end">
                 <Typography variant="h5">
-                    {requestIndex + 1} de {requestsToEvaluate.length}
+                    {requestIndex} de {requestsToEvaluate.length}
                 </Typography>
             </Grid>
             <Grid container item xs={12} justify="space-evenly">
-                <UserRequestDisplayForApproval userProfile={userProfile} request={request} />
+                <UserRequestDisplayForApproval userProfile={userProfile} request={selectedRequest} />
                 <Box display="flex">
                     <Box m={1}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                            onClick={() => approveRequest(request)}
-                        >
+                        <Button variant="contained" color="primary" size="small" onClick={approveRequest}>
                             Aprovar
                         </Button>
                     </Box>
                     <Box m={1}>
-                        <Button variant="contained" color="secondary" size="small" onClick={() => denyRequest(request)}>
+                        <Button variant="contained" color="secondary" size="small" onClick={denyRequest}>
                             Cancelar
                         </Button>
                     </Box>
@@ -85,22 +96,6 @@ const ApprovalsPage = observer(() => {
             </Grid>
         </Grid>
     );
-
-    function displayNextRequest() {
-        if (requestIndex + 1 <= requestsToEvaluate.length - 1) {
-            setRequestIndex(requestIndex + 1);
-        } else {
-            setRequestIndex(0);
-        }
-    }
-
-    function displayPreviousRequest() {
-        if (requestIndex - 1 >= 0) {
-            setRequestIndex(requestIndex - 1);
-        } else {
-            setRequestIndex(requestsToEvaluate.length - 1);
-        }
-    }
 });
 
 export default ApprovalsPage;

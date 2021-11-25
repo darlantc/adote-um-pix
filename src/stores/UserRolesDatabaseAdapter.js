@@ -33,16 +33,39 @@ class UserRolesStoreAdapter {
         }
     };
 
-    approveRequest = async ({ id }) => {
-        await this.firebaseService.userRequestsRef.child(`${id}/status`).update(UserRequestStatus.available);
+    approveRequest = async ({ id, ...rest }) => {
+        await this.firebaseService.userRequestsRef
+            .child(`${id}`)
+            .update({ ...rest, status: UserRequestStatus.available });
     };
 
-    denyRequest = async ({ id }) => {
-        await this.firebaseService.userRequestsRef.child(`${id}/status`).update(UserRequestStatus.canceled);
+    denyRequest = async ({ id, ...rest }) => {
+        await this.firebaseService.userRequestsRef
+            .child(`${id}`)
+            .update({ ...rest, status: UserRequestStatus.canceled });
     };
 
-    upgradeUserRole = async ({ id }) => {
-        await this.firebaseService.userRequestsRef.child(`${id}/role`).update("admin");
+    upgradeUserRole = async ({ id, ...rest }) => {
+        const user = { ...rest, role: "admin" };
+        await this.firebaseService.usersRef.child(`${id}`).update(user);
+    };
+
+    getUsersToPromote = async () => {
+        try {
+            this.usersRef = this.firebaseService.usersRef.orderByChild("role").equalTo("default");
+
+            let users = [];
+            const snapshots = await this.usersRef.once("value");
+            snapshots.forEach((snapshot) => {
+                users.push({
+                    id: snapshot.key,
+                    ...snapshot.val(),
+                });
+            });
+            return users;
+        } catch (error) {
+            console.error("UserDatabaseAdapter -> getUser", error);
+        }
     };
 }
 

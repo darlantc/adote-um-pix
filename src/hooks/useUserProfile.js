@@ -20,7 +20,6 @@ function useUserProfile(userId) {
         }
     }, [userStore, userId]);
 
-    console.log("useUserProfile.js", isLoading, userProfile);
     return {
         isLoading,
         userProfile,

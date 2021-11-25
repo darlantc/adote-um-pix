@@ -39,15 +39,22 @@ class MainStore {
         this.userRolesDatabase = new UserRolesDatabaseAdapter(this.authStore, firebaseService);
         this.storesToBeClearedOnLogout.push(this.userRolesDatabase);
 
-        const { getUserRolesRequests, approveRequest, denyRequest, upgradeUserRole } = this.userRolesDatabase;
+        const { getUserRolesRequests, approveRequest, denyRequest, upgradeUserRole, getUsersToPromote } =
+            this.userRolesDatabase;
 
-        this.userRolesStore = new UserRolesStore(getUserRolesRequests, approveRequest, denyRequest, upgradeUserRole);
+        this.userRolesStore = new UserRolesStore(
+            getUserRolesRequests,
+            approveRequest,
+            denyRequest,
+            upgradeUserRole,
+            getUsersToPromote
+        );
         this.storesToBeClearedOnLogout.push(this.userRolesStore);
 
         this.userDatabase = new UserDatabaseAdapter(this.authStore, firebaseService);
         this.storesToBeClearedOnLogout.push(this.userDatabase);
 
-        this.userStore = new UserStore(this.userDatabase.getUser, this.userDatabase.getUsersToPromote);
+        this.userStore = new UserStore(this.userDatabase.getUser);
         this.storesToBeClearedOnLogout.push(this.userStore);
 
         this.clearStores();
