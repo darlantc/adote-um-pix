@@ -47,7 +47,7 @@ class MainStore {
         this.userDatabase = new UserDatabaseAdapter(this.authStore, firebaseService);
         this.storesToBeClearedOnLogout.push(this.userDatabase);
 
-        this.userStore = new UserStore(this.userDatabase.getUser);
+        this.userStore = new UserStore(this.userDatabase.getUser, this.userDatabase.getUsersToPromote);
         this.storesToBeClearedOnLogout.push(this.userStore);
 
         this.clearStores();
