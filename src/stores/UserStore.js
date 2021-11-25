@@ -1,15 +1,16 @@
 class UserStore {
-    get;
+    getUser;
 
-    constructor(get) {
-        this.get = get;
+    constructor(getUser) {
+        this.getUser = getUser;
     }
 
     getUserProfile = async (id) => {
         try {
-            const userProfile = await this.get(id);
+            const userProfile = await this.getUser(id);
             return userProfile;
         } catch (error) {
+            console.log("Error", error);
             return null;
         }
     };
