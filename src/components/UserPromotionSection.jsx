@@ -21,17 +21,19 @@ const UserPromotionSection = () => {
         return <Typography variant="h4">Não foram encontrados usuários elegíveis.</Typography>;
     }
 
+    const thereIsAnyUsersToPromote = usersToPromote.length !== 1;
+
     return (
         <>
             <Typography variant="h4" style={{ width: "100%" }}>
-                {usersToPromote.length !== 1 ? "Foram encontrados" : "Foi encontrado"} {usersToPromote.length} usuário
-                {usersToPromote.length !== 1 ? "s" : ""}
+                {thereIsAnyUsersToPromote ? "Foram encontrados" : "Foi encontrado"} {usersToPromote.length}
+                {thereIsAnyUsersToPromote ? "usuários" : "usuário"}
             </Typography>
             <Typography variant="h5">Selecione o usuário para ser promovido a administrador:</Typography>
             <Box m={3} maxHeight={200} display="flex" flexDirection="column" overflow="auto" width={"100%"}>
-                {usersToPromote.map((user) => {
-                    return <UserPromotionModal user={user} />;
-                })}
+                {usersToPromote.map((user) => (
+                    <UserPromotionModal key={user.id} user={user} />
+                ))}
             </Box>
         </>
     );

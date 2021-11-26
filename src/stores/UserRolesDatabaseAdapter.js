@@ -51,20 +51,21 @@ class UserRolesStoreAdapter {
     };
 
     getUsersToPromote = async () => {
+        let users = [];
         try {
-            this.usersRef = this.firebaseService.usersRef.orderByChild("role").equalTo("default");
+            const ref = this.firebaseService.usersRef.orderByChild("role").equalTo("default");
 
-            let users = [];
-            const snapshots = await this.usersRef.once("value");
+            const snapshots = await ref.once("value");
             snapshots.forEach((snapshot) => {
                 users.push({
                     id: snapshot.key,
                     ...snapshot.val(),
                 });
             });
-            return users;
         } catch (error) {
             console.error("UserDatabaseAdapter -> getUser", error);
+        } finally {
+            return users;
         }
     };
 }

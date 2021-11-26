@@ -24,21 +24,10 @@ const ApprovalsPage = observer(() => {
     } = userRolesStore;
 
     useEffect(() => {
-        async function updateRequests() {
-            await getRequestsToEvaluate();
-        }
-        updateRequests();
+        getRequestsToEvaluate();
     }, [getRequestsToEvaluate]);
 
     const { isLoading: isLoadingUserProfile, userProfile } = useUserProfile(selectedRequest?.user?.id);
-
-    const displayNextRequest = () => {
-        increaseRequestIndex();
-    };
-
-    const displayPreviousRequest = () => {
-        decreaseRequestIndex();
-    };
 
     if (isLoadingRequests || isLoadingUserProfile) {
         return <LoadingAnimation />;
@@ -79,17 +68,12 @@ const ApprovalsPage = observer(() => {
             </Grid>
             <Grid container item xs={12}>
                 <Grid container item xs={6} justify="flex-start">
-                    <IconButton
-                        variant="contained"
-                        color="primary"
-                        onClick={displayPreviousRequest}
-                        aria-label="Voltar"
-                    >
+                    <IconButton variant="contained" color="primary" onClick={decreaseRequestIndex} aria-label="Voltar">
                         <ChevronLeft />
                     </IconButton>
                 </Grid>
                 <Grid container item xs={6} justify="flex-end">
-                    <IconButton variant="contained" color="primary" onClick={displayNextRequest} aria-label="Avançar">
+                    <IconButton variant="contained" color="primary" onClick={increaseRequestIndex} aria-label="Avançar">
                         <ChevronRight />
                     </IconButton>
                 </Grid>

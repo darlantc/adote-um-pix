@@ -92,7 +92,7 @@ class UserRolesStore {
             const users = await this.getUsersToPromote();
             this.setUsersToPromote(users);
         } catch (error) {
-            console.log("Error", error);
+            console.error("Error getListOfUsersToPromote", error);
         } finally {
             this.setIsLoadingUsers(false);
         }
@@ -114,19 +114,19 @@ class UserRolesStore {
     };
 
     increaseRequestIndex = () => {
-        if (this.requestIndex + 1 <= this.requestsToEvaluate.length) {
-            this.setRequestIndex(this.requestIndex + 1);
-        } else {
-            this.setRequestIndex(1);
+        let nextIndex = this.requestIndex + 1;
+        if (nextIndex > this.requestsToEvaluate.length) {
+            nextIndex = 1;
         }
+        this.setRequestIndex(nextIndex);
     };
 
     decreaseRequestIndex = () => {
-        if (this.requestIndex > 1) {
-            this.setRequestIndex(this.requestIndex - 1);
-        } else {
-            this.setRequestIndex(this.requestsToEvaluate.length);
+        let previousIndex = this.requestIndex - 1;
+        if (previousIndex < 1) {
+            previousIndex = this.requestsToEvaluate.length;
         }
+        this.setRequestIndex(previousIndex);
     };
 }
 
