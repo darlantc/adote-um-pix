@@ -11,7 +11,7 @@ const UserPromotionSection = () => {
 
     useEffect(() => {
         getListOfUsersToPromote();
-    });
+    }, [getListOfUsersToPromote]);
 
     if (isLoadingUsers) {
         return <LoadingAnimation />;
