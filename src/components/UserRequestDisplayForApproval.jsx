@@ -30,14 +30,16 @@ const UserRequestDisplayForApproval = ({ userProfile, request }) => {
             <Card className={classes.root} aria-label="card">
                 <CardContent>
                     <Box display="flex" alignItems="center">
-                            <Box m={1}>
-                                <Avatar src={userProfile.photoUrl} className={classes.orange}>{userProfile.fullName[0].toUpperCase()}</Avatar>
-                            </Box>
-                            <Box m={1} display="flex" alignItems="center">
-                                <Typography variant="h5" component="h2" gutterBottom>
-                                    {userProfile.fullName}
-                                </Typography>
-                            </Box>
+                        <Box m={1}>
+                            <Avatar src={userProfile.photoUrl} className={classes.orange}>
+                                {userProfile.fullName[0].toUpperCase()}
+                            </Avatar>
+                        </Box>
+                        <Box m={1} display="flex" alignItems="center">
+                            <Typography variant="h5" component="h2" gutterBottom>
+                                {userProfile.fullName}
+                            </Typography>
+                        </Box>
                     </Box>
                     {userProfile && <Typography variant="h6">{userProfile.email || userProfile.phone}</Typography>}
                     <Typography variant="h6">Bio:</Typography>
