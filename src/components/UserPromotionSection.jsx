@@ -28,7 +28,7 @@ const UserPromotionSection = () => {
                 amount={usersToPromote.length}
             ></SingularPluralTypography>
 
-            {usersToPromote.length > 0 ? (
+            {usersToPromote.length > 0 && (
                 <>
                     <Typography variant="h5">Selecione o usuário para ser promovido a administrador:</Typography>
                     <Box m={3} maxHeight={200} display="flex" flexDirection="column" overflow="auto" width={"100%"}>
@@ -37,8 +37,6 @@ const UserPromotionSection = () => {
                         })}
                     </Box>
                 </>
-            ) : (
-                <></>
             )}
         </>
     );
