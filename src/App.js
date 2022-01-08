@@ -18,7 +18,7 @@ import { theme } from "./assets/jss/styles.js";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: theme.spacing(4, 2, 4),
-        maxWidth: "700px",
+        maxWidth: "1200px",
         backgroundImage: `url(${PixBackground})`,
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center center",
