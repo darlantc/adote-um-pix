@@ -6,20 +6,25 @@ class UserRolesStore {
     requestsToEvaluate = [];
     requestIndex = 1;
     usersToPromote = [];
+    usersToDowngrade = [];
     isLoadingRequests = false;
     isLoadingUsers = false;
     getRequests;
     approve;
     deny;
     upgrade;
+    downgrade;
     getUsersToPromote;
+    getUsersToDowngrade;
 
-    constructor(getRequests, approve, deny, upgrade, getUsersToPromote) {
+    constructor(getRequests, approve, deny, upgrade, downgrade, getUsersToPromote, getUsersToDowngrade) {
         this.getRequests = getRequests;
         this.approve = approve;
         this.deny = deny;
         this.upgrade = upgrade;
+        this.downgrade = downgrade;
         this.getUsersToPromote = getUsersToPromote;
+        this.getUsersToDowngrade = getUsersToDowngrade;
 
         makeObservable(this, {
             requestsToEvaluate: observable,
@@ -27,12 +32,14 @@ class UserRolesStore {
             isLoadingRequests: observable,
             requestIndex: observable,
             usersToPromote: observable,
+            usersToDowngrade: observable,
             selectedRequest: computed,
             setRequestsToEvaluate: action,
             setRequestIndex: action,
             setIsLoadingUsers: action,
             setIsLoadingRequests: action,
             setUsersToPromote: action,
+            setUsersToDowngrade: action,
         });
     }
 
@@ -64,6 +71,10 @@ class UserRolesStore {
         this.usersToPromote = newValue;
     };
 
+    setUsersToDowngrade = (newValue) => {
+        this.usersToDowngrade = newValue;
+    };
+
     static hasAccessTo = (route, user) => {
         if (user?.role === "admin") {
             return true;
@@ -86,11 +97,14 @@ class UserRolesStore {
         }
     };
 
-    getListOfUsersToPromote = async () => {
+    getListOfUsers = async () => {
         this.setIsLoadingUsers(true);
         try {
-            const users = await this.getUsersToPromote();
-            this.setUsersToPromote(users);
+            const usersToPromote = await this.getUsersToPromote();
+            const usersToDowngrade = await this.getUsersToDowngrade();
+
+            this.setUsersToPromote(usersToPromote);
+            this.setUsersToDowngrade(usersToDowngrade);
         } catch (error) {
             console.error("Error getListOfUsersToPromote", error);
         } finally {
@@ -110,7 +124,12 @@ class UserRolesStore {
 
     upgradeUserRole = async (user) => {
         await this.upgrade(user);
-        await this.getListOfUsersToPromote();
+        await this.getListOfUsers();
+    };
+
+    downgradeUserRole = async (user) => {
+        await this.downgrade(user);
+        await this.getListOfUsers();
     };
 
     increaseRequestIndex = () => {

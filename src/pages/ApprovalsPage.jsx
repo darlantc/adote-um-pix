@@ -1,14 +1,18 @@
-import { Grid } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 
-import UserRequestApprovalComponent from "../components/UserRequestApprovalComponent";
+import UserRequestApprovalSection from "../components/UserRequestApprovalSection";
 import UserPromotionSection from "../components/UserPromotionSection";
 
 const ApprovalsPage = () => {
     return (
-        <Grid container>
-            <UserPromotionSection />
-            <UserRequestApprovalComponent />
-        </Grid>
+        <Box display="flex">
+            <Box width="70%" display="flex" alignItems="center" justifyContent="center">
+                <UserRequestApprovalSection />
+            </Box>
+            <Box width="30%" display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                <UserPromotionSection />
+            </Box>
+        </Box>
     );
 };
 

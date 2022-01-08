@@ -50,6 +50,11 @@ class UserRolesStoreAdapter {
         await this.firebaseService.usersRef.child(`${id}`).update(user);
     };
 
+    downgradeUserRole = async ({ id, ...rest }) => {
+        const user = { ...rest, role: "default" };
+        await this.firebaseService.usersRef.child(`${id}`).update(user);
+    };
+
     getUsersToPromote = async () => {
         let users = [];
         try {
@@ -63,7 +68,26 @@ class UserRolesStoreAdapter {
                 });
             });
         } catch (error) {
-            console.error("UserDatabaseAdapter -> getUser", error);
+            console.error("UserRolesDatabaseAdapter -> getUser", error);
+        } finally {
+            return users;
+        }
+    };
+
+    getUsersToDowngrade = async () => {
+        let users = [];
+        try {
+            const ref = this.firebaseService.usersRef.orderByChild("role").equalTo("admin");
+
+            const snapshots = await ref.once("value");
+            snapshots.forEach((snapshot) => {
+                users.push({
+                    id: snapshot.key,
+                    ...snapshot.val(),
+                });
+            });
+        } catch (error) {
+            console.error("UserRolesDatabaseAdapter -> getUser", error);
         } finally {
             return users;
         }

@@ -6,9 +6,9 @@ import { useEffect } from "react";
 import { useMainStoreContext } from "../contexts/mainStoreContext";
 import UserRequestDisplayForApproval from "./UserRequestDisplayForApproval";
 import useUserProfile from "../hooks/useUserProfile";
-import LoadingAnimation from "../components/LoadingAnimation";
+import LoadingAnimation from "./LoadingAnimation";
 
-const UserRequestApprovalComponent = observer(() => {
+const UserRequestApprovalSection = observer(() => {
     const { userRolesStore } = useMainStoreContext();
     const {
         isLoadingRequests,
@@ -54,10 +54,13 @@ const UserRequestApprovalComponent = observer(() => {
     }
 
     return (
-        <>
+        <Box flexDirection="column" m={2} width="100%" height="100%" alignItems="flex-start">
+            <Typography variant="h3" gutterBottom>
+                Aprovação de Requisições
+            </Typography>
             <Grid container item xs={12} justify="flex-end">
                 <Typography variant="h5">
-                    {requestIndex} de {requestsToEvaluate.length}
+                    {requestIndex}º de {requestsToEvaluate.length}
                 </Typography>
             </Grid>
             <Grid container item xs={12} justify="space-evenly">
@@ -92,8 +95,8 @@ const UserRequestApprovalComponent = observer(() => {
                     </IconButton>
                 </Grid>
             </Grid>
-        </>
+        </Box>
     );
 });
 
-export default UserRequestApprovalComponent;
+export default UserRequestApprovalSection;

@@ -2,14 +2,10 @@ import { Modal, Box, Typography } from "@material-ui/core";
 import { useState } from "react";
 import { observer } from "mobx-react";
 
-import { useMainStoreContext } from "../contexts/mainStoreContext";
 import Default from "../assets/images/defaultUserPhoto.png";
 import CardForUserPromotionDisplay from "../components/CardForUserPromotionDisplay";
 
-const UserPromotionModal = observer(({ user }) => {
-    const { userRolesStore } = useMainStoreContext();
-    const { upgradeUserRole } = userRolesStore;
-
+const UserPromotionModal = observer(({ user, title, action }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { fullName, photoUrl, bio } = user;
@@ -23,8 +19,8 @@ const UserPromotionModal = observer(({ user }) => {
         }
     };
 
-    const didUpgrade = () => {
-        upgradeUserRole(user);
+    const didChange = () => {
+        action(user);
         setIsModalOpen(false);
     };
 
@@ -33,12 +29,12 @@ const UserPromotionModal = observer(({ user }) => {
             <CardForUserPromotionDisplay
                 image={userImage}
                 fullName={fullName}
-                bio={bio}
                 display="flex"
-                imageSize="50px"
+                imageSize="40px"
                 buttonAction={openClose}
                 buttonTitle="Selecionar"
-                justify="left"
+                justify="space-between"
+                width="100%"
             />
             <Modal open={isModalOpen} onClose={openClose}>
                 <Box display="flex" justifyContent="center">
@@ -51,7 +47,7 @@ const UserPromotionModal = observer(({ user }) => {
                         width="300px"
                     >
                         <Typography variant="h6" align="center" gutterBottom>
-                            Deseja promover este usuário?
+                            Deseja {title.toLowerCase()} este usuário?
                         </Typography>
                         <CardForUserPromotionDisplay
                             display="flex"
@@ -60,9 +56,12 @@ const UserPromotionModal = observer(({ user }) => {
                             fullName={fullName}
                             bio={bio}
                             imageSize="200px"
-                            buttonAction={didUpgrade}
-                            buttonTitle="Promover"
+                            buttonAction={didChange}
+                            buttonTitle={title}
                             justify="center"
+                            width="280px"
+                            extraMargin={1}
+                            cancelAction={openClose}
                         />
                     </Box>
                 </Box>

@@ -10,51 +10,62 @@ const CardForUserPromotionDisplay = ({
     buttonAction,
     buttonTitle,
     justify,
+    width,
+    extraMargin,
+    cancelAction,
 }) => {
     return (
         <Box
             display={display}
             flexDirection={flexDirection}
             bgcolor={"rgba(220, 220, 220, 0.4)"}
-            m={1}
-            p={1}
+            marginTop={1}
+            m={extraMargin}
             borderRadius="7px"
             justifyContent={justify}
             alignItems="center"
+            width={width}
         >
-            <img
-                src={image}
-                alt="Imagem de usuário"
+            <Box
+                m={1}
+                display={display}
+                flexDirection={flexDirection}
                 style={{
-                    width: imageSize,
-                    height: imageSize,
-                    margin: "5px",
-                    marginRight: "10px",
-                    borderRadius: "50%",
-                }}
-            />
-            <div
-                m={2}
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
                     height: "100%",
                     width: "100%",
                 }}
             >
-                <Typography variant="h5">{fullName}</Typography>
-                <Typography variant="h6">{bio}</Typography>
-            </div>
+                <img
+                    src={image}
+                    alt="Imagem de usuário"
+                    style={{
+                        width: imageSize,
+                        height: imageSize,
+                        margin: "5px",
+                        marginRight: "10px",
+                        borderRadius: "50%",
+                    }}
+                />
+                <Typography variant="h6">{fullName}</Typography>
+                <Typography variant="h6" align="center">
+                    {bio}
+                </Typography>
+            </Box>
             <Box
                 style={{
                     display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                     height: "100%",
                 }}
             >
+                {cancelAction && (
+                    <Button color="secondary" onClick={cancelAction} style={{ marginRight: "5px" }}>
+                        Voltar
+                    </Button>
+                )}
                 <Button color="primary" onClick={buttonAction}>
                     {buttonTitle}
                 </Button>
