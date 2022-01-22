@@ -1,5 +1,4 @@
-import { render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen } from "@testing-library/react";
 
 import UserRequestDisplayForAdoption from "./UserRequestDisplayForAdoption";
 import { MainStoreContext } from "../contexts/mainStoreContext";
@@ -9,9 +8,9 @@ import { MemoryRouter } from "react-router";
 
 describe("<UserRequestDisplayForAdoption />", () => {
     it("should have a div element with following style", () => {
-        const { getByTestId } = getRenderer({ request: {} });
+        getRenderer({ request: {} });
 
-        expect(getByTestId("UserRequestDisplay")).toHaveStyle({
+        expect(screen.getByTestId("UserRequestDisplay")).toHaveStyle({
             backgroundColor: "#00CCFF",
             color: "#FFFFFF",
             borderRadius: "7px",
@@ -31,18 +30,18 @@ describe("<UserRequestDisplayForAdoption />", () => {
         ["Second Sample", 1226798494],
     ])("should render both headings '%s' & '%s'", (name, createdAt) => {
         const user = { name };
-        const { getByRole } = getRenderer({ request: { user, createdAt } });
+        getRenderer({ request: { user, createdAt } });
 
-        expect(getByRole("heading", { name: name })).toBeInTheDocument();
-        expect(getByRole("heading", { name: formatDate(createdAt) })).toBeInTheDocument();
+        expect(screen.getByRole("heading", { name: name })).toBeInTheDocument();
+        expect(screen.getByRole("heading", { name: formatDate(createdAt) })).toBeInTheDocument();
     });
 
     it.each(["Sample description", "Second sample description"])(
         "should render a '%s' description p tag",
         (expected) => {
             const request = { description: expected };
-            const { getByText } = getRenderer({ request });
-            expect(getByText(expected)).toBeInTheDocument();
+            getRenderer({ request });
+            expect(screen.getByText(expected)).toBeInTheDocument();
         }
     );
 
@@ -50,8 +49,8 @@ describe("<UserRequestDisplayForAdoption />", () => {
         "Sample description with more than 600 cgaracters. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed sodales leo, ut suscipit urna. Vestibulum ullamcorper massa vitae luctus sollicitudin. Aenean nisl mauris, rutrum id nibh nec, pretium mattis metus. Nunc pellentesque, mi vel molestie tincidunt, augue nisl consectetur est, id consectetur justo ante non elit. Proin ullamcorper nisl eu nisl ultricies fringilla. Cras tincidunt tortor at blandit semper. Aenean convallis ante mauris, at congue ex molestie a. Sed ac vestibulum elit. Integer faucibus nulla aliquet turpis faucibus fringilla.",
     ])("should render an extra heading '...' if description has more than 600 characters", (expected) => {
         const request = { description: expected };
-        const { getByRole } = getRenderer({ request });
-        expect(getByRole("heading", { name: "..." })).toBeInTheDocument();
+        getRenderer({ request });
+        expect(screen.getByRole("heading", { name: "..." })).toBeInTheDocument();
     });
 });
 
