@@ -55,19 +55,7 @@ const App = observer(() => {
     }, [subscribeTo, unsubscribe]);
 
     if (loginStatus === LoginStatus.loading) {
-        return (
-            <div
-                style={{
-                    width: "100%",
-                    height: "300px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <LoadingAnimation />
-            </div>
-        );
+        return <LoadingAnimation />;
     }
 
     return (

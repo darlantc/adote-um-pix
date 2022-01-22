@@ -19,13 +19,13 @@ describe("<Routes />", () => {
         ["Minhas Solicitações", APP_ROUTES.myRequests],
         ["Perfil", APP_ROUTES.profile],
     ])("should display '%s' heading for private pages if current route='%s'", async (expectedHeading, routePath) => {
-        const { getByRole } = getRenderer({
+        const { findByRole } = getRenderer({
             initialEntry: routePath,
             loggedUser: {
                 uid: "123",
             },
         });
-        expect(getByRole("heading", { name: expectedHeading })).toBeInTheDocument();
+        expect(await findByRole("heading", { name: expectedHeading })).toBeInTheDocument();
     });
 
     it("if private route and the user is not logged in should redirect to home", () => {

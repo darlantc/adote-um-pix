@@ -4,14 +4,17 @@ import { InternalEvents } from "./InternalEventsStore";
 
 class UserRequestStore {
     get;
+    getByUrl;
     add;
     update;
     remove;
     userRequests = [];
+    isFetching = false;
     searchString = "";
 
-    constructor(get, add, update, remove, InternalEvents) {
+    constructor(get, getByUrl, add, update, remove, InternalEvents) {
         this.get = get;
+        this.getByUrl = getByUrl;
 
         this.add = add;
         this.update = update;
@@ -20,10 +23,12 @@ class UserRequestStore {
 
         makeObservable(this, {
             userRequests: observable,
+            isFetching: observable,
             searchString: observable,
             filteredUserRequests: computed,
             setSearchString: action,
             setUserRequests: action,
+            setIsFetching: action,
         });
     }
 
@@ -47,10 +52,25 @@ class UserRequestStore {
         this.userRequests = newValue;
     };
 
+    setIsFetching = (newValue) => {
+        this.isFetching = newValue;
+    };
+
     getUserRequests = async () => {
+        this.setIsFetching(true);
         const result = await this.get();
         if (result) {
             this.setUserRequests(result);
+        }
+        this.setIsFetching(false);
+    };
+
+    getSpecificUserRequest = async (url) => {
+        try {
+            const request = await this.getByUrl(url);
+            return request;
+        } catch (error) {
+            return null;
         }
     };
 

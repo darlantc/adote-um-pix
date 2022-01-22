@@ -10,7 +10,7 @@ describe("<LoadingAnimation />", () => {
     it("should have a div container", () => {
         const { getByAltText } = getRenderer();
         expect(getByAltText("Animação de Carregamento").closest("div")).toHaveStyle({
-            width: "300px",
+            width: "100%",
             height: "300px",
             display: "flex",
             justifyContent: "center",

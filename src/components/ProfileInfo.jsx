@@ -36,13 +36,6 @@ const ProfileInfo = observer(() => {
         }
     }, [loggedUserProfile]);
 
-    useEffect(() => {
-        const formattedLinkedIn = formatLinkedIn(linkedIn);
-        if (formattedLinkedIn) {
-            setLinkedIn(formattedLinkedIn);
-        }
-    }, [linkedIn]);
-
     const handleFile = (event) => {
         if (event.target.files[0]) {
             const image = event.target.files[0];
@@ -61,10 +54,6 @@ const ProfileInfo = observer(() => {
         event.preventDefault();
         if (loggedUserProfile) {
             handleUserDataUpdate(fullName, bio, linkedIn);
-
-            setFullName("");
-            setBio("");
-            setLinkedIn("");
         }
     };
 
@@ -123,6 +112,7 @@ const ProfileInfo = observer(() => {
                 <TextField
                     className={classes.textField}
                     value={linkedIn}
+                    onBlur={onBlurLinkedInInput}
                     onChange={(event) => {
                         setLinkedIn(event.target.value);
                     }}
@@ -146,6 +136,13 @@ const ProfileInfo = observer(() => {
             </form>
         </>
     );
+
+    function onBlurLinkedInInput({ target }) {
+        const formattedLinkedIn = formatLinkedIn(target.value);
+        if (formattedLinkedIn) {
+            setLinkedIn(formattedLinkedIn);
+        }
+    }
 });
 
 export default ProfileInfo;

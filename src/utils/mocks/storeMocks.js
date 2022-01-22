@@ -2,6 +2,7 @@ import FirebaseService from "../../services/FirebaseService";
 import AuthStore from "../../stores/AuthStore";
 import InternalEventsStore from "../../stores/InternalEventsStore";
 import UserRequestStore from "../../stores/UserRequestStore";
+import UserStore from "../../stores/UserStore";
 
 jest.mock("../../services/FirebaseService");
 
@@ -43,14 +44,21 @@ export function createInternalEventsStore() {
     return internalEventsStore;
 }
 
+export function createUserStore({ get }) {
+    const userStore = new UserStore(get);
+
+    return userStore;
+}
+
 export function createUserRequestStore({
     get = jest.fn(),
+    getByUrl = jest.fn(),
     add = jest.fn(),
     update = jest.fn(),
     remove = jest.fn(),
     sampleUserRequest,
 }) {
-    const userRequestStore = new UserRequestStore(get, add, update, remove);
+    const userRequestStore = new UserRequestStore(get, getByUrl, add, update, remove);
 
     if (sampleUserRequest) {
         userRequestStore.setUserRequests([sampleUserRequest]);

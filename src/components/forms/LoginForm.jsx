@@ -49,7 +49,11 @@ const LoginForm = observer(() => {
     };
 
     if (displayEmailRedirectOptions === "loading") {
-        return <LoadingAnimation />;
+        return (
+            <div style={{ width: "300px" }}>
+                <LoadingAnimation />;
+            </div>
+        );
     }
 
     return (

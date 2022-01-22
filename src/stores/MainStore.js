@@ -2,6 +2,7 @@ import { reaction } from "mobx";
 import UserRequestStore from "./UserRequestStore";
 import UserRequestsDatabaseAdapter from "./UserRequestsDatabaseAdapter";
 import AuthStore from "./AuthStore";
+import UserStore from "./UserStore";
 import InternalEventsStore, { InternalEvents } from "./InternalEventsStore";
 
 class MainStore {
@@ -16,16 +17,20 @@ class MainStore {
         this.authStore = new AuthStore(this.internalEventsStore, firebaseService);
 
         this.getUserRequestsDatabase(this.authStore, firebaseService);
-        const { getUserRequests, addUserRequest, updateUserRequest, removeUserRequest } = this.userRequestsDatabase;
+        const { getUserRequests, getUserRequestByUrl, addUserRequest, updateUserRequest, removeUserRequest } =
+            this.userRequestsDatabase;
 
         this.userRequestStore = new UserRequestStore(
             getUserRequests,
+            getUserRequestByUrl,
             addUserRequest,
             updateUserRequest,
             removeUserRequest,
             this.internalEventsStore
         );
         this.storesToBeClearedOnLogout.push(this.userRequestStore);
+
+        this.userStore = new UserStore(this.getUser);
 
         this.clearStores();
     }
@@ -54,6 +59,17 @@ class MainStore {
                 }
             }
         );
+    };
+
+    getUser = () => {
+        // TODO: Criar a conexão desse callback com o banco de dados Firebase
+        return {
+            photoUrl: null,
+            fullName: "Mateus",
+            linkedIn: "https://www.linkedin.com/in/mateuspereiras/",
+            bio: "Padeiro",
+            pixKey: "06029908588",
+        };
     };
 }
 
