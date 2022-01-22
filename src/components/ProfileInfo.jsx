@@ -33,17 +33,8 @@ const ProfileInfo = observer(() => {
             setFullName(loggedUserProfile?.fullName || "");
             setBio(loggedUserProfile?.bio || "");
             setLinkedIn(loggedUserProfile?.linkedIn || "");
-            setBio(loggedUserProfile?.bio || "");
-            setLinkedIn(loggedUserProfile?.linkedIn || "");
         }
     }, [loggedUserProfile]);
-
-    useEffect(() => {
-        const formattedLinkedIn = formatLinkedIn(linkedIn);
-        if (formattedLinkedIn) {
-            setLinkedIn(formattedLinkedIn);
-        }
-    }, [linkedIn]);
 
     const handleFile = (event) => {
         if (event.target.files[0]) {
@@ -121,6 +112,7 @@ const ProfileInfo = observer(() => {
                 <TextField
                     className={classes.textField}
                     value={linkedIn}
+                    onBlur={onBlurLinkedInInput}
                     onChange={(event) => {
                         setLinkedIn(event.target.value);
                     }}
@@ -144,6 +136,13 @@ const ProfileInfo = observer(() => {
             </form>
         </>
     );
+
+    function onBlurLinkedInInput({ target }) {
+        const formattedLinkedIn = formatLinkedIn(target.value);
+        if (formattedLinkedIn) {
+            setLinkedIn(formattedLinkedIn);
+        }
+    }
 });
 
 export default ProfileInfo;
