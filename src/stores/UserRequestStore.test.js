@@ -1,5 +1,6 @@
 import UserRequestStore from "./UserRequestStore";
 import UserRequestBuilder from "../models/builders/UserRequestBuilder";
+import { createInternalEventsStore } from "../utils/mocks/storeMocks";
 
 describe("UserRequestStore", () => {
     describe("getUserRequests", () => {
@@ -17,6 +18,20 @@ describe("UserRequestStore", () => {
         });
     });
 
+    describe("getUserRequestByUrl", () => {
+        it.each(["sample-url", "another-url"])("should return a specific user request", async (expected) => {
+            const userRequest = UserRequestBuilder.aUserRequest().withCustomUrl(expected).build();
+
+            const sut = makeSUT(
+                () => [],
+                () => userRequest
+            );
+            await sut.getUserRequests();
+
+            expect(sut.getByUrl(expected)).toEqual(userRequest);
+        });
+    });
+
     describe("addUserRequest", () => {
         it("should call addCallback with correct item", async () => {
             let response;
@@ -26,16 +41,18 @@ describe("UserRequestStore", () => {
                 response = item;
                 requestList.push(item);
             };
-            const sut = makeSUT(() => requestList, addCallback);
+            const sut = makeSUT(
+                () => requestList,
+                async () => {},
+                addCallback
+            );
 
             const item1 = UserRequestBuilder.aUserRequest().build();
             await sut.addUserRequest(item1);
             expect(response).toEqual(item1);
             expect(sut.userRequests.includes(item1)).toBe(true);
 
-            const item2 = UserRequestBuilder.aUserRequest()
-                .withCustomDescription("Lorem ipsum")
-                .build();
+            const item2 = UserRequestBuilder.aUserRequest().withCustomDescription("Lorem ipsum").build();
             await sut.addUserRequest(item2);
             expect(response).toEqual(item2);
             expect(sut.userRequests.includes(item2)).toBe(true);
@@ -45,15 +62,9 @@ describe("UserRequestStore", () => {
     describe("updateUserRequest", () => {
         it("should update a specific value in user requests", async () => {
             let sampleList = [
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Vini")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Vivum")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Veritas")
-                    .build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Vini").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Vivum").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Veritas").build(),
             ];
 
             let expected = null;
@@ -64,18 +75,15 @@ describe("UserRequestStore", () => {
             const sut = makeSUT(
                 async () => sampleList,
                 async () => {},
+                async () => {},
                 updateCallback
             );
             await sut.getUserRequests();
 
-            await sut.updateUserRequest(
-                UserRequestBuilder.aUserRequest().build()
-            );
+            await sut.updateUserRequest(UserRequestBuilder.aUserRequest().build());
             expect(expected).toBe(null);
 
-            const updatedItem = UserRequestBuilder.aExistingUserRequest(
-                sampleList[1].id
-            )
+            const updatedItem = UserRequestBuilder.aExistingUserRequest(sampleList[1].id)
                 .withCustomDescription("Beatitudinem")
                 .build();
             await sut.updateUserRequest(updatedItem);
@@ -99,6 +107,7 @@ describe("UserRequestStore", () => {
 
             const sut = makeSUT(
                 () => sampleList,
+                () => {},
                 () => {},
                 () => {},
                 removeCallback
@@ -126,18 +135,10 @@ describe("UserRequestStore", () => {
     describe("filteredUserRequests", () => {
         it("should return values that match string in user requests", async () => {
             let sampleList = [
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Beatitudinem")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Amare")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Magna")
-                    .build(),
-                UserRequestBuilder.aUserRequest()
-                    .withCustomDescription("Cognitio")
-                    .build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Beatitudinem").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Amare").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Magna").build(),
+                UserRequestBuilder.aUserRequest().withCustomDescription("Cognitio").build(),
             ];
 
             const sut = makeSUT(async () => sampleList);
@@ -160,9 +161,7 @@ describe("UserRequestStore", () => {
 
     describe("clearStore", () => {
         it("should empty userRequests", async () => {
-            const sut = makeSUT(() => [
-                UserRequestBuilder.aUserRequest().build(),
-            ]);
+            const sut = makeSUT(() => [UserRequestBuilder.aUserRequest().build()]);
             await sut.getUserRequests();
             expect(sut.userRequests.length).toBe(1);
 
@@ -170,14 +169,17 @@ describe("UserRequestStore", () => {
             expect(sut.userRequests.length).toBe(0);
         });
     });
+
+    // TODO: Garantir que o getByUrl funciona corretamente
 });
 
 // Helpers
 const makeSUT = (
     get = async () => [],
+    getByUrl = async () => {},
     add = async () => {},
     update = async () => {},
     remove = async () => {}
 ) => {
-    return new UserRequestStore(get, add, update, remove);
+    return new UserRequestStore(get, getByUrl, add, update, remove, createInternalEventsStore());
 };

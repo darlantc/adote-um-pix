@@ -11,7 +11,7 @@ class UserRequestsDatabaseAdapter {
     }
 
     syncLoggedUserRequests = () => {
-        this.clearStore();
+        this.clear();
 
         if (!this.authStore.loggedUser) {
             return;
@@ -60,16 +60,33 @@ class UserRequestsDatabaseAdapter {
         }
     };
 
+    getUserRequestByUrl = async (url) => {
+        let userRequest = null;
+        try {
+            this.specificUserRequestsRef = this.firebaseService.userRequestsRef.orderByChild("url").equalTo(url);
+
+            const snapshots = await this.specificUserRequestsRef.once("value");
+            snapshots.forEach((snapshot) => {
+                userRequest = snapshot.val();
+            });
+        } catch (error) {
+            console.error("UserRequestsDatabaseAdapter -> getUserRequest", error);
+        } finally {
+            return userRequest;
+        }
+    };
+
     addUserRequest = async (request) => {
         if (request) {
             const { pixKey, description } = request;
-            const { loggedUser } = this.authStore;
+            const { loggedUserProfile, loggedUser } = this.authStore;
 
             if (this.firebaseService) {
                 this.firebaseService.userRequestsRef.push({
                     user: {
                         id: loggedUser.uid,
-                        name: loggedUser.displayName,
+                        name: loggedUserProfile.fullName,
+                        photoUrl: loggedUserProfile.photoUrl,
                     },
                     pixKey,
                     description,
@@ -88,7 +105,7 @@ class UserRequestsDatabaseAdapter {
         return this.firebaseService.userRequestsRef.child(id).remove();
     };
 
-    clearStore = () => {
+    clear = () => {
         if (this.loggedUserRequestsRef) {
             this.loggedUserRequestsRef.off("value");
             this.loggedUserRequestsRef = null;

@@ -23,19 +23,18 @@ const ProfileInfo = observer(() => {
 
     const classes = useStyles();
 
-    const [currentImage, setCurrentImage] = useState(
-        (loggedUserProfile && loggedUserProfile.photoUrl) || DefaultUserPhoto
-    );
-    const [fullName, setFullName] = useState((loggedUserProfile && loggedUserProfile.fullName) || "");
-    const [bio, setBio] = useState((loggedUserProfile && loggedUserProfile.bio) || "");
-    const [linkedIn, setLinkedIn] = useState((loggedUserProfile && loggedUserProfile.linkedIn) || "");
+    const [currentImage, setCurrentImage] = useState(loggedUserProfile?.photoUrl || DefaultUserPhoto);
+    const [fullName, setFullName] = useState("");
+    const [bio, setBio] = useState("");
+    const [linkedIn, setLinkedIn] = useState("");
 
     useEffect(() => {
-        const formattedLinkedIn = formatLinkedIn(linkedIn);
-        if (formattedLinkedIn) {
-            setLinkedIn(formattedLinkedIn);
+        if (loggedUserProfile) {
+            setFullName(loggedUserProfile?.fullName || "");
+            setBio(loggedUserProfile?.bio || "");
+            setLinkedIn(loggedUserProfile?.linkedIn || "");
         }
-    }, [linkedIn]);
+    }, [loggedUserProfile]);
 
     const handleFile = (event) => {
         if (event.target.files[0]) {
@@ -55,10 +54,6 @@ const ProfileInfo = observer(() => {
         event.preventDefault();
         if (loggedUserProfile) {
             handleUserDataUpdate(fullName, bio, linkedIn);
-
-            setFullName("");
-            setBio("");
-            setLinkedIn("");
         }
     };
 
@@ -117,6 +112,7 @@ const ProfileInfo = observer(() => {
                 <TextField
                     className={classes.textField}
                     value={linkedIn}
+                    onBlur={onBlurLinkedInInput}
                     onChange={(event) => {
                         setLinkedIn(event.target.value);
                     }}
@@ -140,6 +136,13 @@ const ProfileInfo = observer(() => {
             </form>
         </>
     );
+
+    function onBlurLinkedInInput({ target }) {
+        const formattedLinkedIn = formatLinkedIn(target.value);
+        if (formattedLinkedIn) {
+            setLinkedIn(formattedLinkedIn);
+        }
+    }
 });
 
 export default ProfileInfo;
